@@ -1,0 +1,10 @@
+{
+  "block.seasons.season_detector": "Season Detector",
+  "item.seasons.season_calendar": "Season Calendar",
+  "tooltip.seasons.spring": "§aSpring",
+  "tooltip.seasons.summer": "§6Summer",
+  "tooltip.seasons.fall": "§4Fall",
+  "tooltip.seasons.winter": "§bWinter",
+  "tooltip.seasons.calendar_info_1": "§9Currently on: ",
+  "tooltip.seasons.calendar_info_2": " §7days left to "
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "seasons:season_detector"
+    },
+    {
+      "item": "minecraft:book"
+    }
+  ],
+  "result": {
+    "item": "seasons:season_calendar",
+    "count": 1
+  }
+}

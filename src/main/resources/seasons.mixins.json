@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.lucaargolo.seasons.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BiomeMixin",
+    "BlockColorsMixin",
+    "IceBlockMixin",
+    "SnowBlockMixin",
+    "WeatherMixin",
+    "WorldViewMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
