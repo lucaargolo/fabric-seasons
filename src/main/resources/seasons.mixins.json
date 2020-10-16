@@ -4,14 +4,14 @@
   "package": "io.github.lucaargolo.seasons.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BiomeMixin",
-    "BlockColorsMixin",
     "IceBlockMixin",
     "SnowBlockMixin",
     "WeatherMixin",
     "WorldViewMixin"
   ],
   "client": [
+    "BiomeMixin",
+    "BlockColorsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
