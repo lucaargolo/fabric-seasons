@@ -9,8 +9,8 @@
 <p align="center">
   <a href="https://github.com/lucaargolo/fabric-seasons/actions"><img src="https://github.com/lucaargolo/fabric-seasons/workflows/Build/badge.svg"/></a>
   <a href="https://opensource.org/licenses/MPL-2.0"><img src="https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg"></a>
-    <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/versions/fabric-seasons_latest.svg"></a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/fabric-seasons.svg"></a>
+    <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/versions/413523_latest.svg"></a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/413523.svg"></a>
 </p>
 
 ## Features
