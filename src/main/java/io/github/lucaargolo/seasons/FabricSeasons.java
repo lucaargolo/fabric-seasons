@@ -6,9 +6,12 @@ import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixin.WeatherMixin;
+import io.github.lucaargolo.seasons.utils.ModConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.utils.WeatherCache;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -34,7 +37,7 @@ import java.util.List;
 public class FabricSeasons implements ModInitializer {
 
     public static final String MOD_ID = "seasons";
-    public static final int SEASON_LENGTH = 672000;
+    public static ModConfig MOD_CONFIG = new ModConfig();
 
     public static final SeasonDetectorBlock SEASON_DETECTOR = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
     public static final BlockEntityType<BlockEntity> SEASON_DETECTOR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> SEASON_DETECTOR.createBlockEntity(null), SEASON_DETECTOR).build(null));
@@ -43,6 +46,8 @@ public class FabricSeasons implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        MOD_CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColormapResourceSupplier());
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColormapResourceSupplier());
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
@@ -51,15 +56,21 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static Season getCurrentSeason(World world) {
-        int seasonTime = Math.toIntExact(world.getTimeOfDay()) / SEASON_LENGTH;
+        if(MOD_CONFIG.isSeasonLocked()) {
+            return MOD_CONFIG.getLockedSeason();
+        }
+        int seasonTime = Math.toIntExact(world.getTimeOfDay()) / MOD_CONFIG.getSeasonLength();
         return Season.values()[seasonTime % 4];
     }
 
     @Environment(EnvType.CLIENT)
     public static Season getCurrentSeason() {
+        if(MOD_CONFIG.isSeasonLocked()) {
+            return MOD_CONFIG.getLockedSeason();
+        }
         World world = MinecraftClient.getInstance().world;
         int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
-        int seasonTime = (worldTime / SEASON_LENGTH);
+        int seasonTime = (worldTime / MOD_CONFIG.getSeasonLength());
         return Season.values()[seasonTime % 4];
     }
 

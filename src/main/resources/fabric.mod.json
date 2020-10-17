@@ -21,6 +21,9 @@
     ],
     "client": [
       "io.github.lucaargolo.seasons.FabricSeasonsClient"
+    ],
+    "modmenu": [
+      "io.github.lucaargolo.seasons.utils.ModMenuCompat"
     ]
   },
   "accessWidener": "seasons.accesswidener",

@@ -6,5 +6,10 @@
   "tooltip.seasons.fall": "§4Fall",
   "tooltip.seasons.winter": "§bWinter",
   "tooltip.seasons.calendar_info_1": "§9Currently on: ",
-  "tooltip.seasons.calendar_info_2": " §7days left to "
+  "tooltip.seasons.calendar_info_2": " §7days left to ",
+
+  "text.autoconfig.seasons.title": "Seasons Config",
+  "text.autoconfig.seasons.option.seasonLength": "Season length",
+  "text.autoconfig.seasons.option.isSeasonLocked": "Is season locked",
+  "text.autoconfig.seasons.option.lockedSeason": "Season to lock"
 }
