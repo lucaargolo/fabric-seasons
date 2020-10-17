@@ -34,7 +34,7 @@ public class FabricSeasons implements ModInitializer {
     public static final long SEASON_LENGTH = 672000L;
 
     public static final SeasonDetectorBlock SEASON_DETECTOR = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
-    public static final BlockEntityType<BlockEntity> SEASON_DETECTOR_ENTITY = BlockEntityType.Builder.create(() -> SEASON_DETECTOR.createBlockEntity(null), SEASON_DETECTOR).build(null);
+    public static final BlockEntityType<BlockEntity> SEASON_DETECTOR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> SEASON_DETECTOR.createBlockEntity(null), SEASON_DETECTOR).build(null));
     public static final BlockItem SEASON_DETECTOR_ITEM = Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(SEASON_DETECTOR, new Item.Settings().group(ItemGroup.REDSTONE)));
     public static final SeasonCalendarItem SEASON_CALENDAR = Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
 
