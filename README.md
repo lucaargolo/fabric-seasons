@@ -1,4 +1,4 @@
-<p align="center"><img src="https://i.imgur.com/wxBb9f2.png" width="128" height="128"></p>
+<p align="center"><img src="https://i.imgur.com/aA3ppId.png" width="128" height="128"></p>
 <h3 align="center">Fabric Seasons</h3>
 <p align="center">A simple mod for Minecraft that adds seasons to the game, changing biomes as you play.A simple mod for Minecraft that adds seasons to the game, changing biomes as you play.</p>
 <p align="center">
