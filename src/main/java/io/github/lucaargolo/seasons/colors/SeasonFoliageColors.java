@@ -1,6 +1,6 @@
 package io.github.lucaargolo.seasons.colors;
 
-import io.github.lucaargolo.seasons.Season;
+import io.github.lucaargolo.seasons.utils.Season;
 
 public class SeasonFoliageColors {
 

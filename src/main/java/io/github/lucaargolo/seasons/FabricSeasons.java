@@ -3,13 +3,16 @@ package io.github.lucaargolo.seasons;
 import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
 import io.github.lucaargolo.seasons.colors.SeasonFoliageColormapResourceSupplier;
 import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
+import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixin.WeatherMixin;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
+import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.utils.WeatherCache;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Blocks;
@@ -31,7 +34,7 @@ import java.util.List;
 public class FabricSeasons implements ModInitializer {
 
     public static final String MOD_ID = "seasons";
-    public static final long SEASON_LENGTH = 672000L;
+    public static final int SEASON_LENGTH = 672000;
 
     public static final SeasonDetectorBlock SEASON_DETECTOR = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
     public static final BlockEntityType<BlockEntity> SEASON_DETECTOR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> SEASON_DETECTOR.createBlockEntity(null), SEASON_DETECTOR).build(null));
@@ -42,18 +45,21 @@ public class FabricSeasons implements ModInitializer {
     public void onInitialize() {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColormapResourceSupplier());
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColormapResourceSupplier());
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+            SeasonCommand.register(dispatcher);
+        });
     }
 
     public static Season getCurrentSeason(World world) {
-        int seasonTime = (int) (world.getTimeOfDay()/ SEASON_LENGTH);
+        int seasonTime = Math.toIntExact(world.getTimeOfDay()) / SEASON_LENGTH;
         return Season.values()[seasonTime % 4];
     }
 
     @Environment(EnvType.CLIENT)
     public static Season getCurrentSeason() {
         World world = MinecraftClient.getInstance().world;
-        long worldTime = (world != null) ? world.getTimeOfDay() : 0;
-        int seasonTime = (int) (worldTime / SEASON_LENGTH);
+        int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
+        int seasonTime = (worldTime / SEASON_LENGTH);
         return Season.values()[seasonTime % 4];
     }
 

@@ -1,7 +1,7 @@
 package io.github.lucaargolo.seasons.block;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
-import io.github.lucaargolo.seasons.Season;
+import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.block.entity.SeasonDetectorBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
