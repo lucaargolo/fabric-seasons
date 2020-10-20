@@ -9,7 +9,24 @@
   "tooltip.seasons.calendar_info_2": " §7days left to ",
 
   "text.autoconfig.seasons.title": "Seasons Config",
-  "text.autoconfig.seasons.option.seasonLength": "Season length",
-  "text.autoconfig.seasons.option.isSeasonLocked": "Is season locked",
-  "text.autoconfig.seasons.option.lockedSeason": "Season to lock"
+
+  "text.autoconfig.seasons.category.seasonBehaviour": "Season Behaviour",
+  "text.autoconfig.seasons.option.seasonLength": "Season length (ticks)",
+  "text.autoconfig.seasons.option.seasonLock": "Season Lock",
+  "text.autoconfig.seasons.option.seasonLock.isSeasonLocked": "Is season locked",
+  "text.autoconfig.seasons.option.seasonLock.lockedSeason": "Lock to season",
+  "text.autoconfig.seasons.option.doTemperatureChanges": "Enable temperature changes",
+
+  "text.autoconfig.seasons.category.itemsAndBlocks": "Items and Blocks",
+  "text.autoconfig.seasons.option.isSeasonCalendarEnabled": "Enable Season Calendar",
+  "text.autoconfig.seasons.option.isSeasonDetectorEnabled": "Enable Season Detector",
+
+  "text.autoconfig.seasons.option.seasonLock.isSeasonLocked.@Tooltip": "If enabled, your worlds will be stuck in the configured season",
+
+  "text.autoconfig.seasons.option.seasonLength.@Tooltip[0]": "Configures for how long each season lasts for",
+  "text.autoconfig.seasons.option.seasonLength.@Tooltip[1]": "24000 ticks = 1 minecraft day",
+  "text.autoconfig.seasons.option.seasonLength.@Tooltip[2]": "672000 ticks = 28 minecraft days",
+
+  "text.autoconfig.seasons.option.doTemperatureChanges.@Tooltip[0]": "If enabled, temperate biomes will have snow and ice formation in the winter, ",
+  "text.autoconfig.seasons.option.doTemperatureChanges.@Tooltip[1]": "and frozen biomes will melt and have rain in the summer."
 }

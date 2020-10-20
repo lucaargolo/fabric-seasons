@@ -39,10 +39,7 @@ public class FabricSeasons implements ModInitializer {
     public static final String MOD_ID = "seasons";
     public static ModConfig MOD_CONFIG = new ModConfig();
 
-    public static final SeasonDetectorBlock SEASON_DETECTOR = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
-    public static final BlockEntityType<BlockEntity> SEASON_DETECTOR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> SEASON_DETECTOR.createBlockEntity(null), SEASON_DETECTOR).build(null));
-    public static final BlockItem SEASON_DETECTOR_ITEM = Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(SEASON_DETECTOR, new Item.Settings().group(ItemGroup.REDSTONE)));
-    public static final SeasonCalendarItem SEASON_CALENDAR = Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
+    private static BlockEntityType<BlockEntity> seasonDetectorType = null;
 
     @Override
     public void onInitialize() {
@@ -53,6 +50,20 @@ public class FabricSeasons implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             SeasonCommand.register(dispatcher);
         });
+
+        if(MOD_CONFIG.isSeasonDetectorEnabled()) {
+            SeasonDetectorBlock seasonDetector = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
+            seasonDetectorType = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> seasonDetector.createBlockEntity(null), seasonDetector).build(null));
+            Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(seasonDetector, new Item.Settings().group(ItemGroup.REDSTONE)));
+        }
+
+        if(MOD_CONFIG.isSeasonCalendarEnabled()) {
+            Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
+        }
+    }
+
+    public static BlockEntityType<BlockEntity> getSeasonDetectorType() {
+        return seasonDetectorType;
     }
 
     public static Season getCurrentSeason(World world) {
@@ -75,6 +86,7 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static void injectBiomeSeason(Biome biome, World world) {
+        if(!MOD_CONFIG.doTemperatureChanges()) return;
 
         List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
         if(ignoredCategories.contains(biome.getCategory())) return;

@@ -44,7 +44,7 @@ public class SnowBlockMixin extends Block {
 
     @Inject(at = @At("HEAD"), method = "randomTick")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo info) {
-        if (state.get(NATURAL) && world.getBiome(pos).weather.precipitation != Biome.Precipitation.SNOW) {
+        if (state.get(NATURAL) && world.getBiome(pos).canSetSnow(world, pos)) {
             Block.dropStacks(state, world, pos);
             world.removeBlock(pos, false);
         }
