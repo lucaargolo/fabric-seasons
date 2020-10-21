@@ -1,5 +1,6 @@
 package io.github.lucaargolo.seasons;
 
+import io.github.lucaargolo.seasons.utils.ColorsCache;
 import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

@@ -27,11 +27,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEffects;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
@@ -45,10 +48,15 @@ public class FabricSeasons implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         MOD_CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColormapResourceSupplier());
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColormapResourceSupplier());
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             SeasonCommand.register(dispatcher);
+            BuiltinRegistries.BIOME.getEntries().forEach((entry) -> {
+                entry.getValue().getEffects().getFoliageColor().ifPresent(color -> System.out.println(entry.getKey() + " has a custom foliage color: " + color));
+                entry.getValue().getEffects().getGrassColor().ifPresent(color -> System.out.println(entry.getKey() + " has a custom grass color: " + color));
+            });
         });
 
         if(MOD_CONFIG.isSeasonDetectorEnabled()) {
@@ -85,7 +93,7 @@ public class FabricSeasons implements ModInitializer {
         return Season.values()[seasonTime % 4];
     }
 
-    public static void injectBiomeSeason(Biome biome, World world) {
+    public static void injectBiomeTemperature(Biome biome, World world) {
         if(!MOD_CONFIG.doTemperatureChanges()) return;
 
         List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);

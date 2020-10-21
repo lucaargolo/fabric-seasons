@@ -1,5 +1,6 @@
 package io.github.lucaargolo.seasons.colors;
 
+import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.utils.Season;
 
 public class SeasonFoliageColors {
@@ -44,45 +45,15 @@ public class SeasonFoliageColors {
     }
 
     public static int getSpruceColor(Season season) {
-        switch (season) {
-            case SPRING:
-                return 0x619961;
-            case SUMMER:
-                return 0x5EAD5E;
-            case FALL:
-                return 0xB8573D;
-            case WINTER:
-                return 0x66513B;
-        }
-        return 0x619961;
+        return FabricSeasons.MOD_CONFIG.getSpruceFoliage().getColor(season);
     }
 
     public static int getBirchColor(Season season) {
-        switch (season) {
-            case SPRING:
-                return 0x80A755;
-            case SUMMER:
-                return 0x81B844;
-            case FALL:
-                return 0xD66800;
-            case WINTER:
-                return 0x665026;
-        }
-        return 0x80A755;
+        return FabricSeasons.MOD_CONFIG.getBirchFoliage().getColor(season);
     }
 
     public static int getDefaultColor(Season season) {
-        switch (season) {
-            case SPRING:
-                return 0x48B518;
-            case SUMMER:
-                return 0x4CE00B;
-            case FALL:
-                return 0xE0990B;
-            case WINTER:
-                return 0x755514;
-        }
-        return 0x48B518;
+        return FabricSeasons.MOD_CONFIG.getDefaultFoliage().getColor(season);
     }
 
 }

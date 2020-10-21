@@ -22,7 +22,7 @@ public interface WorldViewMixin {
     default Biome getBiome(BlockPos pos) {
         Biome biome = this.getBiomeAccess().getBiome(pos);
         if (this instanceof World) {
-            FabricSeasons.injectBiomeSeason(biome, (World) this);
+            FabricSeasons.injectBiomeTemperature(biome, (World) this);
         }
         return biome;
     }
