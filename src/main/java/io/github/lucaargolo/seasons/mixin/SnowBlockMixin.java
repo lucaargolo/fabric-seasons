@@ -1,6 +1,5 @@
 package io.github.lucaargolo.seasons.mixin;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SnowBlock;
@@ -10,8 +9,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,7 +41,7 @@ public class SnowBlockMixin extends Block {
 
     @Inject(at = @At("HEAD"), method = "randomTick")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo info) {
-        if (state.get(NATURAL) && world.getBiome(pos).canSetSnow(world, pos)) {
+        if (state.get(NATURAL) && !world.getBiome(pos).canSetSnow(world, pos)) {
             Block.dropStacks(state, world, pos);
             world.removeBlock(pos, false);
         }

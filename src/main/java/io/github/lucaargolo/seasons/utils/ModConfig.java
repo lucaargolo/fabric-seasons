@@ -6,71 +6,29 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 import net.minecraft.util.Identifier;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection"})
 @Config(name = FabricSeasons.MOD_ID)
 public class ModConfig implements ConfigData {
 
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.Excluded private static HashMap<Identifier, Field> foliageColors = new HashMap<>();
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.Excluded private static HashMap<Identifier, Field> grassColors = new HashMap<>();
-
-    private HardcodedColors registerBiomeColors(Identifier biomeIdentifier, boolean isFoliage, int springColor, int summerColor, int fallColor, int winterColor) {
-        String type = "Grass";
-        if(isFoliage) type = "Foliage";
-        String camelPath = biomeIdentifier.getPath();
-        camelPath = camelPath.substring(0,1).toUpperCase()+camelPath.substring(1);
-        String fieldName = biomeIdentifier.getNamespace()+camelPath+type;
-        HardcodedColors biomeColors = new HardcodedColors(springColor, summerColor, fallColor, winterColor);
-        try {
-            if (isFoliage) {
-                foliageColors.put(biomeIdentifier, this.getClass().getDeclaredField(fieldName));
-            } else {
-                grassColors.put(biomeIdentifier, this.getClass().getDeclaredField(fieldName));
-            }
-        }catch (NoSuchFieldException ignored) {}
-        return biomeColors;
-    }
-
-    public Optional<Integer> getSeasonFoliageColor(Identifier biomeIdentifier, Season season) {
-        Field colorField = foliageColors.get(biomeIdentifier);
-        if(colorField != null) {
-            try {
-                HardcodedColors colors = (HardcodedColors) colorField.get(this);
-                return Optional.of(colors.getColor(season));
-            }catch (Exception ignored) {}
-        }
-        return Optional.empty();
-    }
-
-    public Optional<Integer> getSeasonGrassColor(Identifier biomeIdentifier, Season season) {
-        Field colorField = grassColors.get(biomeIdentifier);
-        if(colorField != null) {
-            try {
-                HardcodedColors colors = (HardcodedColors) colorField.get(this);
-                return Optional.of(colors.getColor(season));
-            }catch (Exception ignored) {}
-        }
-        return Optional.empty();
-    }
-
+    @SuppressWarnings("FieldMayBeFinal")
     private static class SeasonLock {
         @ConfigEntry.Gui.Tooltip private boolean isSeasonLocked = false;
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         private Season lockedSeason = Season.SPRING;
     }
 
+    @SuppressWarnings("FieldMayBeFinal")
     public static class HardcodedColors {
         @ConfigEntry.ColorPicker private int springColor;
         @ConfigEntry.ColorPicker private int summerColor;
         @ConfigEntry.ColorPicker private int fallColor;
         @ConfigEntry.ColorPicker private int winterColor;
 
-        private HardcodedColors(int springColor, int summerColor, int fallColor, int winterColor) {
+        HardcodedColors(int springColor, int summerColor, int fallColor, int winterColor) {
             this.springColor = springColor;
             this.summerColor = summerColor;
             this.fallColor = fallColor;
@@ -92,10 +50,30 @@ public class ModConfig implements ConfigData {
         }
     }
 
+    @SuppressWarnings("FieldMayBeFinal")
+    private static class BiomeColors {
+
+        private String biomeIdentifier;
+        @ConfigEntry.Gui.TransitiveObject
+        private HardcodedColors colors;
+
+        BiomeColors() {
+            this.biomeIdentifier = "";
+            this.colors = new HardcodedColors(0, 0, 0,0);
+        }
+
+        BiomeColors(String biomeIdentifier, int springColor, int summerColor, int fallColor, int winterColor) {
+            this.biomeIdentifier = biomeIdentifier;
+            this.colors = new HardcodedColors(springColor, summerColor, fallColor, winterColor);
+        }
+
+    }
+
     @ConfigEntry.Category("seasonBehaviour")
     @ConfigEntry.Gui.Tooltip(count = 3) private int seasonLength = 672000;
     @ConfigEntry.Category("seasonBehaviour")
-    @ConfigEntry.Gui.CollapsibleObject private SeasonLock seasonLock = new SeasonLock();
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    private SeasonLock seasonLock = new SeasonLock();
     @ConfigEntry.Category("seasonBehaviour")
     @ConfigEntry.Gui.Tooltip(count = 2) private boolean doTemperatureChanges = true;
 
@@ -104,38 +82,50 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Category("itemsAndBlocks")
     private boolean isSeasonDetectorEnabled = true;
 
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors defaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xE0990B, 0x755514);
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors spruceFoliage = new HardcodedColors(0x619961, 0x619961, 0x619961, 0x619961);
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors birchFoliage = new HardcodedColors(0x80A755, 0x81B844, 0xD66800, 0x665026);
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors swampGrass1 = new HardcodedColors(0x4C763C, 0x4C763C, 0x4C763C, 0x4C763C);
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors swampGrass2 = new HardcodedColors(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
+    @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xE0990B, 0x755514);
+    @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x619961, 0x619961, 0x619961, 0x619961);
+    @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x80A755, 0x81B844, 0xD66800, 0x665026);
+    @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSwampGrass1 = new HardcodedColors(0x4C763C, 0x4C763C, 0x4C763C, 0x4C763C);
+    @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
 
-    @ConfigEntry.Category("vanillaColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSwampFoliage = registerBiomeColors(new Identifier("swamp"), true, 0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
+    @ConfigEntry.Category("hardcodedColors")
+    private final List<BiomeColors> foliageColorList = new ArrayList<>();
+    @ConfigEntry.Category("hardcodedColors")
+    private final List<BiomeColors> grassColorList = new ArrayList<>();
 
-    public HardcodedColors getDefaultFoliage() {
-        return defaultFoliage;
+    public Optional<Integer> getSeasonFoliageColor(Identifier biomeIdentifier, Season season) {
+        Optional<BiomeColors> colors = foliageColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
+        return colors.map(biomeColors -> biomeColors.colors.getColor(season));
     }
 
-    public HardcodedColors getSpruceFoliage() {
-        return spruceFoliage;
+    public Optional<Integer> getSeasonGrassColor(Identifier biomeIdentifier, Season season) {
+        Optional<BiomeColors> colors = grassColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
+        return colors.map(biomeColors -> biomeColors.colors.getColor(season));
     }
 
-    public HardcodedColors getBirchFoliage() {
-        return birchFoliage;
+    public HardcodedColors getMinecraftDefaultFoliage() {
+        return minecraftDefaultFoliage;
     }
 
-    public HardcodedColors getSwampGrass1() {
-        return swampGrass1;
+    public HardcodedColors getMinecraftSpruceFoliage() {
+        return minecraftSpruceFoliage;
     }
 
-    public HardcodedColors getSwampGrass2() {
-        return swampGrass2;
+    public HardcodedColors getMinecraftBirchFoliage() {
+        return minecraftBirchFoliage;
+    }
+
+    public HardcodedColors getMinecraftSwampGrass1() {
+        return minecraftSwampGrass1;
+    }
+
+    public HardcodedColors getMinecraftSwampGrass2() {
+        return minecraftSwampGrass2;
     }
 
     public boolean doTemperatureChanges() {

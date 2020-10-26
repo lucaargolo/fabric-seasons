@@ -1,10 +1,11 @@
-<p align="center"><img src="https://i.imgur.com/aA3ppId.png" width="128" height="128"></p>
+<p align="center"><img src="https://i.imgur.com/CD1pYdR.png" width="128" height="128"></p>
 <h3 align="center">Fabric Seasons</h3>
-<p align="center">A simple mod for Minecraft that adds seasons to the game, changing biomes as you play.A simple mod for Minecraft that adds seasons to the game, changing biomes as you play.</p>
+<p align="center">A simple mod for Minecraft that adds seasons to the game, changing biomes as you play.</p>
 <p align="center">
   <a title="Fabric API" href="https://github.com/FabricMC/fabric">
     <img src="https://i.imgur.com/Ol1Tcf8.png" width="151" height="50" />
   </a>
+  <p align="center">Also uses <a href="https://github.com/shedaniel/AutoConfig">AutoConfig 1u</a> by <a href="https://github.com/shedaniel">Shedaniel</a></p>
 </p>
 <p align="center">
   <a href="https://github.com/lucaargolo/fabric-seasons/actions"><img src="https://github.com/lucaargolo/fabric-seasons/workflows/Build/badge.svg"/></a>

@@ -27,14 +27,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEffects;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
@@ -53,10 +50,6 @@ public class FabricSeasons implements ModInitializer {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColormapResourceSupplier());
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             SeasonCommand.register(dispatcher);
-            BuiltinRegistries.BIOME.getEntries().forEach((entry) -> {
-                entry.getValue().getEffects().getFoliageColor().ifPresent(color -> System.out.println(entry.getKey() + " has a custom foliage color: " + color));
-                entry.getValue().getEffects().getGrassColor().ifPresent(color -> System.out.println(entry.getKey() + " has a custom grass color: " + color));
-            });
         });
 
         if(MOD_CONFIG.isSeasonDetectorEnabled()) {

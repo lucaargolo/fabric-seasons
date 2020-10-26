@@ -65,8 +65,8 @@ public class BiomeMixin {
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects$GrassColorModifier;getModifiedGrassColor(DDI)I"), method = "getGrassColorAt")
     public int getSeasonModifiedGrassColor(BiomeEffects.GrassColorModifier gcm, double x, double z, int color) {
         if(gcm == BiomeEffects.GrassColorModifier.SWAMP) {
-            int swampColor1 = FabricSeasons.MOD_CONFIG.getSwampGrass1().getColor(FabricSeasons.getCurrentSeason());
-            int swampColor2 = FabricSeasons.MOD_CONFIG.getSwampGrass2().getColor(FabricSeasons.getCurrentSeason());
+            int swampColor1 = FabricSeasons.MOD_CONFIG.getMinecraftSwampGrass1().getColor(FabricSeasons.getCurrentSeason());
+            int swampColor2 = FabricSeasons.MOD_CONFIG.getMinecraftSwampGrass2().getColor(FabricSeasons.getCurrentSeason());
 
             double d = Biome.FOLIAGE_NOISE.sample(x * 0.0225D, z * 0.0225D, false);
             return d < -0.1D ? swampColor1 : swampColor2;
