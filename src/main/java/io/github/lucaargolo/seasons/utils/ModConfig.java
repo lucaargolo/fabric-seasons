@@ -5,7 +5,9 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -14,14 +16,12 @@ import java.util.Optional;
 @Config(name = FabricSeasons.MOD_ID)
 public class ModConfig implements ConfigData {
 
-    @SuppressWarnings("FieldMayBeFinal")
     private static class SeasonLock {
         @ConfigEntry.Gui.Tooltip private boolean isSeasonLocked = false;
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         private Season lockedSeason = Season.SPRING;
     }
 
-    @SuppressWarnings("FieldMayBeFinal")
     public static class HardcodedColors {
         @ConfigEntry.ColorPicker private int springColor;
         @ConfigEntry.ColorPicker private int summerColor;
@@ -50,7 +50,6 @@ public class ModConfig implements ConfigData {
         }
     }
 
-    @SuppressWarnings("FieldMayBeFinal")
     private static class BiomeColors {
 
         private String biomeIdentifier;
@@ -94,18 +93,180 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
 
     @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    private boolean isDefaultHSBShiftEnabled = true;
+
+    private static class HSBShift {
+        private float hue;
+        private float saturation;
+        private float brightness;
+
+        public HSBShift(float hue, float saturation, float brightness) {
+            this.hue = hue;
+            this.saturation = saturation;
+            this.brightness = brightness;
+        }
+    }
+
+    private static class DefaultHSBShift {
+        @ConfigEntry.Gui.CollapsibleObject()
+        private HSBShift springHSBShift = new HSBShift(0f, 100f, 0f);
+        @ConfigEntry.Gui.CollapsibleObject()
+        private HSBShift summerHSBShift = new HSBShift(0f, 150f, -10f);
+        @ConfigEntry.Gui.CollapsibleObject()
+        private HSBShift fallHSBShift = new HSBShift(-75f, 100f, 0f);
+        @ConfigEntry.Gui.CollapsibleObject()
+        private HSBShift winterHSBShift = new HSBShift(-65f, 80f, -40f);
+
+        public HSBShift getHSBShift(Season season) {
+            switch (season) {
+                case SPRING:
+                    return springHSBShift;
+                case SUMMER:
+                    return summerHSBShift;
+                case FALL:
+                    return fallHSBShift;
+                case WINTER:
+                    return winterHSBShift;
+            }
+            return springHSBShift;
+        }
+
+    }
+
+    @ConfigEntry.Category("hardcodedColors")
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    private DefaultHSBShift defaultHSBShift = new DefaultHSBShift();
+
+    @ConfigEntry.Category("hardcodedColors")
     private final List<BiomeColors> foliageColorList = new ArrayList<>();
     @ConfigEntry.Category("hardcodedColors")
     private final List<BiomeColors> grassColorList = new ArrayList<>();
 
-    public Optional<Integer> getSeasonFoliageColor(Identifier biomeIdentifier, Season season) {
+    public Optional<Integer> getSeasonFoliageColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<BiomeColors> colors = foliageColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
-        return colors.map(biomeColors -> biomeColors.colors.getColor(season));
+        Optional<Integer> color = colors.map(biomeColors -> biomeColors.colors.getColor(season));
+        if(!color.isPresent() && isDefaultHSBShiftEnabled) {
+            Optional<Integer> defaultColor = biome.getEffects().getFoliageColor();
+            if(defaultColor.isPresent()) {
+                Color initialColor = new Color(defaultColor.get());
+                HSBShift hueShift = defaultHSBShift.getHSBShift(season);
+                Color finalColor = ColorHelper.changeHueSatBri(initialColor, hueShift.hue, hueShift.saturation, hueShift.brightness);
+                return Optional.of(finalColor.getRGB());
+            }
+        }
+        return color;
     }
 
-    public Optional<Integer> getSeasonGrassColor(Identifier biomeIdentifier, Season season) {
+    public Optional<Integer> getSeasonGrassColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<BiomeColors> colors = grassColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
-        return colors.map(biomeColors -> biomeColors.colors.getColor(season));
+        Optional<Integer> color = colors.map(biomeColors -> biomeColors.colors.getColor(season));
+        if(!color.isPresent() && isDefaultHSBShiftEnabled) {
+            Optional<Integer> defaultColor = biome.getEffects().getGrassColor();
+            if(defaultColor.isPresent()) {
+                Color initialColor = new Color(defaultColor.get());
+                HSBShift hueShift = defaultHSBShift.getHSBShift(season);
+                Color finalColor = ColorHelper.changeHueSatBri(initialColor, hueShift.hue, hueShift.saturation, hueShift.brightness);
+                return Optional.of(finalColor.getRGB());
+            }
+        }
+        return color;
+    }
+
+    private static class DefaultCropConfig {
+
+        private float springModifier, summerModifier, fallModifier, winterModifier;
+
+        public DefaultCropConfig(float springModifier, float summerModifier, float fallModifier, float winterModifier) {
+            this.springModifier = springModifier;
+            this.summerModifier = summerModifier;
+            this.fallModifier = fallModifier;
+            this.winterModifier = winterModifier;
+        }
+
+        public float getModifier(Season season) {
+            switch (season) {
+                case SPRING:
+                    return springModifier;
+                case SUMMER:
+                    return summerModifier;
+                case FALL:
+                    return fallModifier;
+                case WINTER:
+                    return winterModifier;
+            }
+            return springModifier;
+        }
+    }
+
+    private static class CropConfig {
+
+        private String cropIdentifier;
+        private float springModifier, summerModifier, fallModifier, winterModifier;
+
+        public CropConfig() {
+            this.cropIdentifier = "";
+            this.springModifier = 1.0f;
+            this.summerModifier = 0.8f;
+            this.fallModifier = 0.6f;
+            this.winterModifier = 0f;
+        }
+
+        public CropConfig(String cropIdentifier, float springModifier, float summerModifier, float fallModifier, float winterModifier) {
+            this.cropIdentifier = cropIdentifier;
+            this.springModifier = springModifier;
+            this.summerModifier = summerModifier;
+            this.fallModifier = fallModifier;
+            this.winterModifier = winterModifier;
+        }
+
+        public float getModifier(Season season) {
+            switch (season) {
+                case SPRING:
+                    return springModifier;
+                case SUMMER:
+                    return summerModifier;
+                case FALL:
+                    return fallModifier;
+                case WINTER:
+                    return winterModifier;
+            }
+            return springModifier;
+        }
+
+    }
+
+    @ConfigEntry.Category("crops")
+    private boolean isSeasonMessingCrops = true;
+    @ConfigEntry.Category("crops")
+    private boolean isSeasonMessingBonemeal = false;
+
+    @ConfigEntry.Category("crops")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    private DefaultCropConfig defaultCropConfig = new DefaultCropConfig(1.0f, 0.8f, 0.6f, 0f);
+
+    @ConfigEntry.Category("crops")
+    private final List<CropConfig> cropConfigs = new ArrayList<>();
+
+    public float getSeasonCropMultiplier(Identifier cropIdentifier, Season season) {
+        Optional<CropConfig> config = cropConfigs.stream().filter(it -> it.cropIdentifier.equals(cropIdentifier.toString())).findFirst();
+        return config.map(cropConfig -> cropConfig.getModifier(season)).orElse(defaultCropConfig.getModifier(season));
+    }
+
+    @ConfigEntry.Category("animals")
+    private boolean doAnimalsBreedsInWinter = true;
+
+    public boolean doAnimalsBreedsInWinter() {
+        return doAnimalsBreedsInWinter;
+    }
+
+    public boolean isSeasonMessingCrops() {
+        return isSeasonMessingCrops;
+    }
+
+    public boolean isSeasonMessingBonemeal() {
+        return isSeasonMessingBonemeal;
     }
 
     public HardcodedColors getMinecraftDefaultFoliage() {

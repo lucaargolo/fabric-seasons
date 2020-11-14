@@ -5,7 +5,7 @@ import io.github.lucaargolo.seasons.colors.SeasonFoliageColormapResourceSupplier
 import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
-import io.github.lucaargolo.seasons.mixin.WeatherMixin;
+import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
 import io.github.lucaargolo.seasons.utils.ModConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
@@ -16,9 +16,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryRemovedCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
@@ -32,12 +36,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
 
     public static final String MOD_ID = "seasons";
     public static ModConfig MOD_CONFIG = new ModConfig();
+    public static HashMap<Item, Block> SEEDS_MAP = new HashMap<>();
 
     private static BlockEntityType<BlockEntity> seasonDetectorType = null;
 
@@ -46,10 +52,20 @@ public class FabricSeasons implements ModInitializer {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         MOD_CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColormapResourceSupplier());
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColormapResourceSupplier());
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             SeasonCommand.register(dispatcher);
+        });
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            SEEDS_MAP.clear();
+            Registry.ITEM.forEach(item -> {
+                if(item instanceof BlockItem) {
+                    Block block = ((BlockItem) item).getBlock();
+                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock) {
+                        FabricSeasons.SEEDS_MAP.put(item, ((BlockItem) item).getBlock());
+                    }
+                }
+            });
         });
 
         if(MOD_CONFIG.isSeasonDetectorEnabled()) {
@@ -109,79 +125,79 @@ public class FabricSeasons implements ModInitializer {
         if(biome.getCategory() == Biome.Category.JUNGLE || biome.getCategory() == Biome.Category.SWAMP) {
             //Jungle Biomes
             if (season == Season.WINTER) {
-                ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                ((WeatherMixin) currentWeather).setTemperature(temp-0.1f);
+                ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                ((WeatherAccessor) currentWeather).setTemperature(temp-0.1f);
             } else {
-                ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                ((WeatherMixin) currentWeather).setTemperature(temp);
+                ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
         }else if(temp <= 0.1) {
             //Frozen Biomes
             switch (season) {
                 case SUMMER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherMixin) currentWeather).setTemperature(temp+0.3f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp+0.3f);
                     break;
                 case WINTER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherMixin) currentWeather).setTemperature(temp-0.2f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp-0.2f);
                     break;
                 default:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
         }else if(temp <= 0.3) {
             //Cold Biomes
             switch (season) {
                 case SPRING:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherMixin) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp);
                     break;
                 case SUMMER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherMixin) currentWeather).setTemperature(temp+0.2f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp+0.2f);
                     break;
                 case WINTER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherMixin) currentWeather).setTemperature(temp-0.2f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp-0.2f);
                     break;
                 default:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
         }else if(temp <= 0.95) {
             //Temperate Biomes
             switch (season) {
                 case SUMMER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp+0.2f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp+0.2f);
                     break;
                 case FALL:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp-0.1f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp-0.1f);
                     break;
                 case WINTER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherMixin) currentWeather).setTemperature(temp-0.7f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp-0.7f);
                     break;
                 default:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
         }else{
             //Hot biomes
             switch (season) {
                 case SUMMER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp+0.2f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp+0.2f);
                     break;
                 case WINTER:
-                    ((WeatherMixin) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherMixin) currentWeather).setTemperature(temp-0.2f);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp-0.2f);
                     break;
                 default:
-                    ((WeatherMixin) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherMixin) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
         }
     }

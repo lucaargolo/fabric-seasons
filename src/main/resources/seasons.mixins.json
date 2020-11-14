@@ -4,9 +4,12 @@
   "package": "io.github.lucaargolo.seasons.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AnimalEntityMixin",
+    "FertilizeableMixin",
     "IceBlockMixin",
+    "ItemMixin",
     "SnowBlockMixin",
-    "WeatherMixin",
+    "WeatherAccessor",
     "WorldViewMixin"
   ],
   "client": [

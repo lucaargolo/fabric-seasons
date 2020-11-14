@@ -30,7 +30,7 @@ public class BiomeMixin {
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
-                Optional<Integer> seasonGrassColor = FabricSeasons.MOD_CONFIG.getSeasonGrassColor(biomeIdentifier, FabricSeasons.getCurrentSeason());
+                Optional<Integer> seasonGrassColor = FabricSeasons.MOD_CONFIG.getSeasonGrassColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonGrassColor.isPresent()) {
                     returnColor = seasonGrassColor;
                 }
@@ -51,7 +51,7 @@ public class BiomeMixin {
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
-                Optional<Integer> seasonFoliageColor = FabricSeasons.MOD_CONFIG.getSeasonFoliageColor(biomeIdentifier, FabricSeasons.getCurrentSeason());
+                Optional<Integer> seasonFoliageColor = FabricSeasons.MOD_CONFIG.getSeasonFoliageColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonFoliageColor.isPresent()) {
                     returnColor = seasonFoliageColor;
                 }
