@@ -7,12 +7,12 @@
     "AnimalEntityMixin",
     "FertilizeableMixin",
     "IceBlockMixin",
-    "ItemMixin",
     "SnowBlockMixin",
     "WeatherAccessor",
     "WorldViewMixin"
   ],
   "client": [
+    "ItemMixin",
     "BiomeMixin",
     "BlockColorsMixin",
     "WorldRendererMixin"
