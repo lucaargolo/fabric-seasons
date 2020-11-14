@@ -37,11 +37,37 @@
   "text.autoconfig.seasons.option.doTemperatureChanges.@Tooltip[1]": "and frozen biomes will melt and have rain in the summer.",
 
   "text.autoconfig.seasons.category.hardcodedColors": "Hardcoded Colors",
+
   "text.autoconfig.seasons.option.minecraftDefaultFoliage": "Default Foliage",
+  "text.autoconfig.seasons.option.minecraftDefaultFoliage.springColor": "Spring",
+  "text.autoconfig.seasons.option.minecraftDefaultFoliage.summerColor": "Summer",
+  "text.autoconfig.seasons.option.minecraftDefaultFoliage.fallColor": "Fall",
+  "text.autoconfig.seasons.option.minecraftDefaultFoliage.winterColor": "Winter",
+
   "text.autoconfig.seasons.option.minecraftSpruceFoliage": "Spruce Foliage",
+  "text.autoconfig.seasons.option.minecraftSpruceFoliage.springColor": "Spring",
+  "text.autoconfig.seasons.option.minecraftSpruceFoliage.summerColor": "Summer",
+  "text.autoconfig.seasons.option.minecraftSpruceFoliage.fallColor": "Fall",
+  "text.autoconfig.seasons.option.minecraftSpruceFoliage.winterColor": "Winter",
+
   "text.autoconfig.seasons.option.minecraftBirchFoliage": "Birch Foliage",
+  "text.autoconfig.seasons.option.minecraftBirchFoliage.springColor": "Spring",
+  "text.autoconfig.seasons.option.minecraftBirchFoliage.summerColor": "Summer",
+  "text.autoconfig.seasons.option.minecraftBirchFoliage.fallColor": "Fall",
+  "text.autoconfig.seasons.option.minecraftBirchFoliage.winterColor": "Winter",
+
   "text.autoconfig.seasons.option.minecraftSwampGrass1": "Swamp Grass 1",
+  "text.autoconfig.seasons.option.minecraftSwampGrass1.springColor": "Spring",
+  "text.autoconfig.seasons.option.minecraftSwampGrass1.summerColor": "Summer",
+  "text.autoconfig.seasons.option.minecraftSwampGrass1.fallColor": "Fall",
+  "text.autoconfig.seasons.option.minecraftSwampGrass1.winterColor": "Winter",
+
   "text.autoconfig.seasons.option.minecraftSwampGrass2": "Swamp Grass 2",
+  "text.autoconfig.seasons.option.minecraftSwampGrass2.springColor": "Spring",
+  "text.autoconfig.seasons.option.minecraftSwampGrass2.summerColor": "Summer",
+  "text.autoconfig.seasons.option.minecraftSwampGrass2.fallColor": "Fall",
+  "text.autoconfig.seasons.option.minecraftSwampGrass2.winterColor": "Winter",
+
   "text.autoconfig.seasons.option.isDefaultHSBShiftEnabled": "Enable default HSB shift",
   "text.autoconfig.seasons.option.isDefaultHSBShiftEnabled.@Tooltip[0]": "If enabled, hardcoded biome colors that does not have custom configs",
   "text.autoconfig.seasons.option.isDefaultHSBShiftEnabled.@Tooltip[1]": "will change based on the configured default hue shift.",
@@ -66,10 +92,10 @@
   "text.autoconfig.seasons.option.grassColorList": "Custom grass colors",
   "text.autoconfig.seasons.option.BiomeColors": "Biome colors",
   "text.autoconfig.seasons.option.BiomeColors.biomeIdentifier": "Biome identifier",
-  "text.autoconfig.seasons.option.BiomeColors.colors.spring": "Spring",
-  "text.autoconfig.seasons.option.BiomeColors.colors.summer": "Summer",
-  "text.autoconfig.seasons.option.BiomeColors.colors.fall": "Fall",
-  "text.autoconfig.seasons.option.BiomeColors.colors.winter": "Winter",
+  "text.autoconfig.seasons.option.BiomeColors.colors.springColor": "Spring",
+  "text.autoconfig.seasons.option.BiomeColors.colors.summerColor": "Summer",
+  "text.autoconfig.seasons.option.BiomeColors.colors.fallColor": "Fall",
+  "text.autoconfig.seasons.option.BiomeColors.colors.winterColor": "Winter",
 
   "text.autoconfig.seasons.category.crops": "Crops",
   "text.autoconfig.seasons.option.isSeasonMessingCrops": "Enable season crops",

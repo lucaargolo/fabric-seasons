@@ -114,7 +114,7 @@ public class ModConfig implements ConfigData {
         @ConfigEntry.Gui.CollapsibleObject()
         private HSBShift summerHSBShift = new HSBShift(0f, 150f, -10f);
         @ConfigEntry.Gui.CollapsibleObject()
-        private HSBShift fallHSBShift = new HSBShift(-75f, 100f, 0f);
+        private HSBShift fallHSBShift = new HSBShift(-65f, 125f, -15f);
         @ConfigEntry.Gui.CollapsibleObject()
         private HSBShift winterHSBShift = new HSBShift(-65f, 80f, -40f);
 

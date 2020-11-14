@@ -38,7 +38,7 @@ public abstract class IceBlockMixin extends Block {
 
     @Inject(at = @At("HEAD"), method = "randomTick")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo info) {
-        if (this == Blocks.ICE && state.get(NATURAL) && !world.getBiome(pos).canSetIce(world, pos, false)) {
+        if (this == Blocks.ICE && state.get(NATURAL) && world.getBiome(pos).getTemperature(pos) >= 0.15F) {
             this.melt(state, world, pos);
         }
     }
