@@ -40,16 +40,16 @@ public class ItemMixin {
                 if (sneak) {
                     tooltip.add(new TranslatableText("tooltip.seasons.crop_multipliers"));
                     TranslatableText spring = new TranslatableText("tooltip.seasons.spring");
-                    LiteralText springMultiplier = new LiteralText((FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100) + "% speed");
+                    LiteralText springMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100)) + "% speed");
                     tooltip.add(spring.append(new LiteralText(": ").setStyle(spring.getStyle()).append(springMultiplier)));
                     TranslatableText summer = new TranslatableText("tooltip.seasons.summer");
-                    LiteralText summerMultiplier = new LiteralText((FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100) + "% speed");
+                    LiteralText summerMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100)) + "% speed");
                     tooltip.add(summer.append(new LiteralText(": ").setStyle(summer.getStyle()).append(summerMultiplier)));
                     TranslatableText fall = new TranslatableText("tooltip.seasons.fall");
-                    LiteralText fallMultiplier = new LiteralText((FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100) + "% speed");
+                    LiteralText fallMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100)) + "% speed");
                     tooltip.add(fall.append(new LiteralText(": ").setStyle(fall.getStyle()).append(fallMultiplier)));
                     TranslatableText winter = new TranslatableText("tooltip.seasons.winter");
-                    LiteralText winterMultiplier = new LiteralText((FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100) + "% speed");
+                    LiteralText winterMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100)) + "% speed");
                     tooltip.add(winter.append(new LiteralText(": ").setStyle(winter.getStyle()).append(winterMultiplier)));
                 } else {
                     if (multiplier == 0f) {
