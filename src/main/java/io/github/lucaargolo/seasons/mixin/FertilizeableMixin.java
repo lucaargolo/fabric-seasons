@@ -32,7 +32,7 @@ public abstract class FertilizeableMixin extends Block implements Fertilizable {
                 if(multiplier >= rand) {
                     seasons$shouldInject = false;
                     this.randomTick(state, world, pos, random);
-                    multiplier -= rand;
+                    multiplier -= 1f;
                 }
             }
             seasons$shouldInject = true;
@@ -50,7 +50,7 @@ public abstract class FertilizeableMixin extends Block implements Fertilizable {
                 if(multiplier >= rand) {
                     seasons$shouldInject = false;
                     this.grow(world, random, pos, state);
-                    multiplier -= rand;
+                    multiplier -= 1f;
                 }
             }
             seasons$shouldInject = true;
