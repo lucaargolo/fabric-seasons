@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "seasons:season_detector"
+      "item": "minecraft:clock"
     },
     {
       "item": "minecraft:book"
