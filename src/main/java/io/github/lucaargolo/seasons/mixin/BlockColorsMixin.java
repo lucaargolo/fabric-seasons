@@ -18,6 +18,9 @@ public class BlockColorsMixin {
 
     /**
      * @author D4rkness_King
+     * @reason I need to slightly change Minecraft's original BlockColors implementation,
+     *   so that grass and leaves can have variable colors per season. Since the original
+     *   code logic/structure is maintained, fabric mixins still work.
      */
     @Overwrite()
     public static BlockColors create() {

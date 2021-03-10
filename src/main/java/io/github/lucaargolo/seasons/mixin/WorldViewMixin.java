@@ -17,6 +17,9 @@ public interface WorldViewMixin {
 
     /**
      * @author D4rkness_King
+     * @reason I need to change how all the biomes are perceived by Minecraft,
+     *   without actually changing the original values so that i dont screw up
+     *   world generation. Upon extensive testing, i found out that this works.
      */
     @Overwrite
     default Biome getBiome(BlockPos pos) {

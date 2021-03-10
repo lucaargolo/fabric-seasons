@@ -1,8 +1,6 @@
 package io.github.lucaargolo.seasons;
 
 import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
-import io.github.lucaargolo.seasons.colors.SeasonFoliageColormapResourceSupplier;
-import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
@@ -10,18 +8,14 @@ import io.github.lucaargolo.seasons.utils.ModConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.utils.WeatherCache;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
-import net.fabricmc.fabric.api.event.registry.RegistryEntryRemovedCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -29,7 +23,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -52,9 +45,7 @@ public class FabricSeasons implements ModInitializer {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         MOD_CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            SeasonCommand.register(dispatcher);
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> SeasonCommand.register(dispatcher));
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             SEEDS_MAP.clear();
