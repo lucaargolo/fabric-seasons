@@ -28,6 +28,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -78,6 +79,9 @@ public class FabricSeasons implements ModInitializer {
         if(MOD_CONFIG.isSeasonLocked()) {
             return MOD_CONFIG.getLockedSeason();
         }
+        if(MOD_CONFIG.isSeasonTiedWithSystemTime()) {
+            return getCurrentSystemSeason();
+        }
         int seasonTime = Math.toIntExact(world.getTimeOfDay()) / MOD_CONFIG.getSeasonLength();
         return Season.values()[seasonTime % 4];
     }
@@ -87,10 +91,60 @@ public class FabricSeasons implements ModInitializer {
         if(MOD_CONFIG.isSeasonLocked()) {
             return MOD_CONFIG.getLockedSeason();
         }
+        if(MOD_CONFIG.isSeasonTiedWithSystemTime()) {
+            return getCurrentSystemSeason();
+        }
         World world = MinecraftClient.getInstance().world;
         int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
         int seasonTime = (worldTime / MOD_CONFIG.getSeasonLength());
         return Season.values()[seasonTime % 4];
+    }
+
+    private static Season getCurrentSystemSeason() {
+        LocalDateTime date = LocalDateTime.now();
+        int m = date.getMonthValue();
+        int d = date.getDayOfMonth();
+        Season season;
+
+        if (MOD_CONFIG.isInNorthHemisphere()) {
+            if (m == 1 || m == 2 || m == 3)
+                season = Season.WINTER;
+            else if (m == 4 || m == 5 || m == 6)
+                season = Season.SPRING;
+            else if (m == 7 || m == 8 || m == 9)
+                season = Season.SUMMER;
+            else
+                season = Season.FALL;
+
+            if (m == 3 && d > 19)
+                season = Season.SPRING;
+            else if (m == 6 && d > 20)
+                season = Season.SUMMER;
+            else if (m == 9 && d > 21)
+                season = Season.FALL;
+            else if (m == 12 && d > 20)
+                season = Season.WINTER;
+        } else {
+            if (m == 1 || m == 2 || m == 3)
+                season = Season.SUMMER;
+            else if (m == 4 || m == 5 || m == 6)
+                season = Season.FALL;
+            else if (m == 7 || m == 8 || m == 9)
+                season = Season.WINTER;
+            else
+                season = Season.SPRING;
+
+            if (m == 3 && d > 19)
+                season = Season.FALL;
+            else if (m == 6 && d > 20)
+                season = Season.WINTER;
+            else if (m == 9 && d > 21)
+                season = Season.SPRING;
+            else if (m == 12 && d > 20)
+                season = Season.SUMMER;
+        }
+
+        return season;
     }
 
     public static void injectBiomeTemperature(Biome biome, World world) {

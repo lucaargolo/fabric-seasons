@@ -26,7 +26,8 @@ public class SeasonCalendarItem extends Item {
             Season season = FabricSeasons.getCurrentSeason(world);
             int seasonLength = FabricSeasons.MOD_CONFIG.getSeasonLength();
             tooltip.add(new TranslatableText("tooltip.seasons.calendar_info_1").append(new TranslatableText("tooltip.seasons."+season.name().toLowerCase())));
-            tooltip.add(new LiteralText(Long.toString(((seasonLength - (world.getTimeOfDay() - ((world.getTimeOfDay()/seasonLength)*seasonLength) )) % seasonLength)/24000L)).append(new TranslatableText("tooltip.seasons.calendar_info_2").append(new TranslatableText("tooltip.seasons."+season.getNext().name().toLowerCase()))));
+            if(!FabricSeasons.MOD_CONFIG.isSeasonLocked() && !FabricSeasons.MOD_CONFIG.isSeasonTiedWithSystemTime())
+                tooltip.add(new LiteralText(Long.toString(((seasonLength - (world.getTimeOfDay() - ((world.getTimeOfDay()/seasonLength)*seasonLength) )) % seasonLength)/24000L)).append(new TranslatableText("tooltip.seasons.calendar_info_2").append(new TranslatableText("tooltip.seasons."+season.getNext().name().toLowerCase()))));
         }
 
     }

@@ -22,6 +22,11 @@
   "text.autoconfig.seasons.option.seasonLock.isSeasonLocked": "Is season locked",
   "text.autoconfig.seasons.option.seasonLock.lockedSeason": "Lock to season",
   "text.autoconfig.seasons.option.doTemperatureChanges": "Enable temperature changes",
+  "text.autoconfig.seasons.option.isSeasonTiedWithSystemTime": "Tied with system time",
+  "text.autoconfig.seasons.option.isInNorthHemisphere": "Is in north hemisphere",
+
+  "text.autoconfig.seasons.option.isSeasonTiedWithSystemTime.@Tooltip": "If enabled, the current season will be based on the time of your computer.",
+  "text.autoconfig.seasons.option.isInNorthHemisphere.@Tooltip": "If enabled, the mod will calculate the seasons based on the north hemisphere.",
 
   "text.autoconfig.seasons.category.itemsAndBlocks": "Items and Blocks",
   "text.autoconfig.seasons.option.isSeasonCalendarEnabled": "Enable Season Calendar",

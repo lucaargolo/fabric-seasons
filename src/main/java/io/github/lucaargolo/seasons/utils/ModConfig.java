@@ -75,6 +75,10 @@ public class ModConfig implements ConfigData {
     private SeasonLock seasonLock = new SeasonLock();
     @ConfigEntry.Category("seasonBehaviour")
     @ConfigEntry.Gui.Tooltip(count = 2) private boolean doTemperatureChanges = true;
+    @ConfigEntry.Category("seasonBehaviour")
+    @ConfigEntry.Gui.Tooltip() private boolean isSeasonTiedWithSystemTime = false;
+    @ConfigEntry.Category("seasonBehaviour")
+    @ConfigEntry.Gui.Tooltip() private boolean isInNorthHemisphere = true;
 
     @ConfigEntry.Category("itemsAndBlocks")
     private boolean isSeasonCalendarEnabled = true;
@@ -311,5 +315,13 @@ public class ModConfig implements ConfigData {
 
     public Season getLockedSeason() {
         return seasonLock.lockedSeason;
+    }
+
+    public boolean isSeasonTiedWithSystemTime() {
+        return isSeasonTiedWithSystemTime;
+    }
+
+    public boolean isInNorthHemisphere() {
+        return isInNorthHemisphere;
     }
 }
