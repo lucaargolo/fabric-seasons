@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.StemBlock;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.BlockItem;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.registry.Registry;
@@ -36,10 +37,10 @@ public class FabricSeasonsClient implements ClientModInitializer {
             });
         });
 
-        ClientTickEvents.END_CLIENT_TICK.register((client) -> {
+        ClientTickEvents.END_WORLD_TICK.register((clientWorld) -> {
             if(FabricSeasons.getCurrentSeason() != lastRenderedSeason) {
                 lastRenderedSeason = FabricSeasons.getCurrentSeason();
-                client.worldRenderer.reload();
+                MinecraftClient.getInstance().worldRenderer.reload();
             }
         });
     }
