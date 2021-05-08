@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AnimalEntityMixin",
-    "FertilizeableMixin",
+    "FertilizableMixin",
     "BlockMixin",
     "BlocksMixin",
     "ItemsMixin",

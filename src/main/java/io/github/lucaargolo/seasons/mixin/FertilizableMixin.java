@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-@Mixin({CropBlock.class, CocoaBlock.class, StemBlock.class})
-public abstract class FertilizeableMixin extends Block implements Fertilizable {
+@Mixin({CropBlock.class, CocoaBlock.class, StemBlock.class, SaplingBlock.class})
+public abstract class FertilizableMixin extends Block implements Fertilizable {
 
     private boolean seasons$shouldInject = true;
 
-    public FertilizeableMixin(Settings settings) {
+    public FertilizableMixin(Settings settings) {
         super(settings);
     }
 
