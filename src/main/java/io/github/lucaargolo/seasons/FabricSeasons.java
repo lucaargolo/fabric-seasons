@@ -50,6 +50,9 @@ public class FabricSeasons implements ModInitializer {
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+    public static Block ORIGINAL_ICE;
+    public static Block ORIGINAL_SNOW;
+
     public static HashMap<Item, Block> SEEDS_MAP = new HashMap<>();
 
     private static BlockEntityType<BlockEntity> seasonDetectorType = null;

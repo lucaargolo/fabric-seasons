@@ -1,4 +1,4 @@
-package io.github.lucaargolo.seasons.block.entity;
+package io.github.lucaargolo.seasons.blockentities;
 
 import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
 import net.minecraft.block.Block;

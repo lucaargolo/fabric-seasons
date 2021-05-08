@@ -6,8 +6,9 @@
   "mixins": [
     "AnimalEntityMixin",
     "FertilizeableMixin",
-    "IceBlockMixin",
-    "SnowBlockMixin",
+    "BlockMixin",
+    "BlocksMixin",
+    "ItemsMixin",
     "WeatherAccessor",
     "WorldViewMixin"
   ],
