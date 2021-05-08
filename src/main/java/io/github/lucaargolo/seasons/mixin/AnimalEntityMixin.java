@@ -14,7 +14,7 @@ public class AnimalEntityMixin {
 
     @Inject(at = @At("HEAD"), method = "breed", cancellable = true)
     public void breedInject(ServerWorld serverWorld, AnimalEntity animalEntity, CallbackInfo info) {
-        if(FabricSeasons.getCurrentSeason(serverWorld) == Season.WINTER && !FabricSeasons.MOD_CONFIG.doAnimalsBreedsInWinter()) {
+        if(FabricSeasons.getCurrentSeason(serverWorld) == Season.WINTER && !FabricSeasons.CONFIG.doAnimalsBreedsInWinter()) {
             info.cancel();
         }
     }

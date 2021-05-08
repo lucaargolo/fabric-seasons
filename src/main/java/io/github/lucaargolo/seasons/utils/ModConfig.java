@@ -1,9 +1,5 @@
 package io.github.lucaargolo.seasons.utils;
 
-import io.github.lucaargolo.seasons.FabricSeasons;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
@@ -12,21 +8,19 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection"})
-@Config(name = FabricSeasons.MOD_ID)
-public class ModConfig implements ConfigData {
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection", "unused"})
+public class ModConfig {
 
     private static class SeasonLock {
-        @ConfigEntry.Gui.Tooltip private boolean isSeasonLocked = false;
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        private boolean isSeasonLocked = false;
         private Season lockedSeason = Season.SPRING;
     }
 
     public static class HardcodedColors {
-        @ConfigEntry.ColorPicker private int springColor;
-        @ConfigEntry.ColorPicker private int summerColor;
-        @ConfigEntry.ColorPicker private int fallColor;
-        @ConfigEntry.ColorPicker private int winterColor;
+        private int springColor;
+        private int summerColor;
+        private int fallColor;
+        private int winterColor;
 
         HardcodedColors(int springColor, int summerColor, int fallColor, int winterColor) {
             this.springColor = springColor;
@@ -53,7 +47,6 @@ public class ModConfig implements ConfigData {
     private static class BiomeColors {
 
         private String biomeIdentifier;
-        @ConfigEntry.Gui.TransitiveObject
         private HardcodedColors colors;
 
         BiomeColors() {
@@ -68,36 +61,27 @@ public class ModConfig implements ConfigData {
 
     }
 
-    @ConfigEntry.Category("seasonBehaviour")
-    @ConfigEntry.Gui.Tooltip(count = 3) private int seasonLength = 672000;
-    @ConfigEntry.Category("seasonBehaviour")
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    
+    private int seasonLength = 672000;
+    
+    
     private SeasonLock seasonLock = new SeasonLock();
-    @ConfigEntry.Category("seasonBehaviour")
-    @ConfigEntry.Gui.Tooltip(count = 2) private boolean doTemperatureChanges = true;
-    @ConfigEntry.Category("seasonBehaviour")
-    @ConfigEntry.Gui.Tooltip() private boolean isSeasonTiedWithSystemTime = false;
-    @ConfigEntry.Category("seasonBehaviour")
-    @ConfigEntry.Gui.Tooltip() private boolean isInNorthHemisphere = true;
+    
+    private boolean doTemperatureChanges = true;
+    
+    private boolean isSeasonTiedWithSystemTime = false;
+    
+    private boolean isInNorthHemisphere = true;
 
-    @ConfigEntry.Category("itemsAndBlocks")
     private boolean isSeasonCalendarEnabled = true;
-    @ConfigEntry.Category("itemsAndBlocks")
     private boolean isSeasonDetectorEnabled = true;
 
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xE0990B, 0x755514);
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x619961, 0x619961, 0x619961, 0x619961);
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x80A755, 0x81B844, 0xD66800, 0x665026);
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSwampGrass1 = new HardcodedColors(0x4C763C, 0x4C763C, 0x4C763C, 0x4C763C);
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.CollapsibleObject private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
+    private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xE0990B, 0x755514);
+    private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x619961, 0x619961, 0x619961, 0x619961);
+    private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x80A755, 0x81B844, 0xD66800, 0x665026);
+    private HardcodedColors minecraftSwampGrass1 = new HardcodedColors(0x4C763C, 0x4C763C, 0x4C763C, 0x4C763C);
+    private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
 
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.Tooltip(count = 2)
     private boolean isDefaultHSBShiftEnabled = true;
 
     private static class HSBShift {
@@ -113,13 +97,9 @@ public class ModConfig implements ConfigData {
     }
 
     private static class DefaultHSBShift {
-        @ConfigEntry.Gui.CollapsibleObject()
         private HSBShift springHSBShift = new HSBShift(0f, 100f, 0f);
-        @ConfigEntry.Gui.CollapsibleObject()
         private HSBShift summerHSBShift = new HSBShift(0f, 150f, -10f);
-        @ConfigEntry.Gui.CollapsibleObject()
         private HSBShift fallHSBShift = new HSBShift(-65f, 125f, -15f);
-        @ConfigEntry.Gui.CollapsibleObject()
         private HSBShift winterHSBShift = new HSBShift(-65f, 80f, -40f);
 
         public HSBShift getHSBShift(Season season) {
@@ -138,14 +118,18 @@ public class ModConfig implements ConfigData {
 
     }
 
-    @ConfigEntry.Category("hardcodedColors")
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    
     private DefaultHSBShift defaultHSBShift = new DefaultHSBShift();
 
-    @ConfigEntry.Category("hardcodedColors")
     private final List<BiomeColors> foliageColorList = new ArrayList<>();
-    @ConfigEntry.Category("hardcodedColors")
     private final List<BiomeColors> grassColorList = new ArrayList<>();
+
+    private int getShiftedColor(Season season, int defaultColor) {
+        Color initialColor = new Color(defaultColor);
+        HSBShift hueShift = defaultHSBShift.getHSBShift(season);
+        Color finalColor = ColorHelper.changeHueSatBri(initialColor, hueShift.hue, hueShift.saturation, hueShift.brightness);
+        return finalColor.getRGB();
+    }
 
     public Optional<Integer> getSeasonFoliageColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<BiomeColors> colors = foliageColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
@@ -153,14 +137,12 @@ public class ModConfig implements ConfigData {
         if(!color.isPresent() && isDefaultHSBShiftEnabled) {
             Optional<Integer> defaultColor = biome.getEffects().getFoliageColor();
             if(defaultColor.isPresent()) {
-                Color initialColor = new Color(defaultColor.get());
-                HSBShift hueShift = defaultHSBShift.getHSBShift(season);
-                Color finalColor = ColorHelper.changeHueSatBri(initialColor, hueShift.hue, hueShift.saturation, hueShift.brightness);
-                return Optional.of(finalColor.getRGB());
+                return Optional.of(getShiftedColor(season, defaultColor.get()));
             }
         }
         return color;
     }
+
 
     public Optional<Integer> getSeasonGrassColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<BiomeColors> colors = grassColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
@@ -168,10 +150,7 @@ public class ModConfig implements ConfigData {
         if(!color.isPresent() && isDefaultHSBShiftEnabled) {
             Optional<Integer> defaultColor = biome.getEffects().getGrassColor();
             if(defaultColor.isPresent()) {
-                Color initialColor = new Color(defaultColor.get());
-                HSBShift hueShift = defaultHSBShift.getHSBShift(season);
-                Color finalColor = ColorHelper.changeHueSatBri(initialColor, hueShift.hue, hueShift.saturation, hueShift.brightness);
-                return Optional.of(finalColor.getRGB());
+                return Optional.of(getShiftedColor(season, defaultColor.get()));
             }
         }
         return color;
@@ -240,17 +219,11 @@ public class ModConfig implements ConfigData {
 
     }
 
-    @ConfigEntry.Category("crops")
     private boolean isSeasonMessingCrops = true;
-    @ConfigEntry.Category("crops")
     private boolean isSeasonMessingBonemeal = false;
 
-    @ConfigEntry.Category("crops")
-    @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     private DefaultCropConfig defaultCropConfig = new DefaultCropConfig(1.0f, 0.8f, 0.6f, 0f);
 
-    @ConfigEntry.Category("crops")
     private final List<CropConfig> cropConfigs = new ArrayList<>();
 
     public float getSeasonCropMultiplier(Identifier cropIdentifier, Season season) {
@@ -258,7 +231,6 @@ public class ModConfig implements ConfigData {
         return config.map(cropConfig -> cropConfig.getModifier(season)).orElse(defaultCropConfig.getModifier(season));
     }
 
-    @ConfigEntry.Category("animals")
     private boolean doAnimalsBreedsInWinter = true;
 
     public boolean doAnimalsBreedsInWinter() {

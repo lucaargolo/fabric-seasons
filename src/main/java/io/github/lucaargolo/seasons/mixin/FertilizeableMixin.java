@@ -24,9 +24,9 @@ public abstract class FertilizeableMixin extends Block implements Fertilizable {
 
     @Inject(at = @At("HEAD"), method = "randomTick", cancellable = true)
     public void randomTickInject(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if(FabricSeasons.MOD_CONFIG.isSeasonMessingCrops() && seasons$shouldInject) {
+        if(FabricSeasons.CONFIG.isSeasonMessingCrops() && seasons$shouldInject) {
             Identifier cropIdentifier = Registry.BLOCK.getId(state.getBlock());
-            float multiplier = FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
+            float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
             while(multiplier > 0f) {
                 float rand = random.nextFloat();
                 if(multiplier >= rand) {
@@ -42,9 +42,9 @@ public abstract class FertilizeableMixin extends Block implements Fertilizable {
 
     @Inject(at = @At("HEAD"), method = "grow", cancellable = true)
     public void growInject(ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
-        if(FabricSeasons.MOD_CONFIG.isSeasonMessingBonemeal() && seasons$shouldInject) {
+        if(FabricSeasons.CONFIG.isSeasonMessingBonemeal() && seasons$shouldInject) {
             Identifier cropIdentifier = Registry.BLOCK.getId(state.getBlock());
-            float multiplier = FabricSeasons.MOD_CONFIG.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
+            float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
             while(multiplier > 0f) {
                 float rand = random.nextFloat();
                 if(multiplier >= rand) {

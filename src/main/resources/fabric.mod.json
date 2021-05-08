@@ -24,9 +24,6 @@
     ],
     "client": [
       "io.github.lucaargolo.seasons.FabricSeasonsClient"
-    ],
-    "modmenu": [
-      "io.github.lucaargolo.seasons.utils.ModMenuCompat"
     ]
   },
   "accessWidener": "seasons.accesswidener",
@@ -34,8 +31,8 @@
     "seasons.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.8.0",
-    "fabric": "*",
-    "minecraft": "1.16.*"
+    "fabricloader": ">=0.10.8",
+    "fabric": ">=0.20.1",
+    "minecraft": "1.16.5"
   }
 }

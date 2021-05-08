@@ -1,5 +1,8 @@
 package io.github.lucaargolo.seasons;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
@@ -8,14 +11,13 @@ import io.github.lucaargolo.seasons.utils.ModConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.utils.WeatherCache;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -27,7 +29,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,15 +44,46 @@ import java.util.List;
 public class FabricSeasons implements ModInitializer {
 
     public static final String MOD_ID = "seasons";
-    public static ModConfig MOD_CONFIG = new ModConfig();
+    public static final Logger LOGGER = LogManager.getLogger("Fabric Seasons");
+    public static ModConfig CONFIG;
+
+    private static final JsonParser parser = new JsonParser();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     public static HashMap<Item, Block> SEEDS_MAP = new HashMap<>();
 
     private static BlockEntityType<BlockEntity> seasonDetectorType = null;
 
     @Override
     public void onInitialize() {
-        AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-        MOD_CONFIG = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+
+        Path configPath = FabricLoader.getInstance().getConfigDir();
+        File configFile = new File(configPath + File.separator + "seasons.json");
+
+        LOGGER.info("Trying to read config file...");
+        try {
+            if (configFile.createNewFile()) {
+                LOGGER.info("No config file found, creating a new one...");
+                String json = gson.toJson(parser.parse(gson.toJson(new ModConfig())));
+                try (PrintWriter out = new PrintWriter(configFile)) {
+                    out.println(json);
+                }
+                CONFIG = new ModConfig();
+                LOGGER.info("Successfully created default config file.");
+            } else {
+                LOGGER.info("A config file was found, loading it..");
+                CONFIG = gson.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
+                if(CONFIG == null) {
+                    throw new NullPointerException("The config file was empty.");
+                }else{
+                    LOGGER.info("Successfully loaded config file.");
+                }
+            }
+        }catch (Exception exception) {
+            LOGGER.error("There was an error creating/loading the config file!", exception);
+            CONFIG = new ModConfig();
+            LOGGER.warn("Defaulting to original config.");
+        }
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> SeasonCommand.register(dispatcher));
 
@@ -60,13 +99,13 @@ public class FabricSeasons implements ModInitializer {
             });
         });
 
-        if(MOD_CONFIG.isSeasonDetectorEnabled()) {
+        if(CONFIG.isSeasonDetectorEnabled()) {
             SeasonDetectorBlock seasonDetector = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
             seasonDetectorType = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> seasonDetector.createBlockEntity(null), seasonDetector).build(null));
             Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(seasonDetector, new Item.Settings().group(ItemGroup.REDSTONE)));
         }
 
-        if(MOD_CONFIG.isSeasonCalendarEnabled()) {
+        if(CONFIG.isSeasonCalendarEnabled()) {
             Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
         }
     }
@@ -76,27 +115,27 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static Season getCurrentSeason(World world) {
-        if(MOD_CONFIG.isSeasonLocked()) {
-            return MOD_CONFIG.getLockedSeason();
+        if(CONFIG.isSeasonLocked()) {
+            return CONFIG.getLockedSeason();
         }
-        if(MOD_CONFIG.isSeasonTiedWithSystemTime()) {
+        if(CONFIG.isSeasonTiedWithSystemTime()) {
             return getCurrentSystemSeason();
         }
-        int seasonTime = Math.toIntExact(world.getTimeOfDay()) / MOD_CONFIG.getSeasonLength();
+        int seasonTime = Math.toIntExact(world.getTimeOfDay()) / CONFIG.getSeasonLength();
         return Season.values()[seasonTime % 4];
     }
 
     @Environment(EnvType.CLIENT)
     public static Season getCurrentSeason() {
-        if(MOD_CONFIG.isSeasonLocked()) {
-            return MOD_CONFIG.getLockedSeason();
+        if(CONFIG.isSeasonLocked()) {
+            return CONFIG.getLockedSeason();
         }
-        if(MOD_CONFIG.isSeasonTiedWithSystemTime()) {
+        if(CONFIG.isSeasonTiedWithSystemTime()) {
             return getCurrentSystemSeason();
         }
         World world = MinecraftClient.getInstance().world;
         int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
-        int seasonTime = (worldTime / MOD_CONFIG.getSeasonLength());
+        int seasonTime = (worldTime / CONFIG.getSeasonLength());
         return Season.values()[seasonTime % 4];
     }
 
@@ -106,7 +145,7 @@ public class FabricSeasons implements ModInitializer {
         int d = date.getDayOfMonth();
         Season season;
 
-        if (MOD_CONFIG.isInNorthHemisphere()) {
+        if (CONFIG.isInNorthHemisphere()) {
             if (m == 1 || m == 2 || m == 3)
                 season = Season.WINTER;
             else if (m == 4 || m == 5 || m == 6)
@@ -148,7 +187,7 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static void injectBiomeTemperature(Biome biome, World world) {
-        if(!MOD_CONFIG.doTemperatureChanges()) return;
+        if(!CONFIG.doTemperatureChanges()) return;
 
         List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
         if(ignoredCategories.contains(biome.getCategory())) return;
