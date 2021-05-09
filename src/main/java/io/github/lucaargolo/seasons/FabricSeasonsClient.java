@@ -2,16 +2,14 @@ package io.github.lucaargolo.seasons;
 
 import io.github.lucaargolo.seasons.colors.SeasonFoliageColormapResourceSupplier;
 import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
+import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.block.Block;
-import net.minecraft.block.CocoaBlock;
-import net.minecraft.block.CropBlock;
-import net.minecraft.block.StemBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.BlockItem;
@@ -33,7 +31,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
             Registry.ITEM.forEach(item -> {
                 if(item instanceof BlockItem) {
                     Block block = ((BlockItem) item).getBlock();
-                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock) {
+                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock || block instanceof SaplingBlock) {
                         FabricSeasons.SEEDS_MAP.put(item, ((BlockItem) item).getBlock());
                     }
                 }
@@ -47,6 +45,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
             }
         });
 
+        BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new ModIdentifier("greenhouse_glass")), RenderLayer.getTranslucent());
         //Since we're replacing the Blocks.ICE entry we have to manually add the default ice block to the translucent render layer
         BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new Identifier("ice")), RenderLayer.getTranslucent());
     }

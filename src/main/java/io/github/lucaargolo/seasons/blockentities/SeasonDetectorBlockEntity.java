@@ -1,16 +1,16 @@
 package io.github.lucaargolo.seasons.blockentities;
 
+import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Tickable;
 
 public class SeasonDetectorBlockEntity extends BlockEntity implements Tickable {
 
-    public SeasonDetectorBlockEntity(BlockEntityType<?> type) {
-        super(type);
+    public SeasonDetectorBlockEntity() {
+        super(FabricSeasons.SEASON_DETECTOR_TYPE);
     }
 
     @Override

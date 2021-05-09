@@ -28,7 +28,7 @@ public class SeasonDetectorBlock extends DaylightDetectorBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockView world) {
-        return new SeasonDetectorBlockEntity(FabricSeasons.getSeasonDetectorType());
+        return new SeasonDetectorBlockEntity();
     }
 
     public static void updateState(BlockState state, World world, BlockPos pos) {

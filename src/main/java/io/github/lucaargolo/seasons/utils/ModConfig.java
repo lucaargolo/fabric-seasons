@@ -73,9 +73,6 @@ public class ModConfig {
     
     private boolean isInNorthHemisphere = true;
 
-    private boolean isSeasonCalendarEnabled = true;
-    private boolean isSeasonDetectorEnabled = true;
-
     private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xE0990B, 0x755514);
     private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x619961, 0x619961, 0x619961, 0x619961);
     private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x80A755, 0x81B844, 0xD66800, 0x665026);
@@ -221,6 +218,7 @@ public class ModConfig {
 
     private boolean isSeasonMessingCrops = true;
     private boolean isSeasonMessingBonemeal = false;
+    private boolean doCropsGrowsNormallyUnderground = true;
 
     private DefaultCropConfig defaultCropConfig = new DefaultCropConfig(1.0f, 0.8f, 0.6f, 0f);
 
@@ -231,10 +229,10 @@ public class ModConfig {
         return config.map(cropConfig -> cropConfig.getModifier(season)).orElse(defaultCropConfig.getModifier(season));
     }
 
-    private boolean doAnimalsBreedsInWinter = true;
+    private boolean doAnimalsBreedInWinter = true;
 
-    public boolean doAnimalsBreedsInWinter() {
-        return doAnimalsBreedsInWinter;
+    public boolean doAnimalsBreedInWinter() {
+        return doAnimalsBreedInWinter;
     }
 
     public boolean isSeasonMessingCrops() {
@@ -243,6 +241,10 @@ public class ModConfig {
 
     public boolean isSeasonMessingBonemeal() {
         return isSeasonMessingBonemeal;
+    }
+
+    public boolean doCropsGrowsNormallyUnderground() {
+        return doCropsGrowsNormallyUnderground;
     }
 
     public HardcodedColors getMinecraftDefaultFoliage() {
@@ -267,14 +269,6 @@ public class ModConfig {
 
     public boolean doTemperatureChanges() {
         return doTemperatureChanges;
-    }
-
-    public boolean isSeasonCalendarEnabled() {
-        return isSeasonCalendarEnabled;
-    }
-
-    public boolean isSeasonDetectorEnabled() {
-        return isSeasonDetectorEnabled;
     }
 
     public int getSeasonLength() {

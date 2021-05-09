@@ -3,19 +3,18 @@ package io.github.lucaargolo.seasons;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import io.github.lucaargolo.seasons.block.GreenhouseGlassBlock;
 import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
-import io.github.lucaargolo.seasons.utils.ModConfig;
-import io.github.lucaargolo.seasons.utils.ModIdentifier;
-import io.github.lucaargolo.seasons.utils.Season;
-import io.github.lucaargolo.seasons.utils.WeatherCache;
+import io.github.lucaargolo.seasons.utils.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
@@ -55,7 +54,8 @@ public class FabricSeasons implements ModInitializer {
 
     public static HashMap<Item, Block> SEEDS_MAP = new HashMap<>();
 
-    private static BlockEntityType<BlockEntity> seasonDetectorType = null;
+    public static BlockEntityType<BlockEntity> SEASON_DETECTOR_TYPE = null;
+    public static BlockEntityType<BlockEntity> GREENHOUSE_GLASS_TYPE = null;
 
     @Override
     public void onInitialize() {
@@ -95,26 +95,24 @@ public class FabricSeasons implements ModInitializer {
             Registry.ITEM.forEach(item -> {
                 if(item instanceof BlockItem) {
                     Block block = ((BlockItem) item).getBlock();
-                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock) {
+                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock || block instanceof SaplingBlock) {
                         FabricSeasons.SEEDS_MAP.put(item, ((BlockItem) item).getBlock());
                     }
                 }
             });
         });
 
-        if(CONFIG.isSeasonDetectorEnabled()) {
-            SeasonDetectorBlock seasonDetector = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
-            seasonDetectorType = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> seasonDetector.createBlockEntity(null), seasonDetector).build(null));
-            Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(seasonDetector, new Item.Settings().group(ItemGroup.REDSTONE)));
-        }
+        Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
 
-        if(CONFIG.isSeasonCalendarEnabled()) {
-            Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
-        }
-    }
+        SeasonDetectorBlock seasonDetector = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
+        SEASON_DETECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), BlockEntityType.Builder.create(() -> seasonDetector.createBlockEntity(null), seasonDetector).build(null));
+        Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(seasonDetector, new Item.Settings().group(ItemGroup.REDSTONE)));
 
-    public static BlockEntityType<BlockEntity> getSeasonDetectorType() {
-        return seasonDetectorType;
+        GreenhouseGlassBlock greenhouseGlass = Registry.register(Registry.BLOCK, new ModIdentifier("greenhouse_glass"), new GreenhouseGlassBlock(FabricBlockSettings.copyOf(Blocks.GREEN_STAINED_GLASS)));
+        GREENHOUSE_GLASS_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("greenhouse_glass"), BlockEntityType.Builder.create(() -> greenhouseGlass.createBlockEntity(null), greenhouseGlass).build(null));
+        Registry.register(Registry.ITEM, new ModIdentifier("greenhouse_glass"), new BlockItem(greenhouseGlass, new Item.Settings().group(ItemGroup.DECORATIONS)));
+
+        ServerTickEvents.END_SERVER_TICK.register(GreenhouseCache::tick);
     }
 
     public static Season getCurrentSeason(World world) {
