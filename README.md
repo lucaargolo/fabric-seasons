@@ -5,7 +5,6 @@
   <a title="Fabric API" href="https://github.com/FabricMC/fabric">
     <img src="https://i.imgur.com/Ol1Tcf8.png" width="151" height="50" />
   </a>
-  <p align="center">Also uses <a href="https://github.com/shedaniel/AutoConfig">AutoConfig 1u</a> by <a href="https://github.com/shedaniel">Shedaniel</a></p>
 </p>
 <p align="center">
   <a href="https://github.com/lucaargolo/fabric-seasons/actions"><img src="https://github.com/lucaargolo/fabric-seasons/workflows/Build/badge.svg"/></a>
