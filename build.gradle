@@ -1,14 +1,51 @@
+buildscript {
+    dependencies {
+        classpath "org.kohsuke:github-api:${project.github_api_version}"
+    }
+}
+
 plugins {
-    id 'fabric-loom' version '0.5.31'
     id 'maven-publish'
+    id 'fabric-loom'
+    id "org.ajoberstar.grgit"
+    id "com.matthewprenger.cursegradle"
+    id "com.modrinth.minotaur"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name
+archivesBaseName = project.archives_base_name+"-"+project.minecraft_version
 version = project.mod_version
 group = project.maven_group
+
+def ENV = System.getenv()
+
+def RELEASE_NAME = "Seasons ${version}"
+def RELEASE_TYPE = version.split("-").size() > 0 ? (version.split("-")[1] == "BETA" || version.split("-")[1] == "ALPHA") ? version.split("-")[1] : "ALPHA" : "RELEASE"
+def RELEASE_FILE = "${buildDir}/libs/${archivesBaseName}-${version}.jar"
+
+@SuppressWarnings('GrMethodMayBeStatic')
+def getChangeLog() {
+    return "A changelog can be found at https://github.com/lucaargolo/fabric-seasons/commits/"
+}
+
+@SuppressWarnings('GrMethodMayBeStatic')
+def getBranch() {
+    def ENV = System.getenv()
+
+    if (ENV.GITHUB_REF) {
+        def branch = ENV.GITHUB_REF
+        return branch.substring(branch.lastIndexOf("/") + 1)
+    }
+
+    if (grgit == null) {
+        return "unknown"
+    }
+
+    def branch = grgit.branch.current().name
+    return branch.substring(branch.lastIndexOf("/") + 1)
+}
 
 minecraft {
     accessWidener "src/main/resources/seasons.accesswidener"
@@ -60,4 +97,80 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
     from "LICENSE"
+}
+
+//Github publishing
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
+
+task github(dependsOn: remapJar, group: "upload") {
+    onlyIf {
+        ENV.GITHUB_TOKEN
+    }
+
+    doLast {
+        def github = GitHub.connectUsingOAuth(ENV.GITHUB_TOKEN as String)
+        def repository = github.getRepository(ENV.GITHUB_REPOSITORY)
+
+        def releaseBuilder = new GHReleaseBuilder(repository, version as String)
+        releaseBuilder.name(RELEASE_NAME)
+        releaseBuilder.body(getChangeLog())
+        releaseBuilder.commitish(getBranch())
+
+        def ghRelease = releaseBuilder.create()
+        ghRelease.uploadAsset(file(RELEASE_FILE), "application/java-archive")
+    }
+}
+
+//Curseforge publishing
+curseforge {
+    if (ENV.CURSEFORGE_API_KEY) {
+        apiKey = ENV.CURSEFORGE_API_KEY
+    }
+
+    project {
+        id = project.curseforge_id
+        changelog = getChangeLog()
+        releaseType = RELEASE_TYPE.toLowerCase()
+        addGameVersion project.minecraft_version
+        addGameVersion "Fabric"
+
+        mainArtifact(file(RELEASE_FILE)) {
+            displayName = RELEASE_NAME
+            relations {
+                requiredDependency 'fabric-api'
+            }
+        }
+
+        afterEvaluate {
+            uploadTask.dependsOn("remapJar")
+        }
+    }
+
+    options {
+        forgeGradleIntegration = false
+    }
+}
+
+//Modrinth publishing
+import com.modrinth.minotaur.TaskModrinthUpload
+import com.modrinth.minotaur.request.VersionType
+
+task modrinth(type: TaskModrinthUpload, dependsOn: remapJar, group: "upload") {
+    onlyIf {
+        ENV.MODRINTH_TOKEN
+    }
+    token = ENV.MODRINTH_TOKEN
+
+    projectId = project.modrinth_id
+    changelog = getChangeLog()
+
+    versionNumber = version
+    versionName = RELEASE_NAME
+    versionType = VersionType.valueOf(RELEASE_TYPE)
+
+    uploadFile = file(RELEASE_FILE)
+
+    addGameVersion(project.minecraft_version as String)
+    addLoader("fabric")
 }

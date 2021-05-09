@@ -9,8 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2.2.0
-    - name: Build
-      run: |
+    - run: |
           chmod +x ./gradlew
           ./gradlew build
     - uses: actions/upload-artifact@v2
