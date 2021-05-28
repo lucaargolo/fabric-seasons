@@ -12,7 +12,7 @@ public class ColorHelper {
         float r = color.getRed()/255f;
         float g = color.getGreen()/255f;
         float b = color.getBlue()/255f;
-        float p = MathHelper.sqrt((r*r*0.299f)+(g*g*0.597f)+(b*b*0.114));
+        float p = MathHelper.sqrt((r*r*0.299f)+(g*g*0.597f)+(b*b*0.114f));
         float newRed = p+(r-p)*s;
         float newGreen = p+(g-p)*s;
         float newBlue = p+(b-p)*s;

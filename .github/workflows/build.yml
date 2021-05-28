@@ -6,7 +6,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
+    container:
+      image: openjdk:16-jdk
+      options: --user root
+
     steps:
     - uses: actions/checkout@v2.2.0
     - run: |

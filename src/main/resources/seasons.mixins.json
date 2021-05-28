@@ -6,7 +6,7 @@
   "mixins": [
     "AnimalEntityMixin",
     "FertilizableMixin",
-    "BlockMixin",
+    "AbstractBlockStateMixin",
     "BlocksMixin",
     "ItemsMixin",
     "WeatherAccessor",

@@ -21,8 +21,9 @@ public class SeasonGrassColormapResourceSupplier implements SimpleSynchronousRes
         return new ModIdentifier("season_grass");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void apply(ResourceManager manager) {
+    public void reload(ResourceManager manager) {
         try {
             SeasonGrassColors.setColorMap(Season.SPRING, RawTextureDataLoader.loadRawTextureData(manager, SPRING_GRASS_COLORMAP));
             SeasonGrassColors.setColorMap(Season.SUMMER, RawTextureDataLoader.loadRawTextureData(manager, SUMMER_GRASS_COLORMAP));

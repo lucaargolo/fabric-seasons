@@ -24,6 +24,8 @@ def ENV = System.getenv()
 def RELEASE_NAME = "Seasons ${version}"
 def RELEASE_TYPE = version.split("-").size() > 0 ? (version.split("-")[1] == "BETA" || version.split("-")[1] == "ALPHA") ? version.split("-")[1] : "ALPHA" : "RELEASE"
 def RELEASE_FILE = "${buildDir}/libs/${archivesBaseName}-${version}.jar"
+def CF_GAME_VERSION = "1.17-Snapshot"
+
 
 @SuppressWarnings('GrMethodMayBeStatic')
 def getChangeLog() {
@@ -69,34 +71,38 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modRuntime "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
+    //modRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
+    //modRuntime "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
 }
 
 processResources {
     inputs.property "version", project.version
 
     from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy(DuplicatesStrategy.WARN)
         include "fabric.mod.json"
         expand "version": project.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy(DuplicatesStrategy.WARN)
         exclude "fabric.mod.json"
     }
 }
 
 tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+    it.options.encoding = "UTF-8"
+    it.options.release = 16
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+java {
+    withSourcesJar()
 }
 
 jar {
-    from "LICENSE"
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}"}
+    }
 }
 
 //Github publishing
@@ -112,7 +118,7 @@ task github(dependsOn: remapJar, group: "upload") {
         def github = GitHub.connectUsingOAuth(ENV.GITHUB_TOKEN as String)
         def repository = github.getRepository(ENV.GITHUB_REPOSITORY)
 
-        def releaseBuilder = new GHReleaseBuilder(repository, version as String)
+        def releaseBuilder = new GHReleaseBuilder(repository, project.minecraft_version+"-"+project.mod_version as String)
         releaseBuilder.name(RELEASE_NAME)
         releaseBuilder.body(getChangeLog())
         releaseBuilder.commitish(getBranch())
@@ -132,8 +138,9 @@ curseforge {
         id = project.curseforge_id
         changelog = getChangeLog()
         releaseType = RELEASE_TYPE.toLowerCase()
-        addGameVersion project.minecraft_version
         addGameVersion "Fabric"
+        addGameVersion "Java 16"
+        addGameVersion CF_GAME_VERSION
 
         mainArtifact(file(RELEASE_FILE)) {
             displayName = RELEASE_NAME

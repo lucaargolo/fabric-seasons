@@ -31,8 +31,8 @@
     "seasons.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.10.8",
-    "fabric": ">=0.20.1",
-    "minecraft": "1.16.5"
+    "fabricloader": ">=0.11.3",
+    "fabric": ">=0.34.8",
+    "minecraft": "1.17.x"
   }
 }

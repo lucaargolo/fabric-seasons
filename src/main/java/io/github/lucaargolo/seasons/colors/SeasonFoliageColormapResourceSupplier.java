@@ -21,8 +21,9 @@ public class SeasonFoliageColormapResourceSupplier implements SimpleSynchronousR
         return new ModIdentifier("season_foliage");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void apply(ResourceManager manager) {
+    public void reload(ResourceManager manager) {
         try {
             SeasonFoliageColors.setColorMap(Season.SPRING, RawTextureDataLoader.loadRawTextureData(manager, SPRING_FOLIAGE_COLORMAP));
             SeasonFoliageColors.setColorMap(Season.SUMMER, RawTextureDataLoader.loadRawTextureData(manager, SUMMER_FOLIAGE_COLORMAP));
