@@ -35,7 +35,7 @@ public class SeasonCommand {
                     Season season = FabricSeasons.getCurrentSeason(world);
                     context.getSource().sendFeedback(new TranslatableText("tooltip.seasons.calendar_info_1").append(new TranslatableText("tooltip.seasons."+season.name().toLowerCase())), false);
                     context.getSource().sendFeedback(new LiteralText(Long.toString(((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength())/24000L)).append(new TranslatableText("tooltip.seasons.calendar_info_2").append(new TranslatableText("tooltip.seasons."+season.getNext().name().toLowerCase()))), false);
-                    return 1;
+                    return season.ordinal();
                 })
             )
             .then(CommandManager.literal("skip")
@@ -45,17 +45,12 @@ public class SeasonCommand {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength());
-                        switch (season) {
-                            case SPRING:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*3));
-                            case SUMMER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*2));
-                            case FALL:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+FabricSeasons.CONFIG.getSeasonLength());
-                            case WINTER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                        }
-                        return 0;
+                        return switch (season) {
+                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3));
+                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2));
+                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
+                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                        };
                     })
                 )
                 .then(CommandManager.literal("summer")
@@ -63,17 +58,12 @@ public class SeasonCommand {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength());
-                        switch (season) {
-                            case SPRING:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                            case SUMMER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*3));
-                            case FALL:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*2));
-                            case WINTER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+FabricSeasons.CONFIG.getSeasonLength());
-                        }
-                        return 0;
+                        return switch (season) {
+                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3));
+                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2));
+                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
+                        };
                     })
                 )
                 .then(CommandManager.literal("fall")
@@ -81,17 +71,12 @@ public class SeasonCommand {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength());
-                        switch (season) {
-                            case SPRING:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+FabricSeasons.CONFIG.getSeasonLength());
-                            case SUMMER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                            case FALL:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*3));
-                            case WINTER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*2));
-                        }
-                        return 0;
+                        return switch (season) {
+                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
+                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3));
+                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2));
+                        };
                     })
                 )
                 .then(CommandManager.literal("winter")
@@ -99,17 +84,12 @@ public class SeasonCommand {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength());
-                        switch (season) {
-                            case SPRING:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*2));
-                            case SUMMER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+FabricSeasons.CONFIG.getSeasonLength());
-                            case FALL:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                            case WINTER:
-                                return TimeCommand.executeAdd(context.getSource(), timeToNextSeason+(FabricSeasons.CONFIG.getSeasonLength()*3));
-                        }
-                        return 0;
+                        return switch (season) {
+                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2));
+                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
+                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3));
+                        };
                     })
                 )
             )

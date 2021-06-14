@@ -14,15 +14,11 @@ public enum Season implements StringIdentifiable {
     }
 
     public Season getNext() {
-        switch (this) {
-            case SUMMER:
-                return Season.FALL;
-            case FALL:
-                return Season.WINTER;
-            case WINTER:
-                return Season.SPRING;
-            default:
-                return Season.SUMMER;
-        }
+        return switch (this) {
+            case SUMMER -> Season.FALL;
+            case FALL -> Season.WINTER;
+            case WINTER -> Season.SPRING;
+            default -> Season.SUMMER;
+        };
     }
 }
