@@ -15,13 +15,12 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name+"-"+project.minecraft_version
 version = project.mod_version
 group = project.maven_group
 
 def ENV = System.getenv()
 
-def RELEASE_NAME = "Seasons ${version}"
+def RELEASE_NAME = "Fabric Seasons ${version}"
 def RELEASE_TYPE = version.split("-").size() > 0 ? (version.split("-")[1] == "BETA" || version.split("-")[1] == "ALPHA") ? version.split("-")[1] : "ALPHA" : "RELEASE"
 def RELEASE_FILE = "${buildDir}/libs/${archivesBaseName}-${version}.jar"
 
