@@ -70,7 +70,7 @@ public class FabricSeasons implements ModInitializer {
         try {
             if (configFile.createNewFile()) {
                 LOGGER.info("No config file found, creating a new one...");
-                String json = gson.toJson(parser.parse(gson.toJson(new ModConfig())));
+                String json = ConfigToJson(new ModConfig());
                 try (PrintWriter out = new PrintWriter(configFile)) {
                     out.println(json);
                 }
@@ -78,7 +78,8 @@ public class FabricSeasons implements ModInitializer {
                 LOGGER.info("Successfully created default config file.");
             } else {
                 LOGGER.info("A config file was found, loading it..");
-                CONFIG = gson.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
+                CONFIG = ConfigFromJson(new String(Files.readAllBytes(configFile.toPath())));
+                //CONFIG = gson.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
                 if(CONFIG == null) {
                     throw new NullPointerException("The config file was empty.");
                 }else{
@@ -299,6 +300,14 @@ public class FabricSeasons implements ModInitializer {
                 }
             }
         }
+    }
+
+    public static String ConfigToJson(ModConfig config){
+        return gson.toJson(parser.parse(gson.toJson(config)));
+    }
+
+    public static ModConfig ConfigFromJson(String json){
+        return gson.fromJson(json, ModConfig.class);
     }
 
 }
