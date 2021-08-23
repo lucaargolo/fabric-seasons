@@ -19,7 +19,7 @@ import net.minecraft.util.registry.Registry;
 
 public class FabricSeasonsClient implements ClientModInitializer {
 
-    private static Season lastRenderedSeason = Season.SPRING;
+    public static Season lastRenderedSeason = Season.SPRING;
 
     @Override
     public void onInitializeClient() {

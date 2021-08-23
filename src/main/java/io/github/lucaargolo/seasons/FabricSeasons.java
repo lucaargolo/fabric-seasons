@@ -28,8 +28,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -137,9 +139,16 @@ public class FabricSeasons implements ModInitializer {
             return getCurrentSystemSeason();
         }
         World world = MinecraftClient.getInstance().world;
-        int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
-        int seasonTime = (worldTime / CONFIG.getSeasonLength());
-        return Season.values()[seasonTime % 4];
+
+        if (world != null){
+            RegistryKey<World> dimension = world.getRegistryKey();
+            if (dimension == World.OVERWORLD){
+                int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
+                int seasonTime = (worldTime / CONFIG.getSeasonLength());
+                return Season.values()[seasonTime % 4];
+            }
+        }
+        return FabricSeasonsClient.lastRenderedSeason;
     }
 
     private static Season getCurrentSystemSeason() {
