@@ -2,6 +2,8 @@ package io.github.lucaargolo.seasons.utils;
 
 import net.minecraft.util.StringIdentifiable;
 
+import java.util.Locale;
+
 public enum Season implements StringIdentifiable {
     SPRING,
     SUMMER,
@@ -10,7 +12,7 @@ public enum Season implements StringIdentifiable {
 
     @Override
     public String asString() {
-        return name().toLowerCase();
+        return name().toLowerCase(Locale.ROOT);
     }
 
     public Season getNext() {
