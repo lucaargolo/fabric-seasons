@@ -20,6 +20,11 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.github.lucaargolo.seasons.FabricSeasons.ASK_FOR_CONFIG;
 
@@ -27,7 +32,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
 
     private static boolean isServerConfig = false;
     private static ModConfig clientConfig = null;
-    private static Season lastRenderedSeason = Season.SPRING;
+    private static final Map<RegistryKey<World>, Season> lastRenderedSeasonMap = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -48,8 +53,8 @@ public class FabricSeasonsClient implements ClientModInitializer {
         });
 
         ClientTickEvents.END_WORLD_TICK.register((clientWorld) -> {
-            if(FabricSeasons.getCurrentSeason() != lastRenderedSeason) {
-                lastRenderedSeason = FabricSeasons.getCurrentSeason();
+            if(FabricSeasons.getCurrentSeason(clientWorld) != lastRenderedSeasonMap.get(clientWorld.getRegistryKey())) {
+                lastRenderedSeasonMap.put(clientWorld.getRegistryKey(), FabricSeasons.getCurrentSeason(clientWorld));
                 MinecraftClient.getInstance().worldRenderer.reload();
             }
         });

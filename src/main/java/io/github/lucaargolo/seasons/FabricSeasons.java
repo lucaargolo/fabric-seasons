@@ -25,6 +25,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -150,9 +151,10 @@ public class FabricSeasons implements ModInitializer {
 
     @Environment(EnvType.CLIENT)
     public static Season getCurrentSeason() {
-        World world = MinecraftClient.getInstance().world;
-        if(world != null) {
-            return getCurrentSeason(world);
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        if(player != null && player.world != null) {
+            return getCurrentSeason(player.world);
         }
         return Season.SPRING;
     }
