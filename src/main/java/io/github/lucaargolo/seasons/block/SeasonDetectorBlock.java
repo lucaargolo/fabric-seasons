@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DaylightDetectorBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
@@ -29,6 +31,11 @@ public class SeasonDetectorBlock extends DaylightDetectorBlock {
     @Override
     public SeasonDetectorBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new SeasonDetectorBlockEntity(pos, state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return world.isClient ? null : checkType(type, FabricSeasons.SEASON_DETECTOR_TYPE, SeasonDetectorBlockEntity::serverTick);
     }
 
     public static void updateState(BlockState state, World world, BlockPos pos) {
