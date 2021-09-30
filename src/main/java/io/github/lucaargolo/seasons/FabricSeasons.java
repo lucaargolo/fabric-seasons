@@ -223,6 +223,9 @@ public class FabricSeasons implements ModInitializer {
             originalWeather = WeatherCache.getCache(biomeIdentifier);
         }
 
+        if(originalWeather == null) {
+            return;
+        }
         float temp = originalWeather.temperature;
         if(biome.getCategory() == Biome.Category.JUNGLE || biome.getCategory() == Biome.Category.SWAMP) {
             //Jungle Biomes
