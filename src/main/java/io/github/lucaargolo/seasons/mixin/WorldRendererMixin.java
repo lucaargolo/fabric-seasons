@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
 
-    @Inject(at = @At("HEAD"), method = "reload")
+    @Inject(at = @At("HEAD"), method = "reload()V")
     public void reload(CallbackInfo info) {
         ColorsCache.clearCache();
     }
