@@ -17,6 +17,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -26,6 +28,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -47,10 +50,11 @@ public class FabricSeasons implements ModInitializer {
 
     public static final String MOD_ID = "seasons";
     public static final Logger LOGGER = LogManager.getLogger("Fabric Seasons");
+
     public static ModConfig CONFIG;
 
-    private static final JsonParser parser = new JsonParser();
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final JsonParser JSON_PARSER = new JsonParser();
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static Block ORIGINAL_ICE;
     public static Block ORIGINAL_SNOW;
@@ -59,6 +63,9 @@ public class FabricSeasons implements ModInitializer {
 
     public static BlockEntityType<SeasonDetectorBlockEntity> SEASON_DETECTOR_TYPE = null;
     public static BlockEntityType<GreenhouseGlassBlockEntity> GREENHOUSE_GLASS_TYPE = null;
+
+    public static Identifier ASK_FOR_CONFIG = new Identifier(MOD_ID, "ask_for_config");
+    public static Identifier ANSWER_CONFIG = new Identifier(MOD_ID, "anwer_config");
 
     @Override
     public void onInitialize() {
@@ -70,7 +77,7 @@ public class FabricSeasons implements ModInitializer {
         try {
             if (configFile.createNewFile()) {
                 LOGGER.info("No config file found, creating a new one...");
-                String json = gson.toJson(parser.parse(gson.toJson(new ModConfig())));
+                String json = GSON.toJson(JSON_PARSER.parse(GSON.toJson(new ModConfig())));
                 try (PrintWriter out = new PrintWriter(configFile)) {
                     out.println(json);
                 }
@@ -78,7 +85,7 @@ public class FabricSeasons implements ModInitializer {
                 LOGGER.info("Successfully created default config file.");
             } else {
                 LOGGER.info("A config file was found, loading it..");
-                CONFIG = gson.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
+                CONFIG = GSON.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
                 if(CONFIG == null) {
                     throw new NullPointerException("The config file was empty.");
                 }else{
@@ -116,6 +123,13 @@ public class FabricSeasons implements ModInitializer {
         Registry.register(Registry.ITEM, new ModIdentifier("greenhouse_glass"), new BlockItem(greenhouseGlass, new Item.Settings().group(ItemGroup.DECORATIONS)));
 
         ServerTickEvents.END_SERVER_TICK.register(GreenhouseCache::tick);
+
+        ServerPlayNetworking.registerGlobalReceiver(ASK_FOR_CONFIG, (server, player, handler, buf, responseSender) -> {
+            String configJson = GSON.toJson(JSON_PARSER.parse(GSON.toJson(CONFIG)));
+            PacketByteBuf configBuf = PacketByteBufs.create();
+            configBuf.writeString(configJson);
+            ServerPlayNetworking.send(player, ANSWER_CONFIG, configBuf);
+        });
     }
 
     public static Season getCurrentSeason(World world) {
