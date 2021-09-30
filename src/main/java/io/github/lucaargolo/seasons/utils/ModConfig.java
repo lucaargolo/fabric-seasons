@@ -1,6 +1,8 @@
 package io.github.lucaargolo.seasons.utils;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 import java.awt.*;
@@ -63,9 +65,10 @@ public class ModConfig {
 
     
     private int seasonLength = 672000;
-    
-    
+
     private SeasonLock seasonLock = new SeasonLock();
+
+    private List<String> dimensionWhitelist = List.of("minecraft:overworld");
     
     private boolean doTemperatureChanges = true;
     
@@ -281,6 +284,10 @@ public class ModConfig {
 
     public Season getLockedSeason() {
         return seasonLock.lockedSeason;
+    }
+
+    public boolean isValidInDimension(RegistryKey<World> dimension) {
+        return dimensionWhitelist.contains(dimension.getValue().toString());
     }
 
     public boolean isSeasonTiedWithSystemTime() {

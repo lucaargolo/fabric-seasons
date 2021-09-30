@@ -28,6 +28,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import org.apache.logging.log4j.LogManager;
@@ -118,28 +119,28 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static Season getCurrentSeason(World world) {
-        if(CONFIG.isSeasonLocked()) {
-            return CONFIG.getLockedSeason();
+        RegistryKey<World> dimension = world.getRegistryKey();
+        if (CONFIG.isValidInDimension(dimension)) {
+            if(CONFIG.isSeasonLocked()) {
+                return CONFIG.getLockedSeason();
+            }
+            if(CONFIG.isSeasonTiedWithSystemTime()) {
+                return getCurrentSystemSeason();
+            }
+            int worldTime = Math.toIntExact(world.getTimeOfDay());
+            int seasonTime = (worldTime / CONFIG.getSeasonLength());
+            return Season.values()[seasonTime % 4];
         }
-        if(CONFIG.isSeasonTiedWithSystemTime()) {
-            return getCurrentSystemSeason();
-        }
-        int seasonTime = Math.toIntExact(world.getTimeOfDay()) / CONFIG.getSeasonLength();
-        return Season.values()[seasonTime % 4];
+        return Season.SPRING;
     }
 
     @Environment(EnvType.CLIENT)
     public static Season getCurrentSeason() {
-        if(CONFIG.isSeasonLocked()) {
-            return CONFIG.getLockedSeason();
-        }
-        if(CONFIG.isSeasonTiedWithSystemTime()) {
-            return getCurrentSystemSeason();
-        }
         World world = MinecraftClient.getInstance().world;
-        int worldTime = (world != null) ? Math.toIntExact(world.getTimeOfDay()) : 0;
-        int seasonTime = (worldTime / CONFIG.getSeasonLength());
-        return Season.values()[seasonTime % 4];
+        if(world != null) {
+            return getCurrentSeason(world);
+        }
+        return Season.SPRING;
     }
 
     private static Season getCurrentSystemSeason() {
