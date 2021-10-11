@@ -60,7 +60,8 @@ public class FabricSeasonsClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(FabricSeasons.ANSWER_CONFIG, (client, handler, buf, responseSender) -> {
-            String configJson = buf.readString();
+            int stringSize = buf.readInt();
+            String configJson = buf.readString(stringSize);
             FabricSeasons.CONFIG = FabricSeasons.GSON.fromJson(configJson, ModConfig.class);
             isServerConfig = true;
             FabricSeasons.LOGGER.info("Received dedicated server config.");

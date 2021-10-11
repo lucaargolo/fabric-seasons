@@ -128,7 +128,8 @@ public class FabricSeasons implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(ASK_FOR_CONFIG, (server, player, handler, buf, responseSender) -> {
             String configJson = GSON.toJson(JSON_PARSER.parse(GSON.toJson(CONFIG)));
             PacketByteBuf configBuf = PacketByteBufs.create();
-            configBuf.writeString(configJson);
+            configBuf.writeInt(configJson.length());
+            configBuf.writeString(configJson, configJson.length());
             ServerPlayNetworking.send(player, ANSWER_CONFIG, configBuf);
         });
     }
