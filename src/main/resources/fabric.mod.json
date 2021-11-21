@@ -2,37 +2,45 @@
   "schemaVersion": 1,
   "id": "seasons",
   "version": "${version}",
-  "name": "Fabric Seasons",
-  "description": "A simple mod that adds seasons to the game, dynamically changing biomes as you play.",
+
+  "name": "Seasons",
+  "description": "Seasons - as the days go by.",
   "authors": [
     "D4rkness_King"
-  ],
-  "contributors": [
-    "MokkaCicc"
+  ],  "contributors": [
+    "MokkaCicc",
+    "yurisuika"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/fabric-seasons",
-    "sources": "https://github.com/lucaargolo/fabric-seasons",
-    "issues": "https://github.com/lucaargolo/fabric-seasons/issues"
+    "homepage": "https://suikacraft.com",
+    "sources": "https://github.com/yurisuika/Seasons"
   },
+
   "license": "Mozilla Public License 2.0",
   "icon": "assets/seasons/icon.png",
+
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.lucaargolo.seasons.FabricSeasons"
+      "com.yurisuika.seasons.Seasons"
     ],
     "client": [
-      "io.github.lucaargolo.seasons.FabricSeasonsClient"
+      "com.yurisuika.seasons.SeasonsClient"
     ]
   },
-  "accessWidener": "seasons.accesswidener",
   "mixins": [
     "seasons.mixins.json"
   ],
+
+  "accessWidener" : "seasons.accesswidener",
+
   "depends": {
-    "fabricloader": ">=0.11.3",
-    "fabric": ">=0.34.8",
-    "minecraft": "1.17.x"
+    "fabricloader": ">=0.11.6",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
   }
 }

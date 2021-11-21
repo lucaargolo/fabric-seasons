@@ -1,8 +1,8 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "io.github.lucaargolo.seasons.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "package": "com.yurisuika.seasons.mixin",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AnimalEntityMixin",
     "FertilizableMixin",
@@ -13,7 +13,6 @@
     "WorldViewMixin"
   ],
   "client": [
-    "ItemMixin",
     "BiomeMixin",
     "BlockColorsMixin",
     "WorldRendererMixin"
