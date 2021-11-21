@@ -1,4 +1,4 @@
-# [Catherine](http://suikacraft.com)
+# [Seasons](http://suikacraft.com)
 
 Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)* by D4rkness_King. What is different? Asides from early 1.18 support, all non-technical blocks and items have been removed to take seasons to their most basic form. As well, some biome weather and seasonal colours have been improved and tailored for the *[Isabella](https://github.com/yurisuika/Isabella)* resourcepack.
 
@@ -30,7 +30,7 @@ Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seas
 
 ### Source Building
 
-To build from source you will need have JDK 16 to compile and, optionally, Git to clone the repository. Otherwise, download the archive and just run `./gradlew build` from the root project folder.
+To build from source you will need have JDK 17 to compile and, optionally, Git to clone the repository. Otherwise, download the archive and just run `./gradlew build` from the root project folder.
 
 #### Commands
 
