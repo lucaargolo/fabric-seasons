@@ -54,7 +54,7 @@ While you can compile from source, you can always download the latest releases r
 
 Stable releases of Catherine ready to be consumed by the public!
 
-##### 1.18 - [*`1.0.0`*](https://github.com/yurisuika/Seasons/releases/download/1.0.0/seasons-1.18-pre5-1.0.0.jar)
+##### 1.18 - [*`1.0.0`*](https://github.com/yurisuika/Seasons/releases/download/1.0.0/seasons-1.18-pre8-1.0.0.jar)
 
 ---
 
