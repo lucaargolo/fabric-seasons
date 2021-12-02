@@ -76,13 +76,13 @@ public class ModConfig {
 
     private boolean isInNorthHemisphere = true;
 
-    private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x668450, 0x757F55, 0x846550, 0x726861);
-    private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x6A7757, 0x6A7757, 0x6A7757, 0x6A7757);
-    private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x7A9D69, 0x8A986E, 0xA58E60, 0x8B827A);
-    private HardcodedColors minecraftSwampGrass1 = new HardcodedColors(0x72774C, 0x75734E, 0x776E4C, 0x796A49);
-    private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x7C8054, 0x7E7B56, 0x807554, 0x7E7156);
-    private HardcodedColors minecraftBadlandsGrass = new HardcodedColors(0xB3A77D, 0xB39E7D, 0xB39E7D, 0xA3918D);
-    private HardcodedColors minecraftBadlandsFoliage = new HardcodedColors(0x8E8964, 0x8E8264, 0x8E8264, 0x817570);
+    private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x668450, 0x757F55, 0x845C50, 0x766B5D);
+    private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x5D7B53, 0x647855, 0x6A7757, 0x647855);
+    private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x7A9D69, 0x8A986E, 0xA58260, 0x8F8776);
+    private HardcodedColors minecraftSwampGrass1 = new HardcodedColors(0x72774C, 0x75734E, 0x736B50, 0x75734E);
+    private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x7C8054, 0x7E7B56, 0x7C7358, 0x7E7B56);
+    private HardcodedColors minecraftBadlandsGrass = new HardcodedColors(0xB1B37D, 0xA7B781, 0x8E8D64, 0xA7B781);
+    private HardcodedColors minecraftBadlandsFoliage = new HardcodedColors(0x888E64, 0x8B8E64, 0x8E8264, 0x8B8E64);
 
     private boolean isDefaultHSBShiftEnabled = false;
 
