@@ -15,7 +15,8 @@
   "client": [
     "BiomeMixin",
     "BlockColorsMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "FoliageColorsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
