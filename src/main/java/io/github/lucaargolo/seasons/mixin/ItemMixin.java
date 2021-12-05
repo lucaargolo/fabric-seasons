@@ -38,17 +38,17 @@ public class ItemMixin {
                 if (sneak) {
                     tooltip.add(new TranslatableText("tooltip.seasons.crop_multipliers"));
                     TranslatableText spring = new TranslatableText("tooltip.seasons.spring");
-                    LiteralText springMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100)) + "% speed");
-                    tooltip.add(spring.append(new LiteralText(": ").setStyle(spring.getStyle()).append(springMultiplier)));
+                    LiteralText springMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100)) + "%");
+                    tooltip.add(spring.append(new LiteralText(": ").setStyle(spring.getStyle()).append(springMultiplier).append(new TranslatableText("tooltip.seasons.speed"))));
                     TranslatableText summer = new TranslatableText("tooltip.seasons.summer");
-                    LiteralText summerMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100)) + "% speed");
-                    tooltip.add(summer.append(new LiteralText(": ").setStyle(summer.getStyle()).append(summerMultiplier)));
+                    LiteralText summerMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100)) + "%");
+                    tooltip.add(summer.append(new LiteralText(": ").setStyle(summer.getStyle()).append(summerMultiplier).append(new TranslatableText("tooltip.seasons.speed"))));
                     TranslatableText fall = new TranslatableText("tooltip.seasons.fall");
-                    LiteralText fallMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100)) + "% speed");
-                    tooltip.add(fall.append(new LiteralText(": ").setStyle(fall.getStyle()).append(fallMultiplier)));
+                    LiteralText fallMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100)) + "%");
+                    tooltip.add(fall.append(new LiteralText(": ").setStyle(fall.getStyle()).append(fallMultiplier).append(new TranslatableText("tooltip.seasons.speed"))));
                     TranslatableText winter = new TranslatableText("tooltip.seasons.winter");
-                    LiteralText winterMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100)) + "% speed");
-                    tooltip.add(winter.append(new LiteralText(": ").setStyle(winter.getStyle()).append(winterMultiplier)));
+                    LiteralText winterMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100)) + "%");
+                    tooltip.add(winter.append(new LiteralText(": ").setStyle(winter.getStyle()).append(winterMultiplier).append(new TranslatableText("tooltip.seasons.speed"))));
                 } else {
                     if (multiplier == 0f) {
                         tooltip.add(new TranslatableText("tooltip.seasons.not_grow"));

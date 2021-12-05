@@ -1,0 +1,18 @@
+{
+  "item.seasons.season_calendar": "季节日历",
+  "block.seasons.season_detector": "季节传感器",
+  "block.seasons.greenhouse_glass": "温室玻璃",
+  "tooltip.seasons.spring": "§a春季",
+  "tooltip.seasons.summer": "§6夏季",
+  "tooltip.seasons.fall": "§4秋季",
+  "tooltip.seasons.winter": "§b冬季",
+  "tooltip.seasons.calendar_info_1": "§9当前: ",
+  "tooltip.seasons.calendar_info_2": " §7天后进入 ",
+  "tooltip.seasons.faster_grow": "§a该作物在当前季节会生长得更快",
+  "tooltip.seasons.normal_grow": "§9该作物在当前季节正常生长",
+  "tooltip.seasons.slowed_grow": "§6该作物在当前季节需要更长的生长时间",
+  "tooltip.seasons.not_grow": "§c该作物在当前季节不会生长",
+  "tooltip.seasons.show_more": "§7按下 §9{KEY} §7展示更多信息:",
+  "tooltip.seasons.crop_multipliers": "§7作物生长速度:",
+  "tooltip.seasons.speed": ""
+}

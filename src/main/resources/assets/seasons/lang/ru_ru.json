@@ -13,5 +13,6 @@
 	"tooltip.seasons.slowed_grow": "§6В этом сезоне рост этой культуры будет немного дольше",
 	"tooltip.seasons.not_grow": "§cВ этом сезоне эта культура не будет расти",
 	"tooltip.seasons.show_more": "§7Нажмите §9{KEY} §7чтобы показать больше",
-	"tooltip.seasons.crop_multipliers": "§7Влияние сезонов на рост этих культур:"
+	"tooltip.seasons.crop_multipliers": "§7Влияние сезонов на рост этих культур:",
+	"tooltip.seasons.speed": ""
 }
