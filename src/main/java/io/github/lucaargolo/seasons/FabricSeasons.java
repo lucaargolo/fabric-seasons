@@ -210,7 +210,15 @@ public class FabricSeasons implements ModInitializer {
 
     public static void injectBiomeTemperature(Biome biome, World world) {
         if (!CONFIG.doTemperatureChanges()) return;
-        if (CONFIG.isSeasonLocked() && (CONFIG.getLockedSeason() == Season.SPRING || CONFIG.getLockedSeason() == Season.FALL)){
+        boolean isSeasonLocked = CONFIG.isSeasonLocked();
+        Season lockedSeason = CONFIG.getLockedSeason();
+        if (CONFIG.isSeasonTiedWithSystemTime()){
+            // Season tied with systemTime
+            // TODO Finer calculations
+            isSeasonLocked = true;
+            lockedSeason = getCurrentSystemSeason();
+        }
+        if (isSeasonLocked && (lockedSeason == Season.SPRING || lockedSeason == Season.FALL)){
             // LockedSeason SPRING | FALL
             return;
         }
@@ -239,7 +247,7 @@ public class FabricSeasons implements ModInitializer {
         int seasonLength = CONFIG.getSeasonLength() / dayLength;
         int halfYear = seasonLength * 2;
         int seasonTemperatureFactor;
-        if (!CONFIG.isSeasonLocked()){
+        if (isSeasonLocked){
             int worldTime = Math.toIntExact(world.getTimeOfDay()) / dayLength + seasonLength / 2;
             int dayOfYear = worldTime % (seasonLength * 4);
             if (dayOfYear < halfYear) {
@@ -251,7 +259,7 @@ public class FabricSeasons implements ModInitializer {
             }
         } else {
             // SeasonLocked
-            switch (CONFIG.getLockedSeason()) {
+            switch (lockedSeason) {
                 case SUMMER -> seasonTemperatureFactor = seasonLength;
                 case WINTER -> seasonTemperatureFactor = -1 * seasonLength;
                 default -> seasonTemperatureFactor = 0;
