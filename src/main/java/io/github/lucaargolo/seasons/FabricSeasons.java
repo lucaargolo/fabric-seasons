@@ -210,6 +210,10 @@ public class FabricSeasons implements ModInitializer {
 
     public static void injectBiomeTemperature(Biome biome, World world) {
         if (!CONFIG.doTemperatureChanges()) return;
+        if (CONFIG.isSeasonLocked() && (CONFIG.getLockedSeason() == Season.SPRING || CONFIG.getLockedSeason() == Season.FALL)){
+            // LockedSeason SPRING | FALL
+            return;
+        }
 
         List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
         if (ignoredCategories.contains(biome.getCategory())) return;
@@ -233,17 +237,27 @@ public class FabricSeasons implements ModInitializer {
         float temp = originalWeather.temperature;
         int dayLength = 1200 * 20;
         int seasonLength = CONFIG.getSeasonLength() / dayLength;
-        int worldTime = Math.toIntExact(world.getTimeOfDay()) / dayLength + seasonLength / 2;
         int halfYear = seasonLength * 2;
-        int dayOfYear = worldTime % (seasonLength * 4);
         int seasonTemperatureFactor;
-        if (dayOfYear < halfYear) {
-            // SPRING: Warming
-            seasonTemperatureFactor = worldTime % halfYear - seasonLength;
+        if (!CONFIG.isSeasonLocked()){
+            int worldTime = Math.toIntExact(world.getTimeOfDay()) / dayLength + seasonLength / 2;
+            int dayOfYear = worldTime % (seasonLength * 4);
+            if (dayOfYear < halfYear) {
+                // SPRING: Warming
+                seasonTemperatureFactor = worldTime % halfYear - seasonLength;
+            } else {
+                // FALL: Cooling
+                seasonTemperatureFactor = halfYear - worldTime % (halfYear) - seasonLength;
+            }
         } else {
-            // FALL: Cooling
-            seasonTemperatureFactor = halfYear - worldTime % (halfYear) - seasonLength;
+            // SeasonLocked
+            switch (CONFIG.getLockedSeason()) {
+                case SUMMER -> seasonTemperatureFactor = seasonLength;
+                case WINTER -> seasonTemperatureFactor = -1 * seasonLength;
+                default -> seasonTemperatureFactor = 0;
+            }
         }
+
         float biomeTemperature = temp - (temp > 0.32 ? 0.2f : 0) + seasonTemperatureFactor * (CONFIG.getTemperatureDifference() / halfYear);
         biomeTemperature = Math.min(CONFIG.getMaxTemperature(), Math.max(biomeTemperature, CONFIG.getMinTemperature()));
         if (biome.getCategory() == Biome.Category.SWAMP )
