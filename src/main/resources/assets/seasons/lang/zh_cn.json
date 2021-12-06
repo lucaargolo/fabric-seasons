@@ -14,5 +14,8 @@
   "tooltip.seasons.not_grow": "§c该作物在当前季节不会生长",
   "tooltip.seasons.show_more": "§7按下 §9{KEY} §7展示更多信息:",
   "tooltip.seasons.crop_multipliers": "§7作物生长速度:",
-  "tooltip.seasons.speed": ""
+  "tooltip.seasons.speed": "",
+  "tooltip.seasons.current_position_temperature": "当期位置温度:",
+  "tooltip.seasons.celsius": "§c摄氏度: ",
+  "tooltip.seasons.fahrenheit": "§6华氏度: §f"
 }

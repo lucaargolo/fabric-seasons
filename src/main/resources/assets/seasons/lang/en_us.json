@@ -14,5 +14,8 @@
   "tooltip.seasons.not_grow": "§cThis plant will not grow this season",
   "tooltip.seasons.show_more": "§7Press §9{KEY} §7to show more:",
   "tooltip.seasons.crop_multipliers": "§7How this plant is affected by:",
-  "tooltip.seasons.speed": "speed"
+  "tooltip.seasons.speed": "speed",
+  "tooltip.seasons.current_position_temperature": "The current position temperature:",
+  "tooltip.seasons.celsius": "§cCelsius: §f",
+  "tooltip.seasons.fahrenheit": "§6Fahrenheit: §f"
 }

@@ -66,6 +66,14 @@ public class ModConfig {
     
     private int seasonLength = 672000;
 
+    // Difference from the usual temperature, Can be more refined
+    // For example, distinguishing biome
+    private float temperatureDifference = 0.9f;
+
+    private float maxTemperature = 2f;
+
+    private float minTemperature = -2f;
+
     private SeasonLock seasonLock = new SeasonLock();
 
     private List<String> dimensionWhitelist = List.of("minecraft:overworld");
@@ -276,6 +284,18 @@ public class ModConfig {
 
     public int getSeasonLength() {
         return seasonLength;
+    }
+
+    public float getTemperatureDifference() {
+        return temperatureDifference;
+    }
+
+    public float getMaxTemperature() {
+        return maxTemperature;
+    }
+
+    public float getMinTemperature() {
+        return minTemperature;
     }
 
     public boolean isSeasonLocked() {

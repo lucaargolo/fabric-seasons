@@ -9,6 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.TimeCommand;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Locale;
@@ -37,6 +38,15 @@ public class SeasonCommand {
                     Season season = FabricSeasons.getCurrentSeason(world);
                     context.getSource().sendFeedback(new TranslatableText("tooltip.seasons.calendar_info_1").append(new TranslatableText("tooltip.seasons."+season.name().toLowerCase(Locale.ROOT))), false);
                     context.getSource().sendFeedback(new LiteralText(Long.toString(((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength())/24000L)).append(new TranslatableText("tooltip.seasons.calendar_info_2").append(new TranslatableText("tooltip.seasons."+season.getNext().name().toLowerCase(Locale.ROOT)))), false);
+                    try {
+                        BlockPos pos = context.getSource().getPlayer().getBlockPos();
+                        float temp = world.getBiome(pos).getTemperature(pos) * 100;
+                        float celsius = (temp - 32) / 1.8f;
+                        context.getSource().sendFeedback(new TranslatableText("tooltip.seasons.current_position_temperature"), false);
+                        context.getSource().sendFeedback(new TranslatableText("tooltip.seasons.celsius").append(new LiteralText(String.format("%.1f", celsius)).append(" °C")), false);
+                        context.getSource().sendFeedback(new TranslatableText("tooltip.seasons.fahrenheit").append(new LiteralText(String.format("%.1f", temp)).append(" °F")), false);
+                    } catch (Exception ignored){
+                    }
                     return season.ordinal();
                 })
             )

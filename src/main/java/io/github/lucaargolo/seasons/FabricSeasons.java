@@ -35,6 +35,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,6 +47,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class FabricSeasons implements ModInitializer {
 
@@ -87,13 +89,13 @@ public class FabricSeasons implements ModInitializer {
             } else {
                 LOGGER.info("A config file was found, loading it..");
                 CONFIG = GSON.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
-                if(CONFIG == null) {
+                if (CONFIG == null) {
                     throw new NullPointerException("The config file was empty.");
-                }else{
+                } else {
                     LOGGER.info("Successfully loaded config file.");
                 }
             }
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             LOGGER.error("There was an error creating/loading the config file!", exception);
             CONFIG = new ModConfig();
             LOGGER.warn("Defaulting to original config.");
@@ -104,9 +106,9 @@ public class FabricSeasons implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             SEEDS_MAP.clear();
             Registry.ITEM.forEach(item -> {
-                if(item instanceof BlockItem) {
+                if (item instanceof BlockItem) {
                     Block block = ((BlockItem) item).getBlock();
-                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock || block instanceof SaplingBlock) {
+                    if (block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock || block instanceof SaplingBlock) {
                         FabricSeasons.SEEDS_MAP.put(item, ((BlockItem) item).getBlock());
                     }
                 }
@@ -136,10 +138,10 @@ public class FabricSeasons implements ModInitializer {
     public static Season getCurrentSeason(World world) {
         RegistryKey<World> dimension = world.getRegistryKey();
         if (CONFIG.isValidInDimension(dimension)) {
-            if(CONFIG.isSeasonLocked()) {
+            if (CONFIG.isSeasonLocked()) {
                 return CONFIG.getLockedSeason();
             }
-            if(CONFIG.isSeasonTiedWithSystemTime()) {
+            if (CONFIG.isSeasonTiedWithSystemTime()) {
                 return getCurrentSystemSeason();
             }
             int worldTime = Math.toIntExact(world.getTimeOfDay());
@@ -153,7 +155,7 @@ public class FabricSeasons implements ModInitializer {
     public static Season getCurrentSeason() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if(player != null && player.world != null) {
+        if (player != null && player.world != null) {
             return getCurrentSeason(player.world);
         }
         return Season.SPRING;
@@ -207,10 +209,10 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static void injectBiomeTemperature(Biome biome, World world) {
-        if(!CONFIG.doTemperatureChanges()) return;
+        if (!CONFIG.doTemperatureChanges()) return;
 
         List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
-        if(ignoredCategories.contains(biome.getCategory())) return;
+        if (ignoredCategories.contains(biome.getCategory())) return;
 
         Season season = FabricSeasons.getCurrentSeason(world);
 
@@ -225,91 +227,41 @@ public class FabricSeasons implements ModInitializer {
             originalWeather = WeatherCache.getCache(biomeIdentifier);
         }
 
-        if(originalWeather == null) {
+        if (originalWeather == null) {
             return;
         }
         float temp = originalWeather.temperature;
-        if(biome.getCategory() == Biome.Category.JUNGLE || biome.getCategory() == Biome.Category.SWAMP) {
-            //Jungle Biomes
-            if (season == Season.WINTER) {
-                ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                ((WeatherAccessor) currentWeather).setTemperature(temp-0.1f);
+        int dayLength = 1200 * 20;
+        int seasonLength = CONFIG.getSeasonLength() / dayLength;
+        int worldTime = Math.toIntExact(world.getTimeOfDay()) / dayLength + seasonLength / 2;
+        int halfYear = seasonLength * 2;
+        int dayOfYear = worldTime % (seasonLength * 4);
+        int seasonTemperatureFactor;
+        if (dayOfYear < halfYear) {
+            // SPRING: Warming
+            seasonTemperatureFactor = worldTime % halfYear - seasonLength;
+        } else {
+            // FALL: Cooling
+            seasonTemperatureFactor = halfYear - worldTime % (halfYear) - seasonLength;
+        }
+        float biomeTemperature = temp - (temp > 0.32 ? 0.2f : 0) + seasonTemperatureFactor * (CONFIG.getTemperatureDifference() / halfYear);
+        biomeTemperature = Math.min(CONFIG.getMaxTemperature(), Math.max(biomeTemperature, CONFIG.getMinTemperature()));
+        if (biome.getCategory() == Biome.Category.SWAMP )
+            // swamp: No ice
+            biomeTemperature = Math.max(biomeTemperature, 0.35f);
+        ((WeatherAccessor) currentWeather).setTemperature(biomeTemperature);
+        if (temp > 0.95) {
+            //Hot biomes
+            if (season == Season.SUMMER) {
+                // rainy season
+                ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
             } else {
                 ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
-        }else if(temp <= 0.1) {
-            //Frozen Biomes
-            switch (season) {
-                case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.3f);
-                }
-                case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
-                }
-                default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
-                }
-            }
-        }else if(temp <= 0.3) {
-            //Cold Biomes
-            switch (season) {
-                case SPRING -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
-                }
-                case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
-                }
-                case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
-                }
-                default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
-                }
-            }
-        }else if(temp <= 0.95) {
-            //Temperate Biomes
-            switch (season) {
-                case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
-                }
-                case FALL -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.1f);
-                }
-                case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.7f);
-                }
-                default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
-                }
-            }
-        }else{
-            //Hot biomes
-            switch (season) {
-                case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
-                }
-                case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
-                }
-                default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
-                }
-            }
+        } else if (biomeTemperature <= 0.32) {
+            ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+        } else {
+            ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
         }
     }
 
