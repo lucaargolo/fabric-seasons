@@ -35,7 +35,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +46,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class FabricSeasons implements ModInitializer {
 
@@ -208,46 +206,34 @@ public class FabricSeasons implements ModInitializer {
         return season;
     }
 
-    public static void injectBiomeTemperature(Biome biome, World world) {
-        if (!CONFIG.doTemperatureChanges()) return;
+    public static void CacheWeather(Biome biome, World world) {
+        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
+        if (WeatherCache.hasCache(biomeIdentifier)) return;
+        Biome.Weather currentWeather = biome.weather;
+        TemperatureCache.cacheVanilla(biomeIdentifier, currentWeather.temperature);
+        Biome.Weather originalWeather = new Biome.Weather(currentWeather.precipitation, currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
+        WeatherCache.setCache(biomeIdentifier, originalWeather);
+    }
+
+    public static Float calculationTemperature(Biome biome, World world) {
+        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
+        if (biomeIdentifier == null) return null;
+        Float cached = TemperatureCache.getCalculated(biomeIdentifier, world.getTimeOfDay());
+        if (cached != null) return cached;
+
         boolean isSeasonLocked = CONFIG.isSeasonLocked();
         Season lockedSeason = CONFIG.getLockedSeason();
-        if (CONFIG.isSeasonTiedWithSystemTime()){
+        if (CONFIG.isSeasonTiedWithSystemTime()) {
             // Season tied with systemTime
             // TODO Finer calculations
             isSeasonLocked = true;
             lockedSeason = getCurrentSystemSeason();
         }
-        if (isSeasonLocked && (lockedSeason == Season.SPRING || lockedSeason == Season.FALL)){
-            // LockedSeason SPRING | FALL
-            return;
-        }
-
-        List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
-        if (ignoredCategories.contains(biome.getCategory())) return;
-
-        Season season = FabricSeasons.getCurrentSeason(world);
-
-        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
-        Biome.Weather currentWeather = biome.weather;
-
-        Biome.Weather originalWeather;
-        if (!WeatherCache.hasCache(biomeIdentifier)) {
-            originalWeather = new Biome.Weather(currentWeather.precipitation, currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
-            WeatherCache.setCache(biomeIdentifier, originalWeather);
-        } else {
-            originalWeather = WeatherCache.getCache(biomeIdentifier);
-        }
-
-        if (originalWeather == null) {
-            return;
-        }
-        float temp = originalWeather.temperature;
         int dayLength = 1200 * 20;
         int seasonLength = CONFIG.getSeasonLength() / dayLength;
         int halfYear = seasonLength * 2;
         int seasonTemperatureFactor;
-        if (isSeasonLocked){
+        if (!isSeasonLocked) {
             int worldTime = Math.toIntExact(world.getTimeOfDay()) / dayLength + seasonLength / 2;
             int dayOfYear = worldTime % (seasonLength * 4);
             if (dayOfYear < halfYear) {
@@ -265,25 +251,49 @@ public class FabricSeasons implements ModInitializer {
                 default -> seasonTemperatureFactor = 0;
             }
         }
-
-        float biomeTemperature = temp - (temp > 0.32 ? 0.2f : 0) + seasonTemperatureFactor * (CONFIG.getTemperatureDifference() / halfYear);
+        Float temp = TemperatureCache.getVanilla(biomeIdentifier);
+        if (temp == null) return null;
+        // Correct the temperature offset
+        float tempOffset = temp > 0.15 ? 0.2f : 0;
+        float biomeTemperature = temp - tempOffset + seasonTemperatureFactor * (CONFIG.getTemperatureDifference() / seasonLength);
         biomeTemperature = Math.min(CONFIG.getMaxTemperature(), Math.max(biomeTemperature, CONFIG.getMinTemperature()));
-        if (biome.getCategory() == Biome.Category.SWAMP )
+        if (biome.getCategory() == Biome.Category.SWAMP)
             // swamp: No ice
-            biomeTemperature = Math.max(biomeTemperature, 0.35f);
+            biomeTemperature = Math.max(biomeTemperature, 0.15f);
+        TemperatureCache.cacheCalculated(biomeIdentifier, biomeTemperature, world.getTimeOfDay());
+        return biomeTemperature;
+    }
+
+    public static void injectBiomeTemperature(Biome biome, World world) {
+        if (!CONFIG.doTemperatureChanges()) return;
+        FabricSeasons.CacheWeather(biome, world);
+
+        List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
+        if (ignoredCategories.contains(biome.getCategory())) return;
+
+        Season season = FabricSeasons.getCurrentSeason(world);
+        Biome.Weather currentWeather = biome.weather;
+
+        Float biomeTemperature = calculationTemperature(biome, world);
+        if (biomeTemperature == null) return;
+
         ((WeatherAccessor) currentWeather).setTemperature(biomeTemperature);
-        if (temp > 0.95) {
+
+        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
+        if (biomeIdentifier == null) return;
+        Float temp = TemperatureCache.getVanilla(biomeIdentifier);
+        if (temp == null) return;
+        if (temp > 0.95 && season == Season.WINTER) {
             //Hot biomes
-            if (season == Season.SUMMER) {
-                // rainy season
-                ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-            } else {
-                ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-            }
-        } else if (biomeTemperature <= 0.32) {
-            ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-        } else {
             ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+        } else if (currentWeather.precipitation != Biome.Precipitation.NONE && biomeTemperature < 0.30){
+            // Snow, but not ice
+            // Impossible, but there is no sound when it rains
+            ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+            // I don't know how to get the world weather. Otherwise, it can cool down when rained.
+            // ((WeatherAccessor) currentWeather).setTemperature(biomeTemperature - 0.16f);
+        } else {
+            ((WeatherAccessor) currentWeather).setPrecipitation(WeatherCache.getCache(biomeIdentifier).precipitation);
         }
     }
 

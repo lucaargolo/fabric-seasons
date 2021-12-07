@@ -68,7 +68,7 @@ public class ModConfig {
 
     // Difference from the usual temperature, Can be more refined
     // For example, distinguishing biome
-    private float temperatureDifference = 0.9f;
+    private float temperatureDifference = 0.6f;
 
     private float maxTemperature = 2f;
 
