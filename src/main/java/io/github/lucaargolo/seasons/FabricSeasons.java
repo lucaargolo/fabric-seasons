@@ -277,6 +277,10 @@ public class FabricSeasons implements ModInitializer {
         Float biomeTemperature = calculationTemperature(biome, world);
         if (biomeTemperature == null) return;
 
+        if (world.isRaining())
+            // Cool down when it rains
+            biomeTemperature -= CONFIG.getCoolDownWhenItRains();
+
         ((WeatherAccessor) currentWeather).setTemperature(biomeTemperature);
 
         Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
@@ -286,13 +290,11 @@ public class FabricSeasons implements ModInitializer {
         if (temp > 0.95 && season == Season.WINTER) {
             //Hot biomes
             ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-        } else if (currentWeather.precipitation != Biome.Precipitation.NONE && biomeTemperature < 0.30){
+        }/* else if (currentWeather.precipitation != Biome.Precipitation.NONE && biomeTemperature < 0.30){
             // Snow, but not ice
             // Impossible, but there is no sound when it rains
             ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-            // I don't know how to get the world weather. Otherwise, it can cool down when rained.
-            // ((WeatherAccessor) currentWeather).setTemperature(biomeTemperature - 0.16f);
-        } else {
+        } */else {
             ((WeatherAccessor) currentWeather).setPrecipitation(WeatherCache.getCache(biomeIdentifier).precipitation);
         }
     }

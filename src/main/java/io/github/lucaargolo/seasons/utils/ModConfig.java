@@ -74,6 +74,10 @@ public class ModConfig {
 
     private float minTemperature = -2f;
 
+    // Cool down when it rains
+    // Sorry for my english, if I translate incorrectly, maybe you can fix it
+    private float coolDownWhenItRains = -0.15f;
+
     private SeasonLock seasonLock = new SeasonLock();
 
     private List<String> dimensionWhitelist = List.of("minecraft:overworld");
@@ -296,6 +300,10 @@ public class ModConfig {
 
     public float getMinTemperature() {
         return minTemperature;
+    }
+
+    public float getCoolDownWhenItRains() {
+        return coolDownWhenItRains;
     }
 
     public boolean isSeasonLocked() {
