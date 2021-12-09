@@ -1,11 +1,12 @@
 {
   "homepage": "https://github.com/yurisuika/Seasons",
   "1.18": {
+    "1.1.0": "Sub-seasons!",
     "1.0.1": "OptiFine compatibility!",
     "1.0.0": "Initial release!"
   }
   "promos": {
-    "1.18-latest": "1.0.1",
-    "1.18-recommended": "1.0.1"
+    "1.18-latest": "1.1.0",
+    "1.18-recommended": "1.1.0"
   }
 }
