@@ -22,13 +22,13 @@ public class SeasonCommand {
                     .executes(context -> TimeCommand.executeSet(context.getSource(), 0))
                 )
                 .then(CommandManager.literal("summer")
-                    .executes(context -> TimeCommand.executeSet(context.getSource(), Seasons.CONFIG.getSeasonLength()))
+                    .executes(context -> TimeCommand.executeSet(context.getSource(), Seasons.CONFIG.getSeasonLength()*3))
                 )
-                .then(CommandManager.literal("fall")
-                    .executes(context -> TimeCommand.executeSet(context.getSource(), Seasons.CONFIG.getSeasonLength()*2))
+                .then(CommandManager.literal("autumn")
+                    .executes(context -> TimeCommand.executeSet(context.getSource(), Seasons.CONFIG.getSeasonLength()*6))
                 )
                 .then(CommandManager.literal("winter")
-                    .executes(context -> TimeCommand.executeSet(context.getSource(), Seasons.CONFIG.getSeasonLength()*3))
+                    .executes(context -> TimeCommand.executeSet(context.getSource(), Seasons.CONFIG.getSeasonLength()*9))
                 )
             )
             .then(CommandManager.literal("query")
@@ -48,10 +48,18 @@ public class SeasonCommand {
                         Season season = Seasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((Seasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/ Seasons.CONFIG.getSeasonLength())* Seasons.CONFIG.getSeasonLength()) )) % Seasons.CONFIG.getSeasonLength());
                         return switch (season) {
-                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
-                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
-                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
-                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case EARLY_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 9));
+                            case MID_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 8));
+                            case LATE_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 7));
+                            case EARLY_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 6));
+                            case MID_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 5));
+                            case LATE_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 4));
+                            case EARLY_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
+                            case MID_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
+                            case LATE_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
+                            case EARLY_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case MID_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 11));
+                            case LATE_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 10));
                         };
                     })
                 )
@@ -61,23 +69,39 @@ public class SeasonCommand {
                         Season season = Seasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((Seasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/ Seasons.CONFIG.getSeasonLength())* Seasons.CONFIG.getSeasonLength()) )) % Seasons.CONFIG.getSeasonLength());
                         return switch (season) {
-                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
-                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
-                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
+                            case EARLY_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case MID_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 11));
+                            case LATE_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 10));
+                            case EARLY_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 9));
+                            case MID_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 8));
+                            case LATE_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 7));
+                            case EARLY_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 6));
+                            case MID_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 5));
+                            case LATE_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 4));
+                            case EARLY_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
+                            case MID_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
+                            case LATE_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
                         };
                     })
                 )
-                .then(CommandManager.literal("fall")
+                .then(CommandManager.literal("autumn")
                     .executes(context -> {
                         World world = context.getSource().getWorld();
                         Season season = Seasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((Seasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/ Seasons.CONFIG.getSeasonLength())* Seasons.CONFIG.getSeasonLength()) )) % Seasons.CONFIG.getSeasonLength());
                         return switch (season) {
-                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
-                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
-                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
+                            case EARLY_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
+                            case MID_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
+                            case LATE_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
+                            case EARLY_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case MID_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 11));
+                            case LATE_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 10));
+                            case EARLY_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 9));
+                            case MID_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 8));
+                            case LATE_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 7));
+                            case EARLY_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 6));
+                            case MID_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 5));
+                            case LATE_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 4));
                         };
                     })
                 )
@@ -87,10 +111,18 @@ public class SeasonCommand {
                         Season season = Seasons.getCurrentSeason(world);
                         int timeToNextSeason = Math.toIntExact((Seasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/ Seasons.CONFIG.getSeasonLength())* Seasons.CONFIG.getSeasonLength()) )) % Seasons.CONFIG.getSeasonLength());
                         return switch (season) {
-                            case SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
-                            case SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
-                            case FALL -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
-                            case WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
+                            case EARLY_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 6));
+                            case MID_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 5));
+                            case LATE_SPRING -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 4));
+                            case EARLY_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 3));
+                            case MID_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 2));
+                            case LATE_SUMMER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + Seasons.CONFIG.getSeasonLength());
+                            case EARLY_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason);
+                            case MID_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 11));
+                            case LATE_AUTUMN -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 10));
+                            case EARLY_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 9));
+                            case MID_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 8));
+                            case LATE_WINTER -> TimeCommand.executeAdd(context.getSource(), timeToNextSeason + (Seasons.CONFIG.getSeasonLength() * 7));
                         };
                     })
                 )

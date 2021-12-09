@@ -131,9 +131,9 @@ public class Seasons implements ModInitializer {
             }
             int worldTime = Math.toIntExact(world.getTimeOfDay());
             int seasonTime = (worldTime / CONFIG.getSeasonLength());
-            return Season.values()[seasonTime % 4];
+            return Season.values()[seasonTime % 12];
         }
-        return Season.SPRING;
+        return Season.EARLY_SPRING;
     }
 
     @Environment(EnvType.CLIENT)
@@ -143,7 +143,7 @@ public class Seasons implements ModInitializer {
         if(player != null && player.world != null) {
             return getCurrentSeason(player.world);
         }
-        return Season.SPRING;
+        return Season.EARLY_SPRING;
     }
 
     private static Season getCurrentSystemSeason() {
@@ -153,41 +153,73 @@ public class Seasons implements ModInitializer {
         Season season;
 
         if (CONFIG.isInNorthHemisphere()) {
-            if (m == 1 || m == 2 || m == 3)
-                season = Season.WINTER;
-            else if (m == 4 || m == 5 || m == 6)
-                season = Season.SPRING;
-            else if (m == 7 || m == 8 || m == 9)
-                season = Season.SUMMER;
+            if (m == 1)
+                season = Season.EARLY_WINTER;
+            else if (m == 2)
+                season = Season.MID_WINTER;
+            else if (m == 3)
+                season = Season.LATE_WINTER;
+            else if (m == 4)
+                season = Season.EARLY_SPRING;
+            else if (m == 5)
+                season = Season.MID_SPRING;
+            else if (m == 6)
+                season = Season.LATE_SPRING;
+            else if (m == 7)
+                season = Season.EARLY_SUMMER;
+            else if (m == 8)
+                season = Season.MID_SUMMER;
+            else if (m == 9)
+                season = Season.LATE_SUMMER;
+            else if (m == 10)
+                season = Season.EARLY_AUTUMN;
+            else if (m == 11)
+                season = Season.MID_AUTUMN;
             else
-                season = Season.FALL;
+                season = Season.LATE_AUTUMN;
 
             if (m == 3 && d > 19)
-                season = Season.SPRING;
+                season = Season.EARLY_SPRING;
             else if (m == 6 && d > 20)
-                season = Season.SUMMER;
+                season = Season.EARLY_SUMMER;
             else if (m == 9 && d > 21)
-                season = Season.FALL;
+                season = Season.EARLY_AUTUMN;
             else if (m == 12 && d > 20)
-                season = Season.WINTER;
+                season = Season.EARLY_WINTER;
         } else {
-            if (m == 1 || m == 2 || m == 3)
-                season = Season.SUMMER;
-            else if (m == 4 || m == 5 || m == 6)
-                season = Season.FALL;
-            else if (m == 7 || m == 8 || m == 9)
-                season = Season.WINTER;
+            if (m == 1)
+                season = Season.EARLY_SUMMER;
+            else if (m == 2)
+                season = Season.MID_SUMMER;
+            else if (m == 3)
+                season = Season.LATE_SUMMER;
+            else if (m == 4)
+                season = Season.EARLY_AUTUMN;
+            else if (m == 5)
+                season = Season.MID_AUTUMN;
+            else if (m == 6)
+                season = Season.LATE_AUTUMN;
+            else if (m == 7)
+                season = Season.EARLY_WINTER;
+            else if (m == 8)
+                season = Season.MID_WINTER;
+            else if (m == 9)
+                season = Season.LATE_WINTER;
+            else if (m == 10)
+                season = Season.EARLY_SPRING;
+            else if (m == 11)
+                season = Season.MID_SPRING;
             else
-                season = Season.SPRING;
+                season = Season.LATE_SPRING;
 
             if (m == 3 && d > 19)
-                season = Season.FALL;
+                season = Season.EARLY_AUTUMN;
             else if (m == 6 && d > 20)
-                season = Season.WINTER;
+                season = Season.EARLY_WINTER;
             else if (m == 9 && d > 21)
-                season = Season.SPRING;
+                season = Season.EARLY_SPRING;
             else if (m == 12 && d > 20)
-                season = Season.SUMMER;
+                season = Season.EARLY_SUMMER;
         }
 
         return season;
@@ -208,7 +240,8 @@ public class Seasons implements ModInitializer {
         if (!WeatherCache.hasCache(biomeIdentifier)) {
             originalWeather = new Biome.Weather(currentWeather.precipitation, currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
             WeatherCache.setCache(biomeIdentifier, originalWeather);
-        } else {
+        }
+        else {
             originalWeather = WeatherCache.getCache(biomeIdentifier);
         }
 
@@ -218,25 +251,26 @@ public class Seasons implements ModInitializer {
         float temp = originalWeather.temperature;
         if(biome.getCategory() == Biome.Category.JUNGLE || biome.getCategory() == Biome.Category.SWAMP) {
             //Jungle Biomes
-            if (season == Season.WINTER) {
+            if (season == Season.EARLY_WINTER | season == Season.MID_WINTER | season == Season.LATE_WINTER) {
                 ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
                 ((WeatherAccessor) currentWeather).setTemperature(temp-0.1f);
             } else {
                 ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
                 ((WeatherAccessor) currentWeather).setTemperature(temp);
             }
-        }else if(biome.getCategory() == Biome.Category.MESA) {
+        }
+        else if(biome.getCategory() == Biome.Category.MESA) {
             //Badlands Biomes
             switch (season) {
-                case SPRING -> {
+                case EARLY_SPRING, MID_SPRING, LATE_SPRING -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
                     ((WeatherAccessor) currentWeather).setTemperature(temp);
                 }
-                case SUMMER -> {
+                case EARLY_SUMMER, MID_SUMMER, LATE_SUMMER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
                     ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
                 }
-                case WINTER -> {
+                case EARLY_WINTER, MID_WINTER, LATE_WINTER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
                     ((WeatherAccessor) currentWeather).setTemperature(temp - 2.0f);
                 }
@@ -245,14 +279,15 @@ public class Seasons implements ModInitializer {
                     ((WeatherAccessor) currentWeather).setTemperature(temp);
                 }
             }
-        }else if(temp <= 0.1) {
+        }
+        else if(temp <= 0.1) {
             //Frozen Biomes
             switch (season) {
-                case SUMMER -> {
+                case EARLY_SUMMER, MID_SUMMER, LATE_SUMMER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
                     ((WeatherAccessor) currentWeather).setTemperature(temp + 0.3f);
                 }
-                case WINTER -> {
+                case EARLY_WINTER, MID_WINTER, LATE_WINTER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
                     ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
                 }
@@ -261,18 +296,19 @@ public class Seasons implements ModInitializer {
                     ((WeatherAccessor) currentWeather).setTemperature(temp);
                 }
             }
-        }else if(temp <= 0.3) {
+        }
+        else if(temp <= 0.3) {
             //Cold Biomes
             switch (season) {
-                case SPRING -> {
+                case EARLY_SPRING, MID_SPRING, LATE_SPRING -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
                     ((WeatherAccessor) currentWeather).setTemperature(temp);
                 }
-                case SUMMER -> {
+                case EARLY_SUMMER, MID_SUMMER, LATE_SUMMER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
                     ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
                 }
-                case WINTER -> {
+                case EARLY_WINTER, MID_WINTER, LATE_WINTER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
                     ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
                 }
@@ -281,18 +317,19 @@ public class Seasons implements ModInitializer {
                     ((WeatherAccessor) currentWeather).setTemperature(temp);
                 }
             }
-        }else if(temp <= 0.95) {
+        }
+        else if(temp <= 0.95) {
             //Temperate Biomes
             switch (season) {
-                case SUMMER -> {
+                case EARLY_SUMMER, MID_SUMMER, LATE_SUMMER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
                     ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
                 }
-                case FALL -> {
+                case EARLY_AUTUMN, MID_AUTUMN, LATE_AUTUMN -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
                     ((WeatherAccessor) currentWeather).setTemperature(temp - 0.1f);
                 }
-                case WINTER -> {
+                case EARLY_WINTER, MID_WINTER, LATE_WINTER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
                     ((WeatherAccessor) currentWeather).setTemperature(temp - 0.7f);
                 }
@@ -301,14 +338,15 @@ public class Seasons implements ModInitializer {
                     ((WeatherAccessor) currentWeather).setTemperature(temp);
                 }
             }
-        }else{
-            //Hot biomes
+        }
+        else {
+            //Hot Biomes
             switch (season) {
-                case SUMMER -> {
+                case EARLY_SUMMER, MID_SUMMER, LATE_SUMMER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
                     ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
                 }
-                case WINTER -> {
+                case EARLY_WINTER, MID_WINTER, LATE_WINTER -> {
                     ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
                     ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
                 }
