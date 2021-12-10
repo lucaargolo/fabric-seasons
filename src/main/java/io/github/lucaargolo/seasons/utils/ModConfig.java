@@ -76,7 +76,7 @@ public class ModConfig {
 
     // Cool down when it rains
     // Sorry for my english, if I translate incorrectly, maybe you can fix it
-    private float coolDownWhenItRains = -0.15f;
+    private float coolDownWhenItRains = 0.15f;
 
     private SeasonLock seasonLock = new SeasonLock();
 
