@@ -8,6 +8,10 @@ Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seas
 
 ### Seasons
 
+##### Seasons
+
+* Stages (early, mid, late) for improved transitions.
+
 ##### Biomes
 
 * Additional weather support for Mesa biomes.
