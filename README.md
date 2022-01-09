@@ -33,7 +33,7 @@ When using Git, just choose a directory you wish to keep the project root folder
 ```shell script
 git clone --recursive https://github.com/yurisuika/seasons.git
 
-cd ./catherine
+cd ./seasons
 
 ./gradlew build
 ```
