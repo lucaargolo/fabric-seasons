@@ -36,20 +36,20 @@ Stable releases of Catherine ready to be consumed by the public!
 
 ##### 1.18 - [*`1.1.0`*](https://github.com/yurisuika/Seasons/releases/download/1.1.0/seasons-1.18-1.1.0.jar)
 
+For Fabric 1.18!
+
 ---
 
 ## <p align="center">LINKS</p>
 
-Get all the hot tips and tricks here!
-
-#### DEPENDENCIES
+#### Dependencies
 
 Seasons requires *[Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)* as a dependency!
 
-#### SERVERS
+#### Servers
 
 Join *`play.suikacraft.com`* to play on SuikaCraft today!
 
-#### COMMUNITY
+#### Community
 
 The one and only! Join the *[SuikaCraft Discord](https://discord.gg/0zdNEkQle7Qg9C1H)* to find the latest discussion on the resource pack and server or just to chat!
