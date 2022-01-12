@@ -12,10 +12,10 @@ To build from source you will need have JDK 17 to compile and, optionally, Git t
 
 #### Commands
 
-When using Git, just choose a directory you wish to keep the project root folder in, then run these commands:
+When using Git, just choose a directory you wish to keep the project root folder in, decide which branch you wish to compile, and then run these commands:
 
 ```shell script
-git clone --recursive https://github.com/yurisuika/seasons.git
+git clone --branch Fabric-1.18 --recursive https://github.com/yurisuika/seasons.git
 
 cd ./seasons
 
