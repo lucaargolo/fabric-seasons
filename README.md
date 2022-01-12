@@ -1,6 +1,6 @@
 # Seasons
 
-Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)* by D4rkness_King. What is different? Asides from early 1.18 support, all non-technical blocks and items have been removed to take seasons to their most basic form. As well, some biome weather and seasonal colors have been improved and tailored for the *[Isabella](https://github.com/yurisuika/Isabella)* resource pack.
+Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)*. What is different? All non-technical blocks and items have been removed to take seasons to their most basic form. As well, sub-seasons have been added for more gradual transitions of time in both color and plant growth!
 
 ---
 
