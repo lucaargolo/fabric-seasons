@@ -1,22 +1,6 @@
 # Seasons
 
-Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)* by D4rkness_King. What is different? Asides from early 1.18 support, all non-technical blocks and items have been removed to take seasons to their most basic form. As well, some biome weather and seasonal colours have been improved and tailored for the *[Isabella](https://github.com/yurisuika/Isabella)* resourcepack.
-
----
-
-## FEATURES
-
-### Seasons
-
-##### Seasons
-
-* Stages (early, mid, late) for improved transitions.
-
-##### Biomes
-
-* Additional weather support for Mesa biomes.
-* Additional colour support for Mesa biomes.
-* Isabella colours in place of vanilla styling.
+Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)* by D4rkness_King. What is different? Asides from early 1.18 support, all non-technical blocks and items have been removed to take seasons to their most basic form. As well, some biome weather and seasonal colors have been improved and tailored for the *[Isabella](https://github.com/yurisuika/Isabella)* resource pack.
 
 ---
 
@@ -67,5 +51,3 @@ Join *`play.suikacraft.com`* to play on SuikaCraft today!
 #### COMMUNITY
 
 The one and only! Join the *[SuikaCraft Discord](https://discord.gg/0zdNEkQle7Qg9C1H)* to find the latest discussion on the resource pack and server or just to chat!
-
-We've set up a *[SuikaCraft Guilded](https://www.guilded.gg/i/Z2yNYwAk)* server as well! Come join the chat of the future!
