@@ -1,10 +1,12 @@
-# Seasons
+# <p align="center">Seasons</p>
+
+<p align="center"><img src="https://github.com/yurisuika/Seasons/blob/Fabric-1.18/src/main/resources/assets/seasons/icon.png?raw=true" width="128" height="128"></p>
 
 Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)*. What is different? All non-technical blocks and items have been removed to take seasons to their most basic form. As well, sub-seasons have been added for more gradual transitions of time in both color and plant growth!
 
 ---
 
-## DOWNLOADS
+## <p align="center">DOWNLOADS</p>
 
 ### Source Building
 
@@ -36,7 +38,7 @@ Stable releases of Catherine ready to be consumed by the public!
 
 ---
 
-## LINKS
+## <p align="center">LINKS</p>
 
 Get all the hot tips and tricks here!
 
