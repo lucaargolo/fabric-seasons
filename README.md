@@ -4,6 +4,8 @@
 
 Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)*. What is different? All non-technical blocks and items have been removed to take seasons to their most basic form. As well, sub-seasons have been added for more gradual transitions of time in both color and plant growth!
 
+If you plan to use this with OptiFabric + OptiFine you *MUST* turn Custom Colors `OFF` and turn Swamp Colors `ON` unless you want all the colors to be broken!
+
 ---
 
 ## <p align="center">DOWNLOADS</p>
@@ -34,9 +36,9 @@ While you can compile from source, you can always download the latest releases r
 
 Stable releases of Catherine ready to be consumed by the public!
 
-##### 1.18 - [*`1.1.0`*](https://github.com/yurisuika/Seasons/releases/download/1.1.0/seasons-1.18-1.1.0.jar)
+##### 1.18 - [*`1.1.1`*](https://github.com/yurisuika/Seasons/releases/download/1.1.1/seasons-1.18.1-1.1.1.jar)
 
-For Fabric 1.18!
+For Fabric 1.18.1!
 
 ---
 
