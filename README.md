@@ -38,7 +38,7 @@ While you can compile from source, you can always download the latest releases r
 
 Stable releases of Catherine ready to be consumed by the public!
 
-##### 1.18 - [*`1.1.1`*](https://github.com/yurisuika/Seasons/releases/download/1.1.1/seasons-1.18.1-1.1.1.jar)
+##### 1.18 - [*`1.1.2`*](https://github.com/yurisuika/Seasons/releases/download/1.1.2/seasons-1.18.1-1.1.2.jar)
 
 For Fabric 1.18.1!
 

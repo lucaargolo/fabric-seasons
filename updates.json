@@ -1,6 +1,7 @@
 {
   "homepage": "https://github.com/yurisuika/Seasons",
   "1.18.1": {
+    "1.1.2": "Isabella colors!"
     "1.1.1": "Vanilla colors!"
   },
   "1.18": {
@@ -9,8 +10,8 @@
     "1.0.0": "Initial release!"
   }
   "promos": {
-    "1.18.1-latest": "1.1.1",
-    "1.18.1-recommended": "1.1.1",
+    "1.18.1-latest": "1.1.2",
+    "1.18.1-recommended": "1.1.2",
     "1.18-latest": "1.1.0",
     "1.18-recommended": "1.1.0"
   }
