@@ -6,6 +6,8 @@ Seasons is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seas
 
 If you plan to use this with OptiFabric + OptiFine you *MUST* turn Custom Colors `OFF` and turn Swamp Colors `ON` unless you want all the colors to be broken!
 
+Seasons also supports colours for the *[Isabella](https://github.com/yurisuika/Isabella)* resource pack through the Fabric companion mod *[Catherine](https://github.com/yurisuika/Catherine)*!
+
 ---
 
 ## <p align="center">DOWNLOADS</p>
