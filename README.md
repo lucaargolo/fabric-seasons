@@ -30,18 +30,6 @@ cd ./seasons
 
 Afterwards, your compiled JAR will be in `./build/libs`.
 
-### Released Builds
-
-While you can compile from source, you can always download the latest releases right off of GitHub. Either click the links below or check the releases tab.
-
-#### Latest Builds
-
-Stable releases of Catherine ready to be consumed by the public!
-
-##### 1.18 - [*`1.1.2`*](https://github.com/yurisuika/Seasons/releases/download/1.1.2/seasons-1.18.1-1.1.2.jar)
-
-For Fabric 1.18.1!
-
 ---
 
 ## <p align="center">LINKS</p>
@@ -49,10 +37,6 @@ For Fabric 1.18.1!
 #### Dependencies
 
 Seasons requires *[Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)* as a dependency!
-
-#### Servers
-
-Join *`play.suikacraft.com`* to play on SuikaCraft today!
 
 #### Community
 
