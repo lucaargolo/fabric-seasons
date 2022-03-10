@@ -1,43 +1,27 @@
-<p align="center"><img src="https://github.com/yurisuika/Seasonal/blob/Fabric-1.18/src/main/resources/assets/seasonal/icon.png?raw=true" width="256" height="256"></p>
+<p align="center"><img src="https://i.imgur.com/CD1pYdR.png" width="128" height="128"></p>
+<h3 align="center">Fabric Seasons</h3>
+<p align="center">A simple mod for Minecraft that adds seasons to the game, changing biomes as you play.</p>
+<p align="center">
+  <a title="Fabric API" href="https://github.com/FabricMC/fabric">
+    <img src="https://i.imgur.com/Ol1Tcf8.png" width="151" height="50" />
+  </a>
+</p>
+<p align="center">
+  <a href="https://github.com/lucaargolo/fabric-seasons/actions"><img src="https://github.com/lucaargolo/fabric-seasons/workflows/Build/badge.svg"/></a>
+  <a href="https://opensource.org/licenses/MPL-2.0"><img src="https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg"></a>
+    <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/versions/413523_latest.svg"></a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/413523.svg"></a>
+</p>
 
-# <p align="center">SEASONAL</p>
+## Features
+For a complete list of features please check the mods [official page](https://www.curseforge.com/minecraft/mc-mods/fabric-seasons)
 
-Seasonal is a fork of *[Fabric Seasons](https://github.com/lucaargolo/fabric-seasons)*. What is different? All non-technical blocks and items have been removed to take seasons to their most basic form. As well, sub-seasons have been added for more gradual transitions of time in both color and plant growth!
+## License
+Distributed under the Mozilla Public License 2.0. See `LICENSE` for more information.
 
-If you plan to use this with OptiFabric + OptiFine you *MUST* turn Custom Colors `OFF` and turn Swamp Colors `ON` unless you want all the colors to be broken!
+## Build
+If you want to build this yourself, please clone the repository and execute `gradlew build` in the projects folder. 
 
-Seasonal also supports colors for the *[Isabella](https://github.com/yurisuika/Isabella)* resource pack through the Fabric companion mod *[Catherine](https://github.com/yurisuika/Catherine)*!
+Artifacts will be generated at `/build/libs`
 
----
 
-## <p align="center">DOWNLOADS</p>
-
-### Source Building
-
-To build from source you will need have JDK 17 to compile and, optionally, Git to clone the repository. Otherwise, download the archive and just run `./gradlew build` from the root project folder.
-
-#### Commands
-
-When using Git, just choose a directory you wish to keep the project root folder in, decide which branch you wish to compile, and then run these commands:
-
-```shell script
-git clone --branch Fabric-1.18 --recursive https://github.com/yurisuika/seasonal.git
-
-cd ./seasonal
-
-./gradlew build
-```
-
-Afterwards, your compiled JAR will be in `./build/libs`.
-
----
-
-## <p align="center">LINKS</p>
-
-#### Dependencies
-
-Seasonal requires *[Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)* as a dependency!
-
-#### Community
-
-The one and only! Join the *[SuikaCraft Discord](https://discord.gg/0zdNEkQle7Qg9C1H)* to find the latest discussion on the resource pack and server or just to chat!

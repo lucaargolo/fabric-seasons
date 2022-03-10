@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "seasons",
+  "version": "${version}",
+  "name": "Fabric Seasons",
+  "description": "A simple mod that adds seasons to the game, dynamically changing biomes as you play.",
+  "authors": [
+    "D4rkness_King"
+  ],
+  "contributors": [
+    "MokkaCicc"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/fabric-seasons",
+    "sources": "https://github.com/lucaargolo/fabric-seasons",
+    "issues": "https://github.com/lucaargolo/fabric-seasons/issues"
+  },
+  "license": "Mozilla Public License 2.0",
+  "icon": "assets/seasons/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.lucaargolo.seasons.FabricSeasons"
+    ],
+    "client": [
+      "io.github.lucaargolo.seasons.FabricSeasonsClient"
+    ]
+  },
+  "accessWidener": "seasons.accesswidener",
+  "mixins": [
+    "seasons.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": ">=0.34.8",
+    "minecraft": "1.18.x"
+  }
+}
