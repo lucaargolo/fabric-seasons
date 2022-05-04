@@ -4,18 +4,19 @@
   "package": "io.github.lucaargolo.seasons.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AnimalEntityMixin",
-    "FertilizableMixin",
     "AbstractBlockStateMixin",
+    "AnimalEntityMixin",
     "BlocksMixin",
+    "FertilizableMixin",
     "ItemsMixin",
     "WeatherAccessor",
     "WorldViewMixin"
   ],
   "client": [
-    "ItemMixin",
+    "ChunkRendererRegionAccessor",
     "BiomeMixin",
     "BlockColorsMixin",
+    "ItemMixin",
     "WorldRendererMixin"
   ],
   "injectors": {

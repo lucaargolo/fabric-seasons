@@ -2,6 +2,7 @@ package io.github.lucaargolo.seasons;
 
 import io.github.lucaargolo.seasons.colors.SeasonFoliageColormapResourceSupplier;
 import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
+import io.github.lucaargolo.seasons.models.SeasonalSnowBakedModel;
 import io.github.lucaargolo.seasons.utils.ModConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
@@ -9,13 +10,17 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.model.BakedModelManagerHelper;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.item.BlockItem;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -81,6 +86,8 @@ public class FabricSeasonsClient implements ClientModInitializer {
                 isServerConfig = false;
             }
         }));
+
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider(SeasonalSnowBakedModel.Provider::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new ModIdentifier("greenhouse_glass")), RenderLayer.getTranslucent());
         //Since we're replacing the Blocks.ICE entry we have to manually add the default ice block to the translucent render layer

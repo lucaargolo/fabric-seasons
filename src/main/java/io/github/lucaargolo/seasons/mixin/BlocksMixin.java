@@ -35,7 +35,7 @@ public abstract class BlocksMixin {
             infoReturnable.setReturnValue(ICE);
         }else if(id.equals("snow")) {
             FabricSeasons.ORIGINAL_SNOW = infoReturnable.getReturnValue();
-            SNOW = Registry.register(Registry.BLOCK, new ModIdentifier("seasonal_snow"), new SeasonalSnowBlock(AbstractBlock.Settings.of(Material.SNOW_LAYER).ticksRandomly().strength(0.1F).requiresTool().sounds(BlockSoundGroup.SNOW)));
+            SNOW = Registry.register(Registry.BLOCK, new ModIdentifier("seasonal_snow"), new SeasonalSnowBlock(AbstractBlock.Settings.of(Material.SNOW_LAYER).ticksRandomly().strength(0.1F).requiresTool().sounds(BlockSoundGroup.SNOW).nonOpaque()));
             infoReturnable.setReturnValue(SNOW);
         }
     }
