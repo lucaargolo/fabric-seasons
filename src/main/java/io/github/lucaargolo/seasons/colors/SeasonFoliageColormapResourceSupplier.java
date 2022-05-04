@@ -1,7 +1,7 @@
 package io.github.lucaargolo.seasons.colors;
 
-import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
+import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.util.RawTextureDataLoader;
 import net.minecraft.resource.ResourceManager;

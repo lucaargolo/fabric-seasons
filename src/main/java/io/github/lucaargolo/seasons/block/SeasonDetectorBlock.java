@@ -1,8 +1,8 @@
 package io.github.lucaargolo.seasons.block;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
-import io.github.lucaargolo.seasons.utils.Season;
 import io.github.lucaargolo.seasons.blockentities.SeasonDetectorBlockEntity;
+import io.github.lucaargolo.seasons.utils.Season;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DaylightDetectorBlock;
@@ -16,7 +16,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class SeasonDetectorBlock extends DaylightDetectorBlock {

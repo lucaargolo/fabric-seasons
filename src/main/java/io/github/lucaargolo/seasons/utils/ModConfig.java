@@ -6,8 +6,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
 import java.awt.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection", "unused"})
@@ -32,17 +32,12 @@ public class ModConfig {
         }
 
         public int getColor(Season season) {
-            switch (season) {
-                case SPRING:
-                    return springColor;
-                case SUMMER:
-                    return summerColor;
-                case FALL:
-                    return fallColor;
-                case WINTER:
-                    return winterColor;
-            }
-            return springColor;
+            return switch (season) {
+                case SPRING -> springColor;
+                case SUMMER -> summerColor;
+                case FALL -> fallColor;
+                case WINTER -> winterColor;
+            };
         }
     }
 
@@ -103,17 +98,12 @@ public class ModConfig {
         private HSBShift winterHSBShift = new HSBShift(-65f, 80f, -40f);
 
         public HSBShift getHSBShift(Season season) {
-            switch (season) {
-                case SPRING:
-                    return springHSBShift;
-                case SUMMER:
-                    return summerHSBShift;
-                case FALL:
-                    return fallHSBShift;
-                case WINTER:
-                    return winterHSBShift;
-            }
-            return springHSBShift;
+            return switch (season) {
+                case SPRING -> springHSBShift;
+                case SUMMER -> summerHSBShift;
+                case FALL -> fallHSBShift;
+                case WINTER -> winterHSBShift;
+            };
         }
 
     }
@@ -134,7 +124,7 @@ public class ModConfig {
     public Optional<Integer> getSeasonFoliageColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<BiomeColors> colors = foliageColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
         Optional<Integer> color = colors.map(biomeColors -> biomeColors.colors.getColor(season));
-        if(!color.isPresent() && isDefaultHSBShiftEnabled) {
+        if(color.isEmpty() && isDefaultHSBShiftEnabled) {
             Optional<Integer> defaultColor = biome.getEffects().getFoliageColor();
             if(defaultColor.isPresent()) {
                 return Optional.of(getShiftedColor(season, defaultColor.get()));
@@ -147,7 +137,7 @@ public class ModConfig {
     public Optional<Integer> getSeasonGrassColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<BiomeColors> colors = grassColorList.stream().filter(it -> it.biomeIdentifier.equals(biomeIdentifier.toString())).findFirst();
         Optional<Integer> color = colors.map(biomeColors -> biomeColors.colors.getColor(season));
-        if(!color.isPresent() && isDefaultHSBShiftEnabled) {
+        if(color.isEmpty() && isDefaultHSBShiftEnabled) {
             Optional<Integer> defaultColor = biome.getEffects().getGrassColor();
             if(defaultColor.isPresent()) {
                 return Optional.of(getShiftedColor(season, defaultColor.get()));
@@ -168,17 +158,12 @@ public class ModConfig {
         }
 
         public float getModifier(Season season) {
-            switch (season) {
-                case SPRING:
-                    return springModifier;
-                case SUMMER:
-                    return summerModifier;
-                case FALL:
-                    return fallModifier;
-                case WINTER:
-                    return winterModifier;
-            }
-            return springModifier;
+            return switch (season) {
+                case SPRING -> springModifier;
+                case SUMMER -> summerModifier;
+                case FALL -> fallModifier;
+                case WINTER -> winterModifier;
+            };
         }
     }
 
@@ -204,17 +189,12 @@ public class ModConfig {
         }
 
         public float getModifier(Season season) {
-            switch (season) {
-                case SPRING:
-                    return springModifier;
-                case SUMMER:
-                    return summerModifier;
-                case FALL:
-                    return fallModifier;
-                case WINTER:
-                    return winterModifier;
-            }
-            return springModifier;
+            return switch (season) {
+                case SPRING -> springModifier;
+                case SUMMER -> summerModifier;
+                case FALL -> fallModifier;
+                case WINTER -> winterModifier;
+            };
         }
 
     }

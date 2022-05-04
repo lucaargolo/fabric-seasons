@@ -1,7 +1,6 @@
 package io.github.lucaargolo.seasons.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-
 import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.utils.Season;
 import net.minecraft.server.command.CommandManager;

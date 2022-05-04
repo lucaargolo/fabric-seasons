@@ -2,6 +2,7 @@ package io.github.lucaargolo.seasons.mixin;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
@@ -22,12 +23,12 @@ public interface WorldViewMixin {
      *   world generation. Upon extensive testing, i found out that this works.
      */
     @Overwrite
-    default Biome getBiome(BlockPos pos) {
-        Biome biome = this.getBiomeAccess().getBiome(pos);
+    default RegistryEntry<Biome> getBiome(BlockPos pos) {
+        RegistryEntry<Biome> biomeEntry = this.getBiomeAccess().getBiome(pos);
         if (this instanceof World) {
-            FabricSeasons.injectBiomeTemperature(biome, (World) this);
+            FabricSeasons.injectBiomeTemperature(biomeEntry.value(), (World) this);
         }
-        return biome;
+        return biomeEntry;
     }
 
 }

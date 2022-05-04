@@ -3,7 +3,7 @@ package io.github.lucaargolo.seasons.mixin;
 import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.colors.SeasonFoliageColors;
 import io.github.lucaargolo.seasons.colors.SeasonGrassColors;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;

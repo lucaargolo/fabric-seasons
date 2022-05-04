@@ -34,7 +34,7 @@ public class ItemMixin {
             if (block != null) {
                 Identifier cropIdentifier = Registry.BLOCK.getId(block);
                 float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, season);
-                boolean sneak = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), MinecraftClient.getInstance().options.keySneak.boundKey.getCode());
+                boolean sneak = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), MinecraftClient.getInstance().options.sneakKey.boundKey.getCode());
                 if (sneak) {
                     tooltip.add(new TranslatableText("tooltip.seasons.crop_multipliers"));
                     TranslatableText spring = new TranslatableText("tooltip.seasons.spring");
@@ -59,7 +59,7 @@ public class ItemMixin {
                     } else {
                         tooltip.add(new TranslatableText("tooltip.seasons.faster_grow"));
                     }
-                    tooltip.add(new LiteralText(new TranslatableText("tooltip.seasons.show_more").getString().replace("{KEY}", new TranslatableText(MinecraftClient.getInstance().options.keySneak.getBoundKeyTranslationKey()).getString())));
+                    tooltip.add(new LiteralText(new TranslatableText("tooltip.seasons.show_more").getString().replace("{KEY}", new TranslatableText(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).getString())));
                 }
             }
         }
