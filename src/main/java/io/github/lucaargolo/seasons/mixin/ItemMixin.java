@@ -8,9 +8,8 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -36,30 +35,30 @@ public class ItemMixin {
                 float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, season);
                 boolean sneak = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), MinecraftClient.getInstance().options.sneakKey.boundKey.getCode());
                 if (sneak) {
-                    tooltip.add(new TranslatableText("tooltip.seasons.crop_multipliers"));
-                    TranslatableText spring = new TranslatableText("tooltip.seasons.spring");
-                    LiteralText springMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100)) + "% speed");
-                    tooltip.add(spring.append(new LiteralText(": ").setStyle(spring.getStyle()).append(springMultiplier)));
-                    TranslatableText summer = new TranslatableText("tooltip.seasons.summer");
-                    LiteralText summerMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100)) + "% speed");
-                    tooltip.add(summer.append(new LiteralText(": ").setStyle(summer.getStyle()).append(summerMultiplier)));
-                    TranslatableText fall = new TranslatableText("tooltip.seasons.fall");
-                    LiteralText fallMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100)) + "% speed");
-                    tooltip.add(fall.append(new LiteralText(": ").setStyle(fall.getStyle()).append(fallMultiplier)));
-                    TranslatableText winter = new TranslatableText("tooltip.seasons.winter");
-                    LiteralText winterMultiplier = new LiteralText(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100)) + "% speed");
-                    tooltip.add(winter.append(new LiteralText(": ").setStyle(winter.getStyle()).append(winterMultiplier)));
+                    tooltip.add(Text.translatable("tooltip.seasons.crop_multipliers"));
+                    MutableText spring = Text.translatable("tooltip.seasons.spring");
+                    MutableText springMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100)) + "% speed");
+                    tooltip.add(spring.append(Text.literal(": ").setStyle(spring.getStyle()).append(springMultiplier)));
+                    MutableText summer = Text.translatable("tooltip.seasons.summer");
+                    MutableText summerMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100)) + "% speed");
+                    tooltip.add(summer.append(Text.literal(": ").setStyle(summer.getStyle()).append(summerMultiplier)));
+                    MutableText fall = Text.translatable("tooltip.seasons.fall");
+                    MutableText fallMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100)) + "% speed");
+                    tooltip.add(fall.append(Text.literal(": ").setStyle(fall.getStyle()).append(fallMultiplier)));
+                    MutableText winter = Text.translatable("tooltip.seasons.winter");
+                    MutableText winterMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100)) + "% speed");
+                    tooltip.add(winter.append(Text.literal(": ").setStyle(winter.getStyle()).append(winterMultiplier)));
                 } else {
                     if (multiplier == 0f) {
-                        tooltip.add(new TranslatableText("tooltip.seasons.not_grow"));
+                        tooltip.add(Text.translatable("tooltip.seasons.not_grow"));
                     } else if (multiplier < 1.0f) {
-                        tooltip.add(new TranslatableText("tooltip.seasons.slowed_grow"));
+                        tooltip.add(Text.translatable("tooltip.seasons.slowed_grow"));
                     } else if (multiplier == 1.0f) {
-                        tooltip.add(new TranslatableText("tooltip.seasons.normal_grow"));
+                        tooltip.add(Text.translatable("tooltip.seasons.normal_grow"));
                     } else {
-                        tooltip.add(new TranslatableText("tooltip.seasons.faster_grow"));
+                        tooltip.add(Text.translatable("tooltip.seasons.faster_grow"));
                     }
-                    tooltip.add(new LiteralText(new TranslatableText("tooltip.seasons.show_more").getString().replace("{KEY}", new TranslatableText(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).getString())));
+                    tooltip.add(Text.literal(Text.translatable("tooltip.seasons.show_more").getString().replace("{KEY}", Text.translatable(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).getString())));
                 }
             }
         }

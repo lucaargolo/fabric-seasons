@@ -26,7 +26,7 @@ public interface WorldViewMixin {
     default RegistryEntry<Biome> getBiome(BlockPos pos) {
         RegistryEntry<Biome> biomeEntry = this.getBiomeAccess().getBiome(pos);
         if (this instanceof World) {
-            FabricSeasons.injectBiomeTemperature(biomeEntry.value(), (World) this);
+            FabricSeasons.injectBiomeTemperature(biomeEntry, (World) this);
         }
         return biomeEntry;
     }

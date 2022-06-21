@@ -84,8 +84,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project["loader_version"]}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
 
-    modRuntime("com.terraformersmc:modmenu:${project["modmenu_version"]}")
-    modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${project["rei_version"]}")
+    modCompileOnly("com.terraformersmc:modmenu:${project["modmenu_version"]}")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project["rei_version"]}")
 }
 
 tasks.processResources {

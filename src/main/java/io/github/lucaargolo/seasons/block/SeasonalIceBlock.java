@@ -7,9 +7,8 @@ import net.minecraft.block.IceBlock;
 import net.minecraft.item.Item;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LightType;
-
-import java.util.Random;
 
 public class SeasonalIceBlock extends IceBlock {
 
