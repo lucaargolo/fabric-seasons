@@ -6,8 +6,7 @@ import io.github.lucaargolo.seasons.utils.Season;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.TimeCommand;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
 import java.util.Locale;
@@ -34,8 +33,8 @@ public class SeasonCommand {
                 .executes(context -> {
                     World world = context.getSource().getWorld();
                     Season season = FabricSeasons.getCurrentSeason(world);
-                    context.getSource().sendFeedback(new TranslatableText("tooltip.seasons.calendar_info_1").append(new TranslatableText("tooltip.seasons."+season.name().toLowerCase(Locale.ROOT))), false);
-                    context.getSource().sendFeedback(new LiteralText(Long.toString(((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength())/24000L)).append(new TranslatableText("tooltip.seasons.calendar_info_2").append(new TranslatableText("tooltip.seasons."+season.getNext().name().toLowerCase(Locale.ROOT)))), false);
+                    context.getSource().sendFeedback(Text.translatable("tooltip.seasons.calendar_info_1").append(Text.translatable("tooltip.seasons."+season.name().toLowerCase(Locale.ROOT))), false);
+                    context.getSource().sendFeedback(Text.literal(Long.toString(((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength())/24000L)).append(Text.translatable("tooltip.seasons.calendar_info_2").append(Text.translatable("tooltip.seasons."+season.getNext().name().toLowerCase(Locale.ROOT)))), false);
                     return season.ordinal();
                 })
             )

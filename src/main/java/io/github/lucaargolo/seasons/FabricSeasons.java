@@ -14,7 +14,7 @@ import io.github.lucaargolo.seasons.utils.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -30,8 +30,11 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.tag.BiomeTags;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -99,7 +102,7 @@ public class FabricSeasons implements ModInitializer {
             LOGGER.warn("Defaulting to original config.");
         }
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> SeasonCommand.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, ignored) -> SeasonCommand.register(dispatcher));
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             SEEDS_MAP.clear();
@@ -206,16 +209,16 @@ public class FabricSeasons implements ModInitializer {
         return season;
     }
 
-    public static void injectBiomeTemperature(Biome biome, World world) {
+    public static void injectBiomeTemperature(RegistryEntry<Biome> biome, World world) {
         if(!CONFIG.doTemperatureChanges()) return;
 
-        List<Biome.Category> ignoredCategories = Arrays.asList(Biome.Category.NONE, Biome.Category.NETHER, Biome.Category.THEEND, Biome.Category.OCEAN);
-        if(ignoredCategories.contains(biome.getCategory())) return;
+        List<TagKey<Biome>> ignoredCategories = Arrays.asList(BiomeTags.IS_NETHER, BiomeTags.IS_END, BiomeTags.IS_OCEAN);
+        if(ignoredCategories.stream().anyMatch(biome::isIn)) return;
 
         Season season = FabricSeasons.getCurrentSeason(world);
 
-        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
-        Biome.Weather currentWeather = biome.weather;
+        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome.value());
+        Biome.Weather currentWeather = biome.value().weather;
 
         Biome.Weather originalWeather;
         if (!WeatherCache.hasCache(biomeIdentifier)) {
@@ -229,85 +232,85 @@ public class FabricSeasons implements ModInitializer {
             return;
         }
         float temp = originalWeather.temperature;
-        if(biome.getCategory() == Biome.Category.JUNGLE || biome.getCategory() == Biome.Category.SWAMP) {
+        if(biome.isIn(BiomeTags.IS_JUNGLE) || biome.isIn(BiomeTags.HAS_CLOSER_WATER_FOG)) {
             //Jungle Biomes
             if (season == Season.WINTER) {
-                ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                ((WeatherAccessor) currentWeather).setTemperature(temp-0.1f);
+                ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                ((WeatherAccessor) (Object) currentWeather).setTemperature(temp-0.1f);
             } else {
-                ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                ((WeatherAccessor) currentWeather).setTemperature(temp);
+                ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                ((WeatherAccessor) (Object) currentWeather).setTemperature(temp);
             }
         }else if(temp <= 0.1) {
             //Frozen Biomes
             switch (season) {
                 case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.3f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp + 0.3f);
                 }
                 case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp - 0.2f);
                 }
                 default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp);
                 }
             }
         }else if(temp <= 0.3) {
             //Cold Biomes
             switch (season) {
                 case SPRING -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp);
                 }
                 case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp + 0.2f);
                 }
                 case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp - 0.2f);
                 }
                 default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp);
                 }
             }
         }else if(temp <= 0.95) {
             //Temperate Biomes
             switch (season) {
                 case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp + 0.2f);
                 }
                 case FALL -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.1f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp - 0.1f);
                 }
                 case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.7f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.SNOW);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp - 0.7f);
                 }
                 default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp);
                 }
             }
         }else{
             //Hot biomes
             switch (season) {
                 case SUMMER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp + 0.2f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp + 0.2f);
                 }
                 case WINTER -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp - 0.2f);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(Biome.Precipitation.RAIN);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp - 0.2f);
                 }
                 default -> {
-                    ((WeatherAccessor) currentWeather).setPrecipitation(originalWeather.precipitation);
-                    ((WeatherAccessor) currentWeather).setTemperature(temp);
+                    ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
+                    ((WeatherAccessor) (Object) currentWeather).setTemperature(temp);
                 }
             }
         }
