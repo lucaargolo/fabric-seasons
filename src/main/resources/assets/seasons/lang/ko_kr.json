@@ -1,0 +1,17 @@
+{
+  "item.seasons.season_calendar": "계절 달력",
+  "block.seasons.season_detector": "계절 탐지기",
+  "block.seasons.greenhouse_glass": "온실 유리",
+  "tooltip.seasons.spring": "§a봄",
+  "tooltip.seasons.summer": "§6여름",
+  "tooltip.seasons.fall": "§4가을",
+  "tooltip.seasons.winter": "§b겨울",
+  "tooltip.seasons.calendar_info_1": "§9현재 계절: ",
+  "tooltip.seasons.calendar_info_2": " §7일 후 게절 바뀜: ",
+  "tooltip.seasons.faster_grow": "§a이 작물은 지금 계절에는 더 빨리 자랍니다.",
+  "tooltip.seasons.normal_grow": "§9이 작물은 지금 계절에는 평범하게 자랍니다.",
+  "tooltip.seasons.slowed_grow": "§6이 작물은 지금 계절에는 더 느리게 자랍니다.",
+  "tooltip.seasons.not_grow": "§c이 작물은 지금 계절에는 자라지 않습니다.",
+  "tooltip.seasons.show_more": "§7더 많은 내용을 보려면 §9{KEY}§7를 누르세요:",
+  "tooltip.seasons.crop_multipliers": "§7작물이 계절에 따라 받는 영향:"
+}
