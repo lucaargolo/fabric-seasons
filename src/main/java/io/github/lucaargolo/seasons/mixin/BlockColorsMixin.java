@@ -1,8 +1,8 @@
 package io.github.lucaargolo.seasons.mixin;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
-import io.github.lucaargolo.seasons.colors.SeasonFoliageColors;
-import io.github.lucaargolo.seasons.colors.SeasonGrassColors;
+import io.github.lucaargolo.seasons.resources.SeasonFoliageColors;
+import io.github.lucaargolo.seasons.resources.SeasonGrassColors;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.util.math.BlockPos;

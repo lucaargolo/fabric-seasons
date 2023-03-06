@@ -1,7 +1,7 @@
 package io.github.lucaargolo.seasons;
 
-import io.github.lucaargolo.seasons.colors.SeasonFoliageColormapResourceSupplier;
-import io.github.lucaargolo.seasons.colors.SeasonGrassColormapResourceSupplier;
+import io.github.lucaargolo.seasons.resources.SeasonFoliageColors;
+import io.github.lucaargolo.seasons.resources.SeasonGrassColors;
 import io.github.lucaargolo.seasons.utils.ModConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
@@ -37,8 +37,8 @@ public class FabricSeasonsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         clientConfig = FabricSeasons.CONFIG;
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColormapResourceSupplier());
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColormapResourceSupplier());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColors());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColors());
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             FabricSeasons.SEEDS_MAP.clear();

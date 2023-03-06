@@ -1,9 +1,9 @@
 package io.github.lucaargolo.seasons.mixin;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
-import io.github.lucaargolo.seasons.colors.SeasonFoliageColors;
-import io.github.lucaargolo.seasons.colors.SeasonGrassColors;
 import io.github.lucaargolo.seasons.mixed.BiomeMixed;
+import io.github.lucaargolo.seasons.resources.SeasonFoliageColors;
+import io.github.lucaargolo.seasons.resources.SeasonGrassColors;
 import io.github.lucaargolo.seasons.utils.ColorsCache;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -36,13 +36,10 @@ public class BiomeMixin implements BiomeMixed {
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
-                Optional<Integer> seasonGrassColor = FabricSeasons.CONFIG.getSeasonGrassColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
+                Optional<Integer> seasonGrassColor = SeasonGrassColors.getSeasonGrassColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonGrassColor.isPresent()) {
                     returnColor = seasonGrassColor;
                 }
-            }
-            if(returnColor == null) {
-                System.out.println("huh");
             }
             ColorsCache.createGrassCache(biome, returnColor);
             return returnColor;
@@ -60,7 +57,7 @@ public class BiomeMixin implements BiomeMixed {
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
-                Optional<Integer> seasonFoliageColor = FabricSeasons.CONFIG.getSeasonFoliageColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
+                Optional<Integer> seasonFoliageColor = SeasonFoliageColors.getSeasonFoliageColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonFoliageColor.isPresent()) {
                     returnColor = seasonFoliageColor;
                 }
@@ -74,8 +71,8 @@ public class BiomeMixin implements BiomeMixed {
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects$GrassColorModifier;getModifiedGrassColor(DDI)I"), method = "getGrassColorAt")
     public int getSeasonModifiedGrassColor(BiomeEffects.GrassColorModifier gcm, double x, double z, int color) {
         if(gcm == BiomeEffects.GrassColorModifier.SWAMP) {
-            int swampColor1 = FabricSeasons.CONFIG.getMinecraftSwampGrass1().getColor(FabricSeasons.getCurrentSeason());
-            int swampColor2 = FabricSeasons.CONFIG.getMinecraftSwampGrass2().getColor(FabricSeasons.getCurrentSeason());
+            int swampColor1 = SeasonGrassColors.getSwampColor1(FabricSeasons.getCurrentSeason());
+            int swampColor2 = SeasonGrassColors.getSwampColor2(FabricSeasons.getCurrentSeason());
 
             double d = Biome.FOLIAGE_NOISE.sample(x * 0.0225D, z * 0.0225D, false);
             return d < -0.1D ? swampColor1 : swampColor2;
