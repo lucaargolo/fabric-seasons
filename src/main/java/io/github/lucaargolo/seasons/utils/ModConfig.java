@@ -71,13 +71,13 @@ public class ModConfig {
     
     private boolean isInNorthHemisphere = true;
 
-    private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xE0990B, 0x755514);
+    private HardcodedColors minecraftDefaultFoliage = new HardcodedColors(0x48B518, 0x4CE00B, 0xD2CF1E, 0xC6DFB6);
     private HardcodedColors minecraftSpruceFoliage = new HardcodedColors(0x619961, 0x619961, 0x619961, 0x619961);
     private HardcodedColors minecraftBirchFoliage = new HardcodedColors(0x80A755, 0x81B844, 0xD66800, 0x665026);
     private HardcodedColors minecraftSwampGrass1 = new HardcodedColors(0x4C763C, 0x4C763C, 0x4C763C, 0x4C763C);
     private HardcodedColors minecraftSwampGrass2 = new HardcodedColors(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
 
-    private boolean isDefaultHSBShiftEnabled = true;
+    private boolean isDefaultHSBShiftEnabled = false;
 
     private static class HSBShift {
         private float hue;

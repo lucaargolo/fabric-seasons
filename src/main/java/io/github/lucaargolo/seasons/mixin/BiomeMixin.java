@@ -3,21 +3,27 @@ package io.github.lucaargolo.seasons.mixin;
 import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.colors.SeasonFoliageColors;
 import io.github.lucaargolo.seasons.colors.SeasonGrassColors;
+import io.github.lucaargolo.seasons.mixed.BiomeMixed;
 import io.github.lucaargolo.seasons.utils.ColorsCache;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
 @Mixin(Biome.class)
-public class BiomeMixin {
+public class BiomeMixin implements BiomeMixed {
+
+    private Biome.Weather originalWeather;
 
     @SuppressWarnings("ConstantConditions")
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects;getGrassColor()Ljava/util/Optional;"), method = "getGrassColorAt")
@@ -34,6 +40,9 @@ public class BiomeMixin {
                 if(seasonGrassColor.isPresent()) {
                     returnColor = seasonGrassColor;
                 }
+            }
+            if(returnColor == null) {
+                System.out.println("huh");
             }
             ColorsCache.createGrassCache(biome, returnColor);
             return returnColor;
@@ -75,14 +84,31 @@ public class BiomeMixin {
         }
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/world/FoliageColors;getColor(DD)I"), method = "getDefaultFoliageColor")
-    public int getSeasonDefaultFolliageColor(double d, double e) {
-        return SeasonFoliageColors.getColor(FabricSeasons.getCurrentSeason(), d, e);
+    @Inject(at = @At("HEAD"), method = "getDefaultFoliageColor", cancellable = true)
+    public void getSeasonDefaultFolliageColor(CallbackInfoReturnable<Integer> cir) {
+        if(this.originalWeather != null) {
+            double originalTemperature = MathHelper.clamp(this.originalWeather.temperature, 0.0F, 1.0F);
+            double originalDownfall = MathHelper.clamp(this.originalWeather.downfall, 0.0F, 1.0F);
+            cir.setReturnValue(SeasonFoliageColors.getColor(FabricSeasons.getCurrentSeason(), originalTemperature, originalDownfall));
+        }
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/world/GrassColors;getColor(DD)I"), method = "getDefaultGrassColor")
-    public int getSeasonDefaultGrassColor(double d, double e) {
-        return SeasonGrassColors.getColor(FabricSeasons.getCurrentSeason(), d, e);
+    @Inject(at = @At("HEAD"), method = "getDefaultGrassColor", cancellable = true)
+    public void getSeasonDefaultGrassColor(CallbackInfoReturnable<Integer> cir) {
+        if(this.originalWeather != null) {
+            double d = MathHelper.clamp(this.originalWeather.temperature, 0.0F, 1.0F);
+            double e = MathHelper.clamp(this.originalWeather.downfall, 0.0F, 1.0F);
+            cir.setReturnValue(SeasonGrassColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
+        }
     }
 
+    @Override
+    public Biome.Weather getOriginalWeather() {
+        return this.originalWeather;
+    }
+
+    @Override
+    public void setOriginalWeather(Biome.Weather originalWeather) {
+        this.originalWeather = originalWeather;
+    }
 }

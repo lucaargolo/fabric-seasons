@@ -9,8 +9,10 @@ import io.github.lucaargolo.seasons.blockentities.GreenhouseGlassBlockEntity;
 import io.github.lucaargolo.seasons.blockentities.SeasonDetectorBlockEntity;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
+import io.github.lucaargolo.seasons.mixed.BiomeMixed;
 import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
 import io.github.lucaargolo.seasons.utils.*;
+import it.unimi.dsi.fastutil.longs.LongArraySet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -30,9 +32,11 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BiomeTags;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
@@ -52,16 +56,13 @@ import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
 
+    private static final LongArraySet temporaryMeltableCache = new LongArraySet();
     public static final String MOD_ID = "seasons";
     public static final Logger LOGGER = LogManager.getLogger("Fabric Seasons");
 
     public static ModConfig CONFIG;
 
-    public static final JsonParser JSON_PARSER = new JsonParser();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    public static Block ORIGINAL_ICE;
-    public static Block ORIGINAL_SNOW;
 
     public static HashMap<Item, Block> SEEDS_MAP = new HashMap<>();
 
@@ -81,7 +82,7 @@ public class FabricSeasons implements ModInitializer {
         try {
             if (configFile.createNewFile()) {
                 LOGGER.info("No config file found, creating a new one...");
-                String json = GSON.toJson(JSON_PARSER.parse(GSON.toJson(new ModConfig())));
+                String json = GSON.toJson(JsonParser.parseString(GSON.toJson(new ModConfig())));
                 try (PrintWriter out = new PrintWriter(configFile)) {
                     out.println(json);
                 }
@@ -126,14 +127,29 @@ public class FabricSeasons implements ModInitializer {
         GREENHOUSE_GLASS_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("greenhouse_glass"), FabricBlockEntityTypeBuilder.create(greenhouseGlass::createBlockEntity, greenhouseGlass).build(null));
         Registry.register(Registry.ITEM, new ModIdentifier("greenhouse_glass"), new BlockItem(greenhouseGlass, new Item.Settings().group(ItemGroup.DECORATIONS)));
 
-        ServerTickEvents.END_SERVER_TICK.register(GreenhouseCache::tick);
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            GreenhouseCache.tick(server);
+            temporaryMeltableCache.clear();
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(ASK_FOR_CONFIG, (server, player, handler, buf, responseSender) -> {
-            String configJson = GSON.toJson(JSON_PARSER.parse(GSON.toJson(CONFIG)));
+            String configJson = GSON.toJson(JsonParser.parseString(GSON.toJson(CONFIG)));
             PacketByteBuf configBuf = PacketByteBufs.create();
             configBuf.writeString(configJson);
             ServerPlayNetworking.send(player, ANSWER_CONFIG, configBuf);
         });
+    }
+
+    public static void setMeltable(BlockPos blockPos) {
+        temporaryMeltableCache.add(blockPos.asLong());
+    }
+
+    public static boolean isMeltable(BlockPos blockPos) {
+        return temporaryMeltableCache.contains(blockPos.asLong());
+    }
+
+    public static PlacedMeltablesState getMeltablesState(ServerWorld world) {
+        return world.getPersistentStateManager().getOrCreate(PlacedMeltablesState::createFromNbt, PlacedMeltablesState::new, "seasons_placed_meltables");
     }
 
     public static Season getCurrentSeason(World world) {
@@ -209,30 +225,24 @@ public class FabricSeasons implements ModInitializer {
         return season;
     }
 
-    public static void injectBiomeTemperature(RegistryEntry<Biome> biome, World world) {
+    public static void injectBiomeTemperature(RegistryEntry<Biome> entry, World world) {
         if(!CONFIG.doTemperatureChanges()) return;
 
         List<TagKey<Biome>> ignoredCategories = Arrays.asList(BiomeTags.IS_NETHER, BiomeTags.IS_END, BiomeTags.IS_OCEAN);
-        if(ignoredCategories.stream().anyMatch(biome::isIn)) return;
+        if(ignoredCategories.stream().anyMatch(entry::isIn)) return;
 
         Season season = FabricSeasons.getCurrentSeason(world);
 
-        Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome.value());
-        Biome.Weather currentWeather = biome.value().weather;
-
-        Biome.Weather originalWeather;
-        if (!WeatherCache.hasCache(biomeIdentifier)) {
+        Biome biome = entry.value();
+        Biome.Weather currentWeather = biome.weather;
+        Biome.Weather originalWeather = ((BiomeMixed) (Object) biome).getOriginalWeather();
+        if (originalWeather == null) {
             originalWeather = new Biome.Weather(currentWeather.precipitation, currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
-            WeatherCache.setCache(biomeIdentifier, originalWeather);
-        } else {
-            originalWeather = WeatherCache.getCache(biomeIdentifier);
+            ((BiomeMixed) (Object) biome).setOriginalWeather(originalWeather);
         }
 
-        if(originalWeather == null) {
-            return;
-        }
         float temp = originalWeather.temperature;
-        if(biome.isIn(BiomeTags.IS_JUNGLE) || biome.isIn(BiomeTags.HAS_CLOSER_WATER_FOG)) {
+        if(entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG)) {
             //Jungle Biomes
             if (season == Season.WINTER) {
                 ((WeatherAccessor) (Object) currentWeather).setPrecipitation(originalWeather.precipitation);
