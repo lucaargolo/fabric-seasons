@@ -16,6 +16,7 @@
     "WorldViewMixin"
   ],
   "client": [
+    "BiomeColorsMixin",
     "BiomeMixin",
     "BlockColorsMixin",
     "ItemMixin",
