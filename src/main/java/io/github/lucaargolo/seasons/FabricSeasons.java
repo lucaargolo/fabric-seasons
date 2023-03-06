@@ -11,6 +11,8 @@ import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixed.BiomeMixed;
 import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
+import io.github.lucaargolo.seasons.resources.CropConfigs;
+import io.github.lucaargolo.seasons.resources.GrassSeasonColors;
 import io.github.lucaargolo.seasons.utils.*;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import net.fabricmc.api.EnvType;
@@ -20,9 +22,11 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,6 +36,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BiomeTags;
 import net.minecraft.tag.TagKey;
@@ -58,7 +63,9 @@ public class FabricSeasons implements ModInitializer {
 
     private static final LongArraySet temporaryMeltableCache = new LongArraySet();
     public static final String MOD_ID = "seasons";
-    public static final Logger LOGGER = LogManager.getLogger("Fabric Seasons");
+    public static final String MOD_NAME = "Fabric Seasons";
+
+    public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
     public static ModConfig CONFIG;
 
@@ -72,35 +79,37 @@ public class FabricSeasons implements ModInitializer {
     public static Identifier ASK_FOR_CONFIG = new Identifier(MOD_ID, "ask_for_config");
     public static Identifier ANSWER_CONFIG = new Identifier(MOD_ID, "anwer_config");
 
+    public static Identifier UPDATE_CROPS = new Identifier(MOD_ID, "update_crops");
+
     @Override
     public void onInitialize() {
 
         Path configPath = FabricLoader.getInstance().getConfigDir();
         File configFile = new File(configPath + File.separator + "seasons.json");
 
-        LOGGER.info("Trying to read config file...");
+        LOGGER.info("["+MOD_NAME+"] Trying to read config file...");
         try {
             if (configFile.createNewFile()) {
-                LOGGER.info("No config file found, creating a new one...");
+                LOGGER.info("["+MOD_NAME+"] No config file found, creating a new one...");
                 String json = GSON.toJson(JsonParser.parseString(GSON.toJson(new ModConfig())));
                 try (PrintWriter out = new PrintWriter(configFile)) {
                     out.println(json);
                 }
                 CONFIG = new ModConfig();
-                LOGGER.info("Successfully created default config file.");
+                LOGGER.info("["+MOD_NAME+"] Successfully created default config file.");
             } else {
-                LOGGER.info("A config file was found, loading it..");
+                LOGGER.info("["+MOD_NAME+"] A config file was found, loading it..");
                 CONFIG = GSON.fromJson(new String(Files.readAllBytes(configFile.toPath())), ModConfig.class);
                 if(CONFIG == null) {
-                    throw new NullPointerException("The config file was empty.");
+                    throw new NullPointerException("["+MOD_NAME+"] The config file was empty.");
                 }else{
-                    LOGGER.info("Successfully loaded config file.");
+                    LOGGER.info("["+MOD_NAME+"] Successfully loaded config file.");
                 }
             }
         }catch (Exception exception) {
-            LOGGER.error("There was an error creating/loading the config file!", exception);
+            LOGGER.error("["+MOD_NAME+"] There was an error creating/loading the config file!", exception);
             CONFIG = new ModConfig();
-            LOGGER.warn("Defaulting to original config.");
+            LOGGER.warn("["+MOD_NAME+"] Defaulting to original config.");
         }
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, ignored) -> SeasonCommand.register(dispatcher));
@@ -110,11 +119,18 @@ public class FabricSeasons implements ModInitializer {
             Registry.ITEM.forEach(item -> {
                 if(item instanceof BlockItem) {
                     Block block = ((BlockItem) item).getBlock();
-                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock || block instanceof SaplingBlock) {
+                    if(block instanceof SeasonalFertilizable) {
                         FabricSeasons.SEEDS_MAP.put(item, ((BlockItem) item).getBlock());
                     }
                 }
             });
+        });
+
+        ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
+            PacketByteBuf buf = PacketByteBufs.create();
+            CropConfigs.getDefaultCropConfig().toBuf(buf);
+            CropConfigs.toBuf(buf);
+            ServerPlayNetworking.send(player, UPDATE_CROPS, buf);
         });
 
         Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
@@ -138,6 +154,8 @@ public class FabricSeasons implements ModInitializer {
             configBuf.writeString(configJson);
             ServerPlayNetworking.send(player, ANSWER_CONFIG, configBuf);
         });
+
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new CropConfigs());
     }
 
     public static void setMeltable(BlockPos blockPos) {

@@ -6,6 +6,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,9 +25,9 @@ public class SeasonCalendarItem extends Item {
         if(world != null) {
             Season season = FabricSeasons.getCurrentSeason(world);
             int seasonLength = FabricSeasons.CONFIG.getSeasonLength();
-            tooltip.add(Text.translatable("tooltip.seasons.calendar_info_1").append(Text.translatable("tooltip.seasons."+season.name().toLowerCase(Locale.ROOT))));
+            tooltip.add(Text.translatable("tooltip.seasons.calendar_info_1").formatted(season.getFormatting()).append(Text.translatable(season.getTranslationKey()).formatted(season.getFormatting())).formatted(Formatting.UNDERLINE));
             if(!FabricSeasons.CONFIG.isSeasonLocked() && !FabricSeasons.CONFIG.isSeasonTiedWithSystemTime())
-                tooltip.add(Text.literal(Long.toString(((seasonLength - (world.getTimeOfDay() - ((world.getTimeOfDay()/seasonLength)*seasonLength) )) % seasonLength)/24000L)).append(Text.translatable("tooltip.seasons.calendar_info_2").append(Text.translatable("tooltip.seasons."+season.getNext().name().toLowerCase(Locale.ROOT)))));
+                tooltip.add(Text.literal(Long.toString(((seasonLength - (world.getTimeOfDay() - ((world.getTimeOfDay()/seasonLength)*seasonLength) )) % seasonLength)/24000L)).append(Text.translatable("tooltip.seasons.calendar_info_2").formatted(Formatting.GRAY).append(Text.translatable("tooltip.seasons."+season.getNext().name().toLowerCase(Locale.ROOT)).formatted(season.getNext().getFormatting()))));
         }
 
     }

@@ -1,7 +1,9 @@
 package io.github.lucaargolo.seasons.mixin;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
+import io.github.lucaargolo.seasons.resources.CropConfigs;
 import io.github.lucaargolo.seasons.utils.GreenhouseCache;
+import io.github.lucaargolo.seasons.utils.SeasonalFertilizable;
 import net.minecraft.block.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -14,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin({CropBlock.class, CocoaBlock.class, StemBlock.class, SaplingBlock.class})
-public abstract class FertilizableMixin extends Block implements Fertilizable {
+@Mixin({CropBlock.class, CocoaBlock.class, StemBlock.class, SaplingBlock.class, SweetBerryBushBlock.class})
+public abstract class FertilizableMixin extends Block implements Fertilizable, SeasonalFertilizable {
 
     private boolean seasons$shouldInject = true;
 
@@ -28,7 +30,7 @@ public abstract class FertilizableMixin extends Block implements Fertilizable {
         boolean shouldGrowNormally = GreenhouseCache.test(world, pos) || (world.getLightLevel(LightType.SKY, pos) == 0 && FabricSeasons.CONFIG.doCropsGrowsNormallyUnderground());
         if(!shouldGrowNormally && FabricSeasons.CONFIG.isSeasonMessingCrops() && seasons$shouldInject) {
             Identifier cropIdentifier = Registry.BLOCK.getId(state.getBlock());
-            float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
+            float multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
             while(multiplier > 0f) {
                 float rand = random.nextFloat();
                 if(multiplier >= rand) {
@@ -47,7 +49,7 @@ public abstract class FertilizableMixin extends Block implements Fertilizable {
         boolean shouldGrowNormally = GreenhouseCache.test(world, pos) || (world.getLightLevel(LightType.SKY, pos) == 0 && FabricSeasons.CONFIG.doCropsGrowsNormallyUnderground());
         if(!shouldGrowNormally && FabricSeasons.CONFIG.isSeasonMessingBonemeal() && seasons$shouldInject) {
             Identifier cropIdentifier = Registry.BLOCK.getId(state.getBlock());
-            float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
+            float multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
             while(multiplier > 0f) {
                 float rand = random.nextFloat();
                 if(multiplier >= rand) {

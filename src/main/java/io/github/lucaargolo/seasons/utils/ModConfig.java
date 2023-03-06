@@ -75,71 +75,9 @@ public class ModConfig {
         return finalColor.getRGB();
     }
 
-    private static class DefaultCropConfig {
-
-        private float springModifier, summerModifier, fallModifier, winterModifier;
-
-        public DefaultCropConfig(float springModifier, float summerModifier, float fallModifier, float winterModifier) {
-            this.springModifier = springModifier;
-            this.summerModifier = summerModifier;
-            this.fallModifier = fallModifier;
-            this.winterModifier = winterModifier;
-        }
-
-        public float getModifier(Season season) {
-            return switch (season) {
-                case SPRING -> springModifier;
-                case SUMMER -> summerModifier;
-                case FALL -> fallModifier;
-                case WINTER -> winterModifier;
-            };
-        }
-    }
-
-    private static class CropConfig {
-
-        private String cropIdentifier;
-        private float springModifier, summerModifier, fallModifier, winterModifier;
-
-        public CropConfig() {
-            this.cropIdentifier = "";
-            this.springModifier = 1.0f;
-            this.summerModifier = 0.8f;
-            this.fallModifier = 0.6f;
-            this.winterModifier = 0f;
-        }
-
-        public CropConfig(String cropIdentifier, float springModifier, float summerModifier, float fallModifier, float winterModifier) {
-            this.cropIdentifier = cropIdentifier;
-            this.springModifier = springModifier;
-            this.summerModifier = summerModifier;
-            this.fallModifier = fallModifier;
-            this.winterModifier = winterModifier;
-        }
-
-        public float getModifier(Season season) {
-            return switch (season) {
-                case SPRING -> springModifier;
-                case SUMMER -> summerModifier;
-                case FALL -> fallModifier;
-                case WINTER -> winterModifier;
-            };
-        }
-
-    }
-
     private boolean isSeasonMessingCrops = true;
     private boolean isSeasonMessingBonemeal = false;
     private boolean doCropsGrowsNormallyUnderground = true;
-
-    private DefaultCropConfig defaultCropConfig = new DefaultCropConfig(1.0f, 0.8f, 0.6f, 0f);
-
-    private final List<CropConfig> cropConfigs = new ArrayList<>();
-
-    public float getSeasonCropMultiplier(Identifier cropIdentifier, Season season) {
-        Optional<CropConfig> config = cropConfigs.stream().filter(it -> it.cropIdentifier.equals(cropIdentifier.toString())).findFirst();
-        return config.map(cropConfig -> cropConfig.getModifier(season)).orElse(defaultCropConfig.getModifier(season));
-    }
 
     private boolean doAnimalsBreedInWinter = true;
 

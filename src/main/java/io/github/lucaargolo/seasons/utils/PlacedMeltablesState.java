@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
 
+import static io.github.lucaargolo.seasons.FabricSeasons.MOD_NAME;
+
 public class PlacedMeltablesState extends PersistentState {
 
     Long2ObjectArrayMap<LongArraySet> chunkToPlaced = new Long2ObjectArrayMap<>();
@@ -57,7 +59,7 @@ public class PlacedMeltablesState extends PersistentState {
                 long[] longArray = nbt.getLongArray(key);
                 state.chunkToPlaced.put(longKey, new LongArraySet(longArray));
             }catch (NumberFormatException exception) {
-                FabricSeasons.LOGGER.error("Error reading manually placed meltable blocks at "+key, exception);
+                FabricSeasons.LOGGER.error("["+MOD_NAME+"] Error reading manually placed meltable blocks at "+key, exception);
             }
         });
         return state;

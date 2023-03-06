@@ -18,7 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class SeasonFoliageColors implements SimpleSynchronousResourceReloadListener {
+import static io.github.lucaargolo.seasons.FabricSeasons.MOD_NAME;
+
+public class FoliageSeasonColors implements SimpleSynchronousResourceReloadListener {
 
     private static final Identifier SPRING_FOLIAGE_COLORMAP = new ModIdentifier("textures/colormap/spring_foliage.png");
     private static final Identifier SUMMER_FOLIAGE_COLORMAP = new ModIdentifier("textures/colormap/summer_foliage.png");
@@ -34,7 +36,7 @@ public class SeasonFoliageColors implements SimpleSynchronousResourceReloadListe
     private static SeasonColor minecraftSpruceFoliage = new SeasonColor(0x619961, 0x619961, 0x619961, 0x619961);
     private static SeasonColor minecraftBirchFoliage = new SeasonColor(0x80A755, 0x81B844, 0xD66800, 0x665026);
 
-    private static HashMap<Identifier, SeasonColor> foliageColorMap = new HashMap<>();
+    private static final HashMap<Identifier, SeasonColor> foliageColorMap = new HashMap<>();
 
     public static Optional<Integer> getSeasonFoliageColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<SeasonColor> colors;
@@ -80,7 +82,7 @@ public class SeasonFoliageColors implements SimpleSynchronousResourceReloadListe
 
     @Override
     public Identifier getFabricId() {
-        return new ModIdentifier("season_foliage");
+        return new ModIdentifier("foliage_season_colors");
     }
 
     @SuppressWarnings("deprecation")
@@ -94,7 +96,7 @@ public class SeasonFoliageColors implements SimpleSynchronousResourceReloadListe
             Resource defaultFoliage = manager.getResource(new ModIdentifier("hardcoded/foliage/default.json")).orElseThrow();
             minecraftDefaultFoliage = new SeasonColor(JsonParser.parseReader(new InputStreamReader(defaultFoliage.getInputStream(), StandardCharsets.UTF_8)));
         }catch (Exception e) {
-            FabricSeasons.LOGGER.error("Failed to load hardcoded foliage colors", e);
+            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to load hardcoded foliage colors", e);
         }
         foliageColorMap.clear();
         manager.findResources("seasons/foliage", id -> id.getPath().endsWith(".json")).forEach((id, resource) -> {
@@ -104,11 +106,11 @@ public class SeasonFoliageColors implements SimpleSynchronousResourceReloadListe
                 SeasonColor colors = new SeasonColor(JsonParser.parseReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)));
                 foliageColorMap.put(biomeIdentifier, colors);
             }catch(Exception e) {
-                FabricSeasons.LOGGER.error("Failed to load biome foliage colors for: "+biomeIdentifier, e);
+                FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to load biome foliage colors for: "+biomeIdentifier, e);
             }
         });
         if(!foliageColorMap.isEmpty()) {
-            FabricSeasons.LOGGER.info("Successfully loaded "+foliageColorMap.size()+" custom foliage colors.");
+            FabricSeasons.LOGGER.info("["+MOD_NAME+"] Successfully loaded "+foliageColorMap.size()+" custom foliage colors.");
         }
         try {
             springColorMap = RawTextureDataLoader.loadRawTextureData(manager, SPRING_FOLIAGE_COLORMAP);
@@ -116,7 +118,7 @@ public class SeasonFoliageColors implements SimpleSynchronousResourceReloadListe
             fallColorMap = RawTextureDataLoader.loadRawTextureData(manager, FALL_FOLIAGE_COLORMAP);
             winterColorMap = RawTextureDataLoader.loadRawTextureData(manager, WINTER_FOLIAGE_COLORMAP);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to load foliage color texture", e);
+            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to load foliage color texture", e);
         }
     }
 }

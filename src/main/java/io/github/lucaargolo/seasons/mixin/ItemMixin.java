@@ -1,6 +1,7 @@
 package io.github.lucaargolo.seasons.mixin;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
+import io.github.lucaargolo.seasons.resources.CropConfigs;
 import io.github.lucaargolo.seasons.utils.Season;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -10,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -32,33 +34,31 @@ public class ItemMixin {
             Block block = FabricSeasons.SEEDS_MAP.getOrDefault(item, null);
             if (block != null) {
                 Identifier cropIdentifier = Registry.BLOCK.getId(block);
-                float multiplier = FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, season);
+                float multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, season);
+                if (multiplier == 0f) {
+                    tooltip.add(Text.translatable("tooltip.seasons.not_grow").formatted(Formatting.RED));
+                } else if (multiplier < 1.0f) {
+                    tooltip.add(Text.translatable("tooltip.seasons.slowed_grow").formatted(Formatting.GOLD));
+                } else if (multiplier == 1.0f) {
+                    tooltip.add(Text.translatable("tooltip.seasons.normal_grow").formatted(Formatting.GREEN));
+                } else {
+                    tooltip.add(Text.translatable("tooltip.seasons.faster_grow").formatted(Formatting.LIGHT_PURPLE));
+                }
                 boolean sneak = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), MinecraftClient.getInstance().options.sneakKey.boundKey.getCode());
                 if (sneak) {
-                    tooltip.add(Text.translatable("tooltip.seasons.crop_multipliers"));
-                    MutableText spring = Text.translatable("tooltip.seasons.spring");
-                    MutableText springMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SPRING) * 100)) + "% speed");
-                    tooltip.add(spring.append(Text.literal(": ").setStyle(spring.getStyle()).append(springMultiplier)));
-                    MutableText summer = Text.translatable("tooltip.seasons.summer");
-                    MutableText summerMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.SUMMER) * 100)) + "% speed");
-                    tooltip.add(summer.append(Text.literal(": ").setStyle(summer.getStyle()).append(summerMultiplier)));
-                    MutableText fall = Text.translatable("tooltip.seasons.fall");
-                    MutableText fallMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.FALL) * 100)) + "% speed");
-                    tooltip.add(fall.append(Text.literal(": ").setStyle(fall.getStyle()).append(fallMultiplier)));
-                    MutableText winter = Text.translatable("tooltip.seasons.winter");
-                    MutableText winterMultiplier = Text.literal(String.format("%.1f", (FabricSeasons.CONFIG.getSeasonCropMultiplier(cropIdentifier, Season.WINTER) * 100)) + "% speed");
-                    tooltip.add(winter.append(Text.literal(": ").setStyle(winter.getStyle()).append(winterMultiplier)));
-                } else {
-                    if (multiplier == 0f) {
-                        tooltip.add(Text.translatable("tooltip.seasons.not_grow"));
-                    } else if (multiplier < 1.0f) {
-                        tooltip.add(Text.translatable("tooltip.seasons.slowed_grow"));
-                    } else if (multiplier == 1.0f) {
-                        tooltip.add(Text.translatable("tooltip.seasons.normal_grow"));
-                    } else {
-                        tooltip.add(Text.translatable("tooltip.seasons.faster_grow"));
+                    for (Season s : Season.values()) {
+                        if(season == s) {
+                            MutableText text = Text.translatable(s.getTranslationKey()).formatted(s.getFormatting(), Formatting.UNDERLINE);
+                            MutableText multiplierText = Text.literal(String.format("%.1f", (CropConfigs.getSeasonCropMultiplier(cropIdentifier, s) * 100)) + "% speed");
+                            tooltip.add(text.append(Text.literal(": ").append(multiplierText.formatted(s.getFormatting()))));
+                        }else{
+                            MutableText text = Text.translatable(s.getTranslationKey()).formatted(s.getFormatting());
+                            MutableText multiplierText = Text.literal(String.format("%.1f", (CropConfigs.getSeasonCropMultiplier(cropIdentifier, s) * 100)) + "% speed");
+                            tooltip.add(text.append(Text.literal(": ").append(multiplierText.formatted(Formatting.WHITE))));
+                        }
                     }
-                    tooltip.add(Text.literal(Text.translatable("tooltip.seasons.show_more").getString().replace("{KEY}", Text.translatable(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).getString())));
+                }else {
+                    tooltip.add(Text.literal(("§7"+Text.translatable("tooltip.seasons.show_more").getString()).replace("{KEY}", "§9"+Text.translatable(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).getString()+"§7")));
                 }
             }
         }

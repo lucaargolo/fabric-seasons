@@ -16,7 +16,7 @@ public class SeasonColor {
     }
 
     public SeasonColor(JsonElement json) {
-        this.springColor = getStringColor(json.getAsJsonObject().get("summer").getAsString());
+        this.springColor = getStringColor(json.getAsJsonObject().get("spring").getAsString());
         this.summerColor = getStringColor(json.getAsJsonObject().get("summer").getAsString());
         this.fallColor = getStringColor(json.getAsJsonObject().get("fall").getAsString());
         this.winterColor = getStringColor(json.getAsJsonObject().get("winter").getAsString());

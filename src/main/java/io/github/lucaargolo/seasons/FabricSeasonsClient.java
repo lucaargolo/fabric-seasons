@@ -1,10 +1,9 @@
 package io.github.lucaargolo.seasons;
 
-import io.github.lucaargolo.seasons.resources.SeasonFoliageColors;
-import io.github.lucaargolo.seasons.resources.SeasonGrassColors;
-import io.github.lucaargolo.seasons.utils.ModConfig;
-import io.github.lucaargolo.seasons.utils.ModIdentifier;
-import io.github.lucaargolo.seasons.utils.Season;
+import io.github.lucaargolo.seasons.resources.CropConfigs;
+import io.github.lucaargolo.seasons.resources.FoliageSeasonColors;
+import io.github.lucaargolo.seasons.resources.GrassSeasonColors;
+import io.github.lucaargolo.seasons.utils.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -26,7 +25,7 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.lucaargolo.seasons.FabricSeasons.ASK_FOR_CONFIG;
+import static io.github.lucaargolo.seasons.FabricSeasons.*;
 
 public class FabricSeasonsClient implements ClientModInitializer {
 
@@ -37,15 +36,15 @@ public class FabricSeasonsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         clientConfig = FabricSeasons.CONFIG;
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonGrassColors());
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SeasonFoliageColors());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GrassSeasonColors());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FoliageSeasonColors());
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             FabricSeasons.SEEDS_MAP.clear();
             Registry.ITEM.forEach(item -> {
                 if(item instanceof BlockItem) {
                     Block block = ((BlockItem) item).getBlock();
-                    if(block instanceof CropBlock || block instanceof StemBlock || block instanceof CocoaBlock || block instanceof SaplingBlock) {
+                    if(block instanceof SeasonalFertilizable) {
                         FabricSeasons.SEEDS_MAP.put(item, ((BlockItem) item).getBlock());
                     }
                 }
@@ -61,29 +60,40 @@ public class FabricSeasonsClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(FabricSeasons.ANSWER_CONFIG, (client, handler, buf, responseSender) -> {
             String configJson = buf.readString();
-            FabricSeasons.CONFIG = FabricSeasons.GSON.fromJson(configJson, ModConfig.class);
-            isServerConfig = true;
-            FabricSeasons.LOGGER.info("Received dedicated server config.");
+            client.execute(() -> {
+                FabricSeasons.CONFIG = FabricSeasons.GSON.fromJson(configJson, ModConfig.class);
+                isServerConfig = true;
+                FabricSeasons.LOGGER.info("["+MOD_NAME+"] Received dedicated server config.");
+            });
+
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(FabricSeasons.UPDATE_CROPS, (client, handler, buf, responseSender) -> {
+            CropConfig receivedConfig = CropConfig.fromBuf(buf);
+            HashMap<Identifier, CropConfig> receivedMap = CropConfigs.fromBuf(buf);
+            client.execute(() -> {
+                CropConfigs.receiveConfig(receivedConfig, receivedMap);
+                FabricSeasons.LOGGER.info("["+MOD_NAME+"] Received dedicated server crops.");
+            });
+
         });
 
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             if(!client.isIntegratedServerRunning()) {
-                FabricSeasons.LOGGER.info("Joined dedicated server, asking for config.");
+                FabricSeasons.LOGGER.info("["+MOD_NAME+"] Joined dedicated server, asking for config.");
                 ClientPlayNetworking.send(ASK_FOR_CONFIG, PacketByteBufs.empty());
             }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
             if(isServerConfig && clientConfig != null) {
-                FabricSeasons.LOGGER.info("Left dedicated server, restoring config.");
+                FabricSeasons.LOGGER.info("["+MOD_NAME+"] Left dedicated server, restoring config.");
                 FabricSeasons.CONFIG = clientConfig;
                 isServerConfig = false;
             }
         }));
 
         BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new ModIdentifier("greenhouse_glass")), RenderLayer.getTranslucent());
-        //Since we're replacing the Blocks.ICE entry we have to manually add the default ice block to the translucent render layer
-        BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new Identifier("ice")), RenderLayer.getTranslucent());
     }
 }

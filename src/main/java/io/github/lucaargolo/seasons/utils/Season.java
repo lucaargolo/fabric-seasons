@@ -1,14 +1,29 @@
 package io.github.lucaargolo.seasons.utils;
 
+import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 
 import java.util.Locale;
 
 public enum Season implements StringIdentifiable {
-    SPRING,
-    SUMMER,
-    FALL,
-    WINTER;
+    SPRING(Formatting.GREEN),
+    SUMMER(Formatting.GOLD),
+    FALL(Formatting.RED),
+    WINTER(Formatting.AQUA);
+
+    private final Formatting formatting;
+
+    Season(Formatting formatting) {
+        this.formatting = formatting;
+    }
+
+    public Formatting getFormatting() {
+        return formatting;
+    }
+
+    public String getTranslationKey() {
+        return "tooltip.seasons."+name().toLowerCase(Locale.ROOT);
+    }
 
     @Override
     public String asString() {

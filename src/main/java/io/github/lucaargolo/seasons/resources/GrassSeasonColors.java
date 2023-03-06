@@ -18,7 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class SeasonGrassColors implements SimpleSynchronousResourceReloadListener {
+import static io.github.lucaargolo.seasons.FabricSeasons.MOD_NAME;
+
+public class GrassSeasonColors implements SimpleSynchronousResourceReloadListener {
 
     private static final Identifier SPRING_GRASS_COLORMAP = new ModIdentifier("textures/colormap/spring_grass.png");
     private static final Identifier SUMMER_GRASS_COLORMAP = new ModIdentifier("textures/colormap/summer_grass.png");
@@ -33,7 +35,7 @@ public class SeasonGrassColors implements SimpleSynchronousResourceReloadListene
     private static SeasonColor minecraftSwampGrass1 = new SeasonColor(0x4C763C, 0x4C763C, 0x4C763C, 0x4C763C);
     private static SeasonColor minecraftSwampGrass2 = new SeasonColor(0x6A7039, 0x6A7039, 0x6A7039, 0x6A7039);
 
-    private static HashMap<Identifier, SeasonColor> grassColorMap = new HashMap<>();
+    private static final HashMap<Identifier, SeasonColor> grassColorMap = new HashMap<>();
 
     public static Optional<Integer> getSeasonGrassColor(Biome biome, Identifier biomeIdentifier, Season season) {
         Optional<SeasonColor> colors;
@@ -75,7 +77,7 @@ public class SeasonGrassColors implements SimpleSynchronousResourceReloadListene
 
     @Override
     public Identifier getFabricId() {
-        return new ModIdentifier("season_grass");
+        return new ModIdentifier("grass_season_colors");
     }
 
     @SuppressWarnings("deprecation")
@@ -87,7 +89,7 @@ public class SeasonGrassColors implements SimpleSynchronousResourceReloadListene
             Resource swampGrass2 = manager.getResource(new ModIdentifier("hardcoded/grass/swamp2.json")).orElseThrow();
             minecraftSwampGrass2 = new SeasonColor(JsonParser.parseReader(new InputStreamReader(swampGrass2.getInputStream(), StandardCharsets.UTF_8)));
         }catch (Exception e) {
-            FabricSeasons.LOGGER.error("Failed to load hardcoded grass colors", e);
+            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to load hardcoded grass colors", e);
         }
         grassColorMap.clear();
         manager.findResources("seasons/grass", id -> id.getPath().endsWith(".json")).forEach((id, resource) -> {
@@ -97,11 +99,11 @@ public class SeasonGrassColors implements SimpleSynchronousResourceReloadListene
                 SeasonColor colors = new SeasonColor(JsonParser.parseReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)));
                 grassColorMap.put(biomeIdentifier, colors);
             }catch(Exception e) {
-                FabricSeasons.LOGGER.error("Failed to load biome grass colors for: "+biomeIdentifier, e);
+                FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to load biome grass colors for: "+biomeIdentifier, e);
             }
         });
         if(!grassColorMap.isEmpty()) {
-            FabricSeasons.LOGGER.info("Successfully loaded "+grassColorMap.size()+" custom grass colors.");
+            FabricSeasons.LOGGER.info("["+MOD_NAME+"] Successfully loaded "+grassColorMap.size()+" custom grass colors.");
         }
         try {
             springColorMap = RawTextureDataLoader.loadRawTextureData(manager, SPRING_GRASS_COLORMAP);
@@ -109,7 +111,7 @@ public class SeasonGrassColors implements SimpleSynchronousResourceReloadListene
             fallColorMap = RawTextureDataLoader.loadRawTextureData(manager, FALL_GRASS_COLORMAP);
             winterColorMap = RawTextureDataLoader.loadRawTextureData(manager, WINTER_GRASS_COLORMAP);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to load foliage color texture", e);
+            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to load foliage color texture", e);
         }
     }
 }
