@@ -7,11 +7,12 @@ import net.minecraft.util.math.BlockPos;
 public interface Meltable {
 
     default void onMeltableReplaced(ServerWorld world, BlockPos pos) {
-        FabricSeasons.getMeltablesState(world).setManuallyPlaced(pos, false);
+        FabricSeasons.getPlacedMeltablesState(world).setManuallyPlaced(pos, false);
+        FabricSeasons.getReplacedMeltablesState(world).setReplaced(pos, null);
     }
 
     default void onMeltableManuallyPlaced(ServerWorld world, BlockPos pos) {
-        FabricSeasons.getMeltablesState(world).setManuallyPlaced(pos, true);
+        FabricSeasons.getPlacedMeltablesState(world).setManuallyPlaced(pos, true);
     }
 
 }

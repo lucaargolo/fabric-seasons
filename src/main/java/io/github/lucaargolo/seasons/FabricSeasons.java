@@ -12,7 +12,6 @@ import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixed.BiomeMixed;
 import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
 import io.github.lucaargolo.seasons.resources.CropConfigs;
-import io.github.lucaargolo.seasons.resources.GrassSeasonColors;
 import io.github.lucaargolo.seasons.utils.*;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import net.fabricmc.api.EnvType;
@@ -22,7 +21,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -166,8 +164,12 @@ public class FabricSeasons implements ModInitializer {
         return temporaryMeltableCache.contains(blockPos.asLong());
     }
 
-    public static PlacedMeltablesState getMeltablesState(ServerWorld world) {
+    public static PlacedMeltablesState getPlacedMeltablesState(ServerWorld world) {
         return world.getPersistentStateManager().getOrCreate(PlacedMeltablesState::createFromNbt, PlacedMeltablesState::new, "seasons_placed_meltables");
+    }
+
+    public static ReplacedMeltablesState getReplacedMeltablesState(ServerWorld world) {
+        return world.getPersistentStateManager().getOrCreate(ReplacedMeltablesState::createFromNbt, ReplacedMeltablesState::new, "seasons_replaced_meltables");
     }
 
     public static Season getCurrentSeason(World world) {
