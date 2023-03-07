@@ -19,7 +19,7 @@ public class BiomeColorsMixin {
     @Inject(at = @At("RETURN"), method = "method_23791", cancellable = true)
     private static void enhanceFallColors(Biome biome, double x, double z, CallbackInfoReturnable<Integer> cir) {
         Season season = FabricSeasons.getCurrentSeason();
-        if(season == Season.FALL && ((Object) biome) instanceof BiomeMixed mixed) {
+        if(season == Season.FALL && ((Object) biome) instanceof BiomeMixed mixed && mixed.getOriginalWeather() != null) {
             double d = MathHelper.clamp(mixed.getOriginalWeather().temperature, 0.0F, 1.0F);
             double e = MathHelper.clamp(mixed.getOriginalWeather().downfall, 0.0F, 1.0F);
             int fallFoliageColor = FoliageSeasonColors.getColor(Season.FALL, d, e);
