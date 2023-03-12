@@ -1,0 +1,22 @@
+{
+  "textures": {
+    "summer": {
+      "side": "minecraft:block/summer_small_dripleaf_side",
+      "top": "minecraft:block/summer_small_dripleaf_top",
+      "particle": "minecraft:block/summer_small_dripleaf_top",
+      "stem": "minecraft:block/summer_small_dripleaf_stem_top"
+    },
+    "fall": {
+      "side": "minecraft:block/fall_small_dripleaf_side",
+      "top": "minecraft:block/fall_small_dripleaf_top",
+      "particle": "minecraft:block/fall_small_dripleaf_top",
+      "stem": "minecraft:block/fall_small_dripleaf_stem_top"
+    },
+    "winter": {
+      "side": "minecraft:block/winter_small_dripleaf_side",
+      "top": "minecraft:block/winter_small_dripleaf_top",
+      "particle": "minecraft:block/winter_small_dripleaf_top",
+      "stem": "minecraft:block/winter_small_dripleaf_stem_top"
+    }
+  }
+}

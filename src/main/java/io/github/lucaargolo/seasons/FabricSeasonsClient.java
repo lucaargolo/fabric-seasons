@@ -1,20 +1,25 @@
 package io.github.lucaargolo.seasons;
 
+import io.github.lucaargolo.seasons.commands.SeasonDebugCommand;
 import io.github.lucaargolo.seasons.resources.CropConfigs;
 import io.github.lucaargolo.seasons.resources.FoliageSeasonColors;
 import io.github.lucaargolo.seasons.resources.GrassSeasonColors;
 import io.github.lucaargolo.seasons.utils.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.block.*;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.item.BlockItem;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -32,6 +37,8 @@ public class FabricSeasonsClient implements ClientModInitializer {
     private static boolean isServerConfig = false;
     private static ModConfig clientConfig = null;
     private static final Map<RegistryKey<World>, Season> lastRenderedSeasonMap = new HashMap<>();
+
+    public static final Map<BakedModel, Map<Season, BakedModel>> originalToSeasonModelMap = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -95,5 +102,13 @@ public class FabricSeasonsClient implements ClientModInitializer {
         }));
 
         BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new ModIdentifier("greenhouse_glass")), RenderLayer.getTranslucent());
+
+        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            ClientCommandRegistrationCallback.EVENT.register((SeasonDebugCommand::register));
+        }
+
+        FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent((container) -> {
+            ResourceManagerHelper.registerBuiltinResourcePack(new ModIdentifier("seasonal_lush_caves"), container, "Seasonal Lush Caves", ResourcePackActivationType.DEFAULT_ENABLED);
+        });
     }
 }

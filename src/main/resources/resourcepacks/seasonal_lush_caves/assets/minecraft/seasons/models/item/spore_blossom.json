@@ -1,0 +1,19 @@
+{
+  "textures": {
+    "summer": {
+      "particle": "minecraft:block/summer_spore_blossom",
+      "flower": "minecraft:block/summer_spore_blossom",
+      "base": "minecraft:block/summer_spore_blossom_base"
+    },
+    "fall": {
+      "particle": "minecraft:block/fall_spore_blossom",
+      "flower": "minecraft:block/fall_spore_blossom",
+      "base": "minecraft:block/fall_spore_blossom_base"
+    },
+    "winter": {
+      "particle": "minecraft:block/winter_spore_blossom",
+      "flower": "minecraft:block/winter_spore_blossom",
+      "base": "minecraft:block/winter_spore_blossom_base"
+    }
+  }
+}

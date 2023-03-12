@@ -1,0 +1,13 @@
+{
+  "textures": {
+    "summer": {
+      "cross": "minecraft:block/summer_cave_vines_plant"
+    },
+    "fall": {
+      "cross": "minecraft:block/fall_cave_vines_plant"
+    },
+    "winter": {
+      "cross": "minecraft:block/winter_cave_vines_plant"
+    }
+  }
+}

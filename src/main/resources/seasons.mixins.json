@@ -19,7 +19,11 @@
     "BiomeColorsMixin",
     "BiomeMixin",
     "BlockColorsMixin",
+    "BlockModelsMixin",
     "ItemMixin",
+    "ItemModelsMixin",
+    "JsonUnbakedModelMixin",
+    "ModelLoaderMixin",
     "WorldRendererMixin"
   ],
   "injectors": {

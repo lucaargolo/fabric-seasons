@@ -2,10 +2,8 @@ package io.github.lucaargolo.seasons.utils;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
-import it.unimi.dsi.fastutil.longs.LongArraySet;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtLongArray;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -50,11 +48,15 @@ public class ReplacedMeltablesState extends PersistentState {
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         chunkToReplaced.long2ObjectEntrySet().fastForEach(entry -> {
-            NbtCompound innerNbt = new NbtCompound();
-            entry.getValue().long2ObjectEntrySet().fastForEach(innerEntry -> {
-                innerNbt.put(innerEntry.getLongKey()+"", BlockState.CODEC.encode(innerEntry.getValue(), NbtOps.INSTANCE, NbtOps.INSTANCE.empty()).getOrThrow(true, a -> {}));
-            });
-            nbt.put(entry.getLongKey()+"", innerNbt);
+            if(!entry.getValue().isEmpty()) {
+                NbtCompound innerNbt = new NbtCompound();
+                entry.getValue().long2ObjectEntrySet().fastForEach(innerEntry -> {
+                    BlockState.CODEC.encode(innerEntry.getValue(), NbtOps.INSTANCE, NbtOps.INSTANCE.empty()).get().ifLeft((element) -> {
+                        innerNbt.put(innerEntry.getLongKey() + "", element);
+                    });
+                });
+                nbt.put(entry.getLongKey() + "", innerNbt);
+            }
         });
         return nbt;
     }
@@ -67,8 +69,10 @@ public class ReplacedMeltablesState extends PersistentState {
                 NbtCompound innerNbt = nbt.getCompound(key);
                 innerNbt.getKeys().forEach(innerKey -> {
                     long innerLongKey = Long.parseLong(innerKey);
-                    BlockState replacedState = BlockState.CODEC.decode(NbtOps.INSTANCE, nbt.get(innerKey)).getOrThrow(true, a -> {}).getFirst();
-                    posToReplaced.put(innerLongKey, replacedState);
+                    BlockState.CODEC.decode(NbtOps.INSTANCE, innerNbt.get(innerKey)).get().ifLeft((pair) -> {
+                        BlockState replacedState = pair.getFirst();
+                        posToReplaced.put(innerLongKey, replacedState);
+                    });
                 });
                 state.chunkToReplaced.put(longKey, posToReplaced);
             }catch (NumberFormatException exception) {

@@ -1,0 +1,16 @@
+{
+  "textures": {
+    "summer": {
+      "particle": "minecraft:block/summer_big_dripleaf_stem",
+      "stem": "minecraft:block/summer_big_dripleaf_stem"
+    },
+    "fall": {
+      "particle": "minecraft:block/fall_big_dripleaf_stem",
+      "stem": "minecraft:block/fall_big_dripleaf_stem"
+    },
+    "winter": {
+      "particle": "minecraft:block/winter_big_dripleaf_stem",
+      "stem": "minecraft:block/winter_big_dripleaf_stem"
+    }
+  }
+}

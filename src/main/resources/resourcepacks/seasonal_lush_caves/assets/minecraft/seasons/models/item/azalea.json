@@ -1,0 +1,22 @@
+{
+  "textures": {
+    "summer": {
+      "side": "minecraft:block/summer_azalea_side",
+      "top": "minecraft:block/summer_azalea_top",
+      "plant": "minecraft:block/summer_azalea_plant",
+      "particle": "minecraft:block/summer_azalea_plant"
+    },
+    "fall": {
+      "side": "minecraft:block/fall_azalea_side",
+      "top": "minecraft:block/fall_azalea_top",
+      "plant": "minecraft:block/fall_azalea_plant",
+      "particle": "minecraft:block/fall_azalea_plant"
+    },
+    "winter": {
+      "side": "minecraft:block/winter_azalea_side",
+      "top": "minecraft:block/winter_azalea_top",
+      "plant": "minecraft:block/winter_azalea_plant",
+      "particle": "minecraft:block/winter_azalea_plant"
+    }
+  }
+}

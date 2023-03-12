@@ -1,0 +1,13 @@
+{
+  "textures": {
+    "summer": {
+      "all": "minecraft:block/summer_azalea_leaves"
+    },
+    "fall": {
+      "all": "minecraft:block/fall_azalea_leaves"
+    },
+    "winter": {
+      "all": "minecraft:block/winter_azalea_leaves"
+    }
+  }
+}

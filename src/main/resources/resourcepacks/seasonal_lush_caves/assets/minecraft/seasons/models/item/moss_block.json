@@ -1,0 +1,13 @@
+{
+  "textures": {
+    "summer": {
+      "all": "minecraft:block/summer_moss_block"
+    },
+    "fall": {
+      "all": "minecraft:block/fall_moss_block"
+    },
+    "winter": {
+      "all": "minecraft:block/winter_moss_block"
+    }
+  }
+}

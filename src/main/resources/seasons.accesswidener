@@ -9,3 +9,5 @@ accessible field net/minecraft/world/biome/Biome$Weather temperatureModifier Lne
 accessible field net/minecraft/world/biome/Biome$Weather downfall F
 accessible field net/minecraft/client/option/KeyBinding boundKey Lnet/minecraft/client/util/InputUtil$Key;
 accessible method net/minecraft/world/biome/Biome getTemperature (Lnet/minecraft/util/math/BlockPos;)F
+accessible method net/minecraft/client/render/model/json/JsonUnbakedModel$Deserializer resolveReference (Lnet/minecraft/util/Identifier;Ljava/lang/String;)Lcom/mojang/datafixers/util/Either;
+mutable field net/minecraft/client/render/model/json/JsonUnbakedModel textureMap Ljava/util/Map;

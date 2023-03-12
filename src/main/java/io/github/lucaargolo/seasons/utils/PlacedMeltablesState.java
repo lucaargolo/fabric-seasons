@@ -1,12 +1,9 @@
 package io.github.lucaargolo.seasons.utils;
 
 import io.github.lucaargolo.seasons.FabricSeasons;
-import it.unimi.dsi.fastutil.longs.Long2IntArrayMap;
-import it.unimi.dsi.fastutil.longs.Long2LongArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLongArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -47,7 +44,9 @@ public class PlacedMeltablesState extends PersistentState {
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         chunkToPlaced.long2ObjectEntrySet().fastForEach(entry -> {
-            nbt.put(entry.getLongKey()+"", new NbtLongArray(entry.getValue()));
+            if(!entry.getValue().isEmpty()) {
+                nbt.put(entry.getLongKey() + "", new NbtLongArray(entry.getValue()));
+            }
         });
         return nbt;
     }
