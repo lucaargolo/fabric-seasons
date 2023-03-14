@@ -13,7 +13,7 @@
 </p>
 <p align="center">
   <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-seasons"><img src="http://cf.way2muchnoise.eu/full_413523_downloads.svg"></a>
-  <a href="https://modrinth.com/mod/fabric-seasons"><img src="https://img.shields.io/modrinth/dt/fabric-seasons?color=00AF5C&label=modrinth&logo=modrinth"></a>
+  <a href="https://modrinth.com/mod/fabric-seasons"><img src="https://img.shields.io/badge/dynamic/json?color=00AF5C&logo=modrinth&label=modrinth&query=downloads&suffix=%20downloads&url=https://api.modrinth.com/v2/project/fabric-seasons"></a>
 </p>
 
 ## Features
