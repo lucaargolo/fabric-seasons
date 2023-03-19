@@ -68,6 +68,7 @@ public class BiomeMixin implements BiomeMixed {
 
     }
 
+    @SuppressWarnings("removal")
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects$GrassColorModifier;getModifiedGrassColor(DDI)I"), method = "getGrassColorAt")
     public int getSeasonModifiedGrassColor(BiomeEffects.GrassColorModifier gcm, double x, double z, int color) {
         if(gcm == BiomeEffects.GrassColorModifier.SWAMP) {

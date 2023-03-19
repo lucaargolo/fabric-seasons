@@ -2,9 +2,9 @@ package io.github.lucaargolo.seasons.resources;
 
 import com.google.gson.JsonParser;
 import io.github.lucaargolo.seasons.FabricSeasons;
-import io.github.lucaargolo.seasons.utils.SeasonColor;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
+import io.github.lucaargolo.seasons.utils.SeasonColor;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.util.RawTextureDataLoader;
 import net.minecraft.resource.Resource;
@@ -44,14 +44,7 @@ public class GrassSeasonColors implements SimpleSynchronousResourceReloadListene
         }else{
             colors = Optional.empty();
         }
-        Optional<Integer> color = colors.map(seasonColor -> seasonColor.getColor(season));
-        if(color.isEmpty() && FabricSeasons.CONFIG.isDefaultHSBShiftEnabled()) {
-            Optional<Integer> defaultColor = biome.getEffects().getGrassColor();
-            if(defaultColor.isPresent()) {
-                return Optional.of(FabricSeasons.CONFIG.getShiftedColor(season, defaultColor.get()));
-            }
-        }
-        return color;
+        return colors.map(seasonColor -> seasonColor.getColor(season));
     }
 
     public static int getColor(Season season, double temperature, double humidity) {

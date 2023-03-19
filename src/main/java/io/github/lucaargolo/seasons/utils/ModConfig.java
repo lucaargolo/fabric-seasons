@@ -1,14 +1,9 @@
 package io.github.lucaargolo.seasons.utils;
 
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection", "unused"})
 public class ModConfig {
@@ -28,52 +23,6 @@ public class ModConfig {
     private boolean isSeasonTiedWithSystemTime = false;
     
     private boolean isInNorthHemisphere = true;
-
-
-    private boolean isDefaultHSBShiftEnabled = false;
-
-    public boolean isDefaultHSBShiftEnabled() {
-        return isDefaultHSBShiftEnabled;
-    }
-
-    private static class HSBShift {
-        private float hue;
-        private float saturation;
-        private float brightness;
-
-        public HSBShift(float hue, float saturation, float brightness) {
-            this.hue = hue;
-            this.saturation = saturation;
-            this.brightness = brightness;
-        }
-    }
-
-    private static class DefaultHSBShift {
-        private HSBShift springHSBShift = new HSBShift(0f, 100f, 0f);
-        private HSBShift summerHSBShift = new HSBShift(0f, 150f, -10f);
-        private HSBShift fallHSBShift = new HSBShift(-65f, 125f, -15f);
-        private HSBShift winterHSBShift = new HSBShift(-65f, 80f, -40f);
-
-        public HSBShift getHSBShift(Season season) {
-            return switch (season) {
-                case SPRING -> springHSBShift;
-                case SUMMER -> summerHSBShift;
-                case FALL -> fallHSBShift;
-                case WINTER -> winterHSBShift;
-            };
-        }
-
-    }
-
-    
-    private DefaultHSBShift defaultHSBShift = new DefaultHSBShift();
-
-    public int getShiftedColor(Season season, int defaultColor) {
-        Color initialColor = new Color(defaultColor);
-        HSBShift hueShift = defaultHSBShift.getHSBShift(season);
-        Color finalColor = ColorHelper.changeHueSatBri(initialColor, hueShift.hue, hueShift.saturation, hueShift.brightness);
-        return finalColor.getRGB();
-    }
 
     private boolean isSeasonMessingCrops = true;
     private boolean isSeasonMessingBonemeal = false;

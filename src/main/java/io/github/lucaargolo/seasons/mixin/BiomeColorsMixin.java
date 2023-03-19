@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BiomeColors.class)
 public class BiomeColorsMixin {
 
-    @SuppressWarnings("ConstantValue")
+    @SuppressWarnings({"ConstantValue", "removal"})
     @Inject(at = @At("RETURN"), method = "method_23791", cancellable = true)
     private static void enhanceFallColors(Biome biome, double x, double z, CallbackInfoReturnable<Integer> cir) {
         Season season = FabricSeasons.getCurrentSeason();
