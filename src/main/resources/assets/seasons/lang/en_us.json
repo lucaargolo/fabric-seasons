@@ -1,16 +1,16 @@
 {
-  "item.seasons.season_calendar": "Season Calendar",
-  "block.seasons.season_detector": "Season Detector",
-  "block.seasons.greenhouse_glass": "Greenhouse Glass",
   "tooltip.seasons.spring": "Spring",
   "tooltip.seasons.summer": "Summer",
   "tooltip.seasons.fall": "Fall",
   "tooltip.seasons.winter": "Winter",
-  "tooltip.seasons.calendar_info_1": "You're in the ",
-  "tooltip.seasons.calendar_info_2": " days left to ",
   "tooltip.seasons.faster_grow": "Grows faster this season",
   "tooltip.seasons.normal_grow": "Grows normally this season",
   "tooltip.seasons.slowed_grow": "Grows slower this season",
   "tooltip.seasons.not_grow": "Won't grow this season",
-  "tooltip.seasons.show_more": "Press {KEY} to show more"
+  "tooltip.seasons.show_more": "Press {KEY} to show more",
+
+  "chat.seasons.mod_installed": "Looks like you have {MOD} installed!",
+  "chat.seasons.compatibility": "Get full Fabric Seasons compatibility installing the addon.",
+  "chat.seasons.available_at": "Available at: ",
+  "chat.seasons.show_once": "This message will only show once."
 }

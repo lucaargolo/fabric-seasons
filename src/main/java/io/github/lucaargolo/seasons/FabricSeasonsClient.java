@@ -87,6 +87,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
 
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            CompatWarnState.getState(client).join();
             if(!client.isIntegratedServerRunning()) {
                 FabricSeasons.LOGGER.info("["+MOD_NAME+"] Joined dedicated server, asking for config.");
                 ClientPlayNetworking.send(ASK_FOR_CONFIG, PacketByteBufs.empty());
@@ -94,6 +95,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
+            CropConfigs.clear();
             if(isServerConfig && clientConfig != null) {
                 FabricSeasons.LOGGER.info("["+MOD_NAME+"] Left dedicated server, restoring config.");
                 FabricSeasons.CONFIG = clientConfig;

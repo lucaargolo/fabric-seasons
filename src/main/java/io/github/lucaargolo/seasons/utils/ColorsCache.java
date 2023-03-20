@@ -11,12 +11,18 @@ public class ColorsCache {
     private static final HashMap<Biome, Optional<Integer>> foliageColors = new HashMap<>();
     private static final HashMap<Biome, Optional<Integer>> grassColors = new HashMap<>();
 
+    @SuppressWarnings("OptionalAssignedToNull")
     public static void createFoliageCache(Biome biome, Optional<Integer> integer) {
-        foliageColors.put(biome, integer);
+        if(integer != null) {
+            foliageColors.put(biome, integer);
+        }
     }
 
+    @SuppressWarnings("OptionalAssignedToNull")
     public static void createGrassCache(Biome biome, Optional<Integer> integer) {
-        grassColors.put(biome, integer);
+        if(integer != null) {
+            grassColors.put(biome, integer);
+        }
     }
 
     public static boolean hasFoliageCache(Biome biome) {

@@ -3,12 +3,7 @@ package io.github.lucaargolo.seasons;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import io.github.lucaargolo.seasons.block.GreenhouseGlassBlock;
-import io.github.lucaargolo.seasons.block.SeasonDetectorBlock;
-import io.github.lucaargolo.seasons.blockentities.GreenhouseGlassBlockEntity;
-import io.github.lucaargolo.seasons.blockentities.SeasonDetectorBlockEntity;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
-import io.github.lucaargolo.seasons.item.SeasonCalendarItem;
 import io.github.lucaargolo.seasons.mixed.BiomeMixed;
 import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
 import io.github.lucaargolo.seasons.resources.CropConfigs;
@@ -22,18 +17,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.world.ServerWorld;
@@ -61,16 +51,15 @@ import java.util.List;
 public class FabricSeasons implements ModInitializer {
 
     //TODO: Move items to Fabric Seasons: Extras (Change Greenhouse Cache Logic)
-    //TODO: Add Extras items/blocks (fallen leaves, greenhouse variants)
+    //TODO: Add Extras items/blocks (fallen leaves, greenhouse variants, patchouli book)
     //TODO: Fix calendar design
 
+    //TODO: Update terralith compat
     //TODO: Vanilla Crops Datapack
-    //TODO: Change Seasonal Fertilizable logic (So it works with BYG fruits)
     //TODO: Traverse Resource Pack
     //TODO: Terrestria Resource Pack
     //TODO: Croptopia Data Pack
     //TODO: Farmer's Delight Data Pack
-    //TODO: Add system that detects when a player is using the mod and not the resource/data pack and sends one message to let them know
 
     private static final LongArraySet temporaryMeltableCache = new LongArraySet();
     public static final String MOD_ID = "seasons";
@@ -84,13 +73,11 @@ public class FabricSeasons implements ModInitializer {
 
     public static HashMap<Item, Block> SEEDS_MAP = new HashMap<>();
 
-    public static BlockEntityType<SeasonDetectorBlockEntity> SEASON_DETECTOR_TYPE = null;
-    public static BlockEntityType<GreenhouseGlassBlockEntity> GREENHOUSE_GLASS_TYPE = null;
+    public static Identifier ASK_FOR_CONFIG = new ModIdentifier("ask_for_config");
+    public static Identifier ANSWER_CONFIG = new ModIdentifier("anwer_config");
 
-    public static Identifier ASK_FOR_CONFIG = new Identifier(MOD_ID, "ask_for_config");
-    public static Identifier ANSWER_CONFIG = new Identifier(MOD_ID, "anwer_config");
+    public static Identifier UPDATE_CROPS = new ModIdentifier("update_crops");
 
-    public static Identifier UPDATE_CROPS = new Identifier(MOD_ID, "update_crops");
 
     @Override
     public void onInitialize() {
@@ -143,16 +130,6 @@ public class FabricSeasons implements ModInitializer {
             CropConfigs.toBuf(buf);
             ServerPlayNetworking.send(player, UPDATE_CROPS, buf);
         });
-
-        Registry.register(Registry.ITEM, new ModIdentifier("season_calendar"), new SeasonCalendarItem((new Item.Settings()).group(ItemGroup.TOOLS)));
-
-        SeasonDetectorBlock seasonDetector = Registry.register(Registry.BLOCK, new ModIdentifier("season_detector"), new SeasonDetectorBlock(FabricBlockSettings.copyOf(Blocks.DAYLIGHT_DETECTOR)));
-        SEASON_DETECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("season_detector"), FabricBlockEntityTypeBuilder.create(seasonDetector::createBlockEntity, seasonDetector).build(null));
-        Registry.register(Registry.ITEM, new ModIdentifier("season_detector"), new BlockItem(seasonDetector, new Item.Settings().group(ItemGroup.REDSTONE)));
-
-        GreenhouseGlassBlock greenhouseGlass = Registry.register(Registry.BLOCK, new ModIdentifier("greenhouse_glass"), new GreenhouseGlassBlock(FabricBlockSettings.copyOf(Blocks.GREEN_STAINED_GLASS)));
-        GREENHOUSE_GLASS_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new ModIdentifier("greenhouse_glass"), FabricBlockEntityTypeBuilder.create(greenhouseGlass::createBlockEntity, greenhouseGlass).build(null));
-        Registry.register(Registry.ITEM, new ModIdentifier("greenhouse_glass"), new BlockItem(greenhouseGlass, new Item.Settings().group(ItemGroup.DECORATIONS)));
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             GreenhouseCache.tick(server);

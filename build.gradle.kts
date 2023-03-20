@@ -1,10 +1,10 @@
-import org.ajoberstar.grgit.Grgit
-import org.kohsuke.github.GitHub
-import org.kohsuke.github.GHReleaseBuilder
-import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseArtifact
+import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import com.matthewprenger.cursegradle.Options
+import org.ajoberstar.grgit.Grgit
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 
 buildscript {
     dependencies {
@@ -186,4 +186,12 @@ modrinth {
 }
 tasks.modrinth.configure {
     group = "upload"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }

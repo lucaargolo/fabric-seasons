@@ -6,12 +6,12 @@
   "mixins": [
     "AbstractBlockMixin",
     "AnimalEntityMixin",
-    "FertilizableMixin",
     "FreezeTopLayerFeatureMixin",
     "IceBlockMixin",
     "LakeFeatureMixin",
     "ServerWorldMixin",
     "SnowBlockMixin",
+    "VanillaFertilizablesMixin",
     "WeatherAccessor",
     "WorldViewMixin"
   ],

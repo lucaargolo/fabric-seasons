@@ -5,26 +5,22 @@ import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.utils.CropConfig;
 import io.github.lucaargolo.seasons.utils.ModIdentifier;
 import io.github.lucaargolo.seasons.utils.Season;
-import io.github.lucaargolo.seasons.utils.SeasonColor;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.util.RawTextureDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Optional;
 
 import static io.github.lucaargolo.seasons.FabricSeasons.MOD_NAME;
 
 public class CropConfigs implements SimpleSynchronousResourceReloadListener {
 
-    private static CropConfig defaultCropConfig = new CropConfig(1.0f, 0.8f, 0.6f, 0f);
+    private static final CropConfig DEFAULT = new CropConfig(1.0f, 0.8f, 0.6f, 0f);
+    private static CropConfig defaultCropConfig = DEFAULT;
     private static HashMap<Identifier, CropConfig> cropConfigMap = new HashMap<>();
 
     public static float getSeasonCropMultiplier(Identifier cropIdentifier, Season season) {
@@ -34,6 +30,11 @@ public class CropConfigs implements SimpleSynchronousResourceReloadListener {
     public static void receiveConfig(CropConfig defaultConfig, HashMap<Identifier, CropConfig> configMap) {
         defaultCropConfig = defaultConfig;
         cropConfigMap = configMap;
+    }
+
+    public static void clear() {
+        defaultCropConfig = DEFAULT;
+        cropConfigMap.clear();
     }
 
     public static CropConfig getDefaultCropConfig() {
