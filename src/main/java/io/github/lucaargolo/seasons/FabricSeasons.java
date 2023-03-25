@@ -30,6 +30,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BiomeTags;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
@@ -50,16 +51,22 @@ import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
 
-    //TODO: Move items to Fabric Seasons: Extras (Change Greenhouse Cache Logic)
     //TODO: Add Extras items/blocks (fallen leaves, greenhouse variants, patchouli book)
     //TODO: Fix calendar design
 
     //TODO: Update terralith compat
-    //TODO: Vanilla Crops Datapack
     //TODO: Traverse Resource Pack
     //TODO: Terrestria Resource Pack
+
+    //TODO: Vanilla Crops Datapack
     //TODO: Croptopia Data Pack
     //TODO: Farmer's Delight Data Pack
+
+    //TODO: Create compat pages/readme
+    //TODO: Create extras page/readme
+    //TODO: Update mod page/readme
+    //TODO: Set up maven publish for addons
+
 
     private static final LongArraySet temporaryMeltableCache = new LongArraySet();
     public static final String MOD_ID = "seasons";
@@ -254,86 +261,76 @@ public class FabricSeasons implements ModInitializer {
         WeatherAccessor weatherAccessor = ((WeatherAccessor) (Object) currentWeather);
         assert weatherAccessor != null;
 
-        float temp = originalWeather.temperature;
-        if(entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG)) {
+        boolean isJungle = entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG);
+        Pair<Biome.Precipitation, Float> modifiedWeather = getSeasonWeather(season, isJungle, originalWeather.precipitation, originalWeather.temperature);
+        weatherAccessor.setPrecipitation(modifiedWeather.getLeft());
+        weatherAccessor.setTemperature(modifiedWeather.getRight());
+    }
+
+    public static Pair<Biome.Precipitation, Float> getSeasonWeather(Season season, boolean jungle, Biome.Precipitation precipitation, float temp) {
+        if(jungle) {
             //Jungle Biomes
             if (season == Season.WINTER) {
-                weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                weatherAccessor.setTemperature(temp-0.1f);
+                return new Pair<>(precipitation, temp-0.1f);
             } else {
-                weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                weatherAccessor.setTemperature(temp);
+                return new Pair<>(precipitation, temp);
             }
         }else if(temp <= 0.1) {
             //Frozen Biomes
             switch (season) {
                 case SUMMER -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.RAIN);
-                    weatherAccessor.setTemperature(temp + 0.3f);
+                    return new Pair<>(Biome.Precipitation.RAIN, temp + 0.3f);
                 }
                 case WINTER -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.SNOW);
-                    weatherAccessor.setTemperature(temp - 0.2f);
+                    return new Pair<>(Biome.Precipitation.SNOW, temp - 0.2f);
                 }
                 default -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp);
+                    return new Pair<>(precipitation, temp);
                 }
             }
         }else if(temp <= 0.3) {
             //Cold Biomes
             switch (season) {
                 case SPRING -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.RAIN);
-                    weatherAccessor.setTemperature(temp);
+                    return new Pair<>(Biome.Precipitation.RAIN, temp);
                 }
                 case SUMMER -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.RAIN);
-                    weatherAccessor.setTemperature(temp + 0.2f);
+                    return new Pair<>(Biome.Precipitation.RAIN, temp + 0.2f);
                 }
                 case WINTER -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.SNOW);
-                    weatherAccessor.setTemperature(temp - 0.2f);
+                    return new Pair<>(Biome.Precipitation.SNOW, temp - 0.2f);
                 }
                 default -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp);
+                    return new Pair<>(precipitation, temp);
                 }
             }
         }else if(temp <= 0.95) {
             //Temperate Biomes
             switch (season) {
                 case SUMMER -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp + 0.2f);
+                    return new Pair<>(precipitation, temp + 0.2f);
                 }
                 case FALL -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp - 0.1f);
+                    return new Pair<>(precipitation, temp - 0.1f);
                 }
                 case WINTER -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.SNOW);
-                    weatherAccessor.setTemperature(temp - 0.7f);
+                    return new Pair<>(Biome.Precipitation.SNOW, temp - 0.7f);
                 }
                 default -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp);
+                    return new Pair<>(precipitation, temp);
                 }
             }
         }else{
             //Hot biomes
             switch (season) {
                 case SUMMER -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp + 0.2f);
+                    return new Pair<>(precipitation, temp + 0.2f);
                 }
                 case WINTER -> {
-                    weatherAccessor.setPrecipitation(Biome.Precipitation.RAIN);
-                    weatherAccessor.setTemperature(temp - 0.2f);
+                    return new Pair<>(Biome.Precipitation.RAIN, temp - 0.2f);
                 }
                 default -> {
-                    weatherAccessor.setPrecipitation(originalWeather.precipitation);
-                    weatherAccessor.setTemperature(temp);
+                    return new Pair<>(precipitation, temp);
                 }
             }
         }

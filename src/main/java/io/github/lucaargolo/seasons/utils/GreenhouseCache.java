@@ -12,7 +12,7 @@ public class GreenhouseCache {
 
     private static final HashMap<RegistryKey<World>, HashMap<ChunkPos, ArrayList<GreenHouseTicket>>> CACHE = new HashMap<>();
 
-    private static final int EXPIRATION_TIME = 40;
+    public static final int EXPIRATION_TIME = 40;
     private static int AGE;
 
     public static void add(World world, ChunkPos chunkPos, GreenHouseTicket ticket) {

@@ -12,7 +12,9 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Mixin(Biome.class)
 public class BiomeMixin implements BiomeMixed {
 
+    @Shadow @Final public Biome.Weather weather;
     private Biome.Weather originalWeather;
 
     @SuppressWarnings("ConstantConditions")
@@ -88,6 +91,10 @@ public class BiomeMixin implements BiomeMixed {
             double originalTemperature = MathHelper.clamp(this.originalWeather.temperature, 0.0F, 1.0F);
             double originalDownfall = MathHelper.clamp(this.originalWeather.downfall, 0.0F, 1.0F);
             cir.setReturnValue(FoliageSeasonColors.getColor(FabricSeasons.getCurrentSeason(), originalTemperature, originalDownfall));
+        }else{
+            double temperature = MathHelper.clamp(this.weather.temperature, 0.0F, 1.0F);
+            double downfall = MathHelper.clamp(this.weather.downfall, 0.0F, 1.0F);
+            cir.setReturnValue(FoliageSeasonColors.getColor(FabricSeasons.getCurrentSeason(), temperature, downfall));
         }
     }
 
@@ -96,6 +103,10 @@ public class BiomeMixin implements BiomeMixed {
         if(this.originalWeather != null) {
             double d = MathHelper.clamp(this.originalWeather.temperature, 0.0F, 1.0F);
             double e = MathHelper.clamp(this.originalWeather.downfall, 0.0F, 1.0F);
+            cir.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
+        }else{
+            double d = MathHelper.clamp(this.weather.temperature, 0.0F, 1.0F);
+            double e = MathHelper.clamp(this.weather.downfall, 0.0F, 1.0F);
             cir.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
         }
     }
