@@ -1,0 +1,16 @@
+{
+  "tooltip.seasons.spring": "Primavera",
+  "tooltip.seasons.summer": "Verão",
+  "tooltip.seasons.fall": "Outono",
+  "tooltip.seasons.winter": "Inverno",
+  "tooltip.seasons.faster_grow": "Cresce mais rapido nessa estação",
+  "tooltip.seasons.normal_grow": "Cresce normalmente nessa estação",
+  "tooltip.seasons.slowed_grow": "Cresce mais devagar nessa estação",
+  "tooltip.seasons.not_grow": "Não cresce nessa estação",
+  "tooltip.seasons.show_more": "Segure {KEY} para ver mais",
+
+  "chat.seasons.mod_installed": "Ei! Parece que você possui o {MOD} intalado!",
+  "chat.seasons.compatibility": "Garanta compatibilidade total com o Fabric Seasons instalando o addon.",
+  "chat.seasons.available_at": "Disponível em: ",
+  "chat.seasons.show_once": "Essa mensagem aparecerá apenas uma vez."
+}

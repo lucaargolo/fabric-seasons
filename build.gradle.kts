@@ -194,4 +194,16 @@ publishing {
             from(components["java"])
         }
     }
+
+    repositories {
+        maven {
+            url = uri("https://maven.cafeteria.dev/releases")
+            credentials {
+                username = environment["MAVEN_USERNAME"]
+                password = environment["MAVEN_PASSWORD"]
+            }
+        }
+
+
+    }
 }

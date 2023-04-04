@@ -178,9 +178,9 @@ public class FabricSeasons implements ModInitializer {
             if(CONFIG.isSeasonTiedWithSystemTime()) {
                 return getCurrentSystemSeason();
             }
-            int worldTime = Math.toIntExact(world.getTimeOfDay());
-            int seasonTime = (worldTime / CONFIG.getSeasonLength());
-            return Season.values()[seasonTime % 4];
+            long worldTime = world.getTimeOfDay();
+            long seasonTime = (worldTime / CONFIG.getSeasonLength());
+            return Season.values()[(int) (seasonTime % 4)];
         }
         return Season.SPRING;
     }
