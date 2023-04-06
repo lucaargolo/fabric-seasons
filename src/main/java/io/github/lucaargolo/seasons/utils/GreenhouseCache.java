@@ -1,6 +1,8 @@
 package io.github.lucaargolo.seasons.utils;
 
+import io.github.lucaargolo.seasons.FabricSeasons;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.RegistryKey;
@@ -12,7 +14,7 @@ public class GreenhouseCache {
 
     private static final HashMap<RegistryKey<World>, HashMap<ChunkPos, ArrayList<GreenHouseTicket>>> CACHE = new HashMap<>();
 
-    public static final int EXPIRATION_TIME = 40;
+    public static final int EXPIRATION_TIME = 5;
     private static int AGE;
 
     public static void add(World world, ChunkPos chunkPos, GreenHouseTicket ticket) {
@@ -21,7 +23,8 @@ public class GreenhouseCache {
         chunkTickets.computeIfAbsent(chunkPos, p -> new ArrayList<>()).add(ticket);
     }
 
-    public static Set<Season> test(World world, BlockPos pos) {
+    public static Season test(World world, BlockPos pos) {
+        Season currentSeason = FabricSeasons.getCurrentSeason(world);
         HashSet<Season> seasons = new HashSet<>();
         RegistryKey<World> worldKey = world.getRegistryKey();
         HashMap<ChunkPos, ArrayList<GreenHouseTicket>> chunkTickets = CACHE.get(worldKey);
@@ -32,6 +35,7 @@ public class GreenhouseCache {
                 while (iterator.hasNext()) {
                     GreenHouseTicket ticket = iterator.next();
                     if(AGE > ticket.age + EXPIRATION_TIME) {
+                        ticket.expired = true;
                         iterator.remove();
                     }else{
                         seasons.addAll(ticket.test(pos));
@@ -39,7 +43,7 @@ public class GreenhouseCache {
                 }
             }
         }
-        return seasons;
+        return seasons.stream().max(Comparator.comparingInt(Season::getTemperature)).orElse(currentSeason);
     }
 
     public static void tick(MinecraftServer server) {
@@ -48,29 +52,28 @@ public class GreenhouseCache {
 
     public static class GreenHouseTicket {
 
-        private final Set<Season> seasons;
-        private final int x;
-        private final int z;
-        private final int minY;
-        private final int maxY;
-        private final int age;
+        private final BlockBox box;
 
-        public GreenHouseTicket(int x, int z, int minY, int maxY, Season... season) {
-            this.seasons = Set.of(season);
-            this.x = x;
-            this.z = z;
-            this.minY = minY;
-            this.maxY = maxY;
+        public final Set<Season> seasons;
+
+        public int age;
+        public boolean expired;
+
+        public GreenHouseTicket(BlockBox box, Season... season) {
+            this.box = box;
+            this.seasons = new HashSet<>(List.of(season));
             this.age = AGE;
+            this.expired = false;
         }
 
         public Set<Season> test(BlockPos pos) {
-            if(pos.getX() == x && (pos.getY() >= minY && pos.getY() <= maxY) && pos.getZ() == z) {
+            if(box.contains(pos)) {
                 return this.seasons;
             }else{
                 return Set.of();
             }
         }
+
     }
 
 }

@@ -9,6 +9,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
 
 import java.io.File;
@@ -37,8 +38,8 @@ public class CompatWarnState {
                 entry.getKey().ifPresent(key -> biomeNamespaces.add(key.getValue().getNamespace()));
             });
         }
-        compatibilityMap.put("byg", new ModInfo("seasonsbygcompat", "seasons_byg_compat", "Oh The Biomes You'll Go"));
-        compatibilityMap.put("terralith", new ModInfo("seasonsterralithcompat", "seasons_terralith_compat", "Terralith"));
+        compatibilityMap.put("byg", new ModInfo("seasonsbygcompat", "fabric-seasons-byg-url", "Oh The Biomes You'll Go"));
+        compatibilityMap.put("terralith", new ModInfo("seasonsterralithcompat", "fabric-seasons-terralith-url", "Terralith"));
     }
     
     private void saveState() {
@@ -50,7 +51,7 @@ public class CompatWarnState {
         try {
             NbtIo.writeCompressed(nbt, compatWarnFile);
         } catch (IOException e) {
-            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to save season compat warn state.", e);
+            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to save season url warn state.", e);
         }
     }
 
@@ -80,12 +81,13 @@ public class CompatWarnState {
             if(info != null && !warnedIds.contains(namespace) && !FabricLoader.getInstance().isModLoaded(info.id)) {
                 ClientPlayerEntity player = client.player;
                 if(player != null) {
-                    MutableText first = Text.literal(("\n§e"+Text.translatable("chat.seasons.mod_installed").getString()).replace("{MOD}", "§a"+info.name()+"§e")+"\n");
-                    MutableText second = Text.literal(("§e"+Text.translatable("chat.seasons.compatibility").getString()).replace("Fabric Seasons", "§aFabric Seasons§e")+"\n");
+
+                    MutableText first = Text.literal("\n").append(Text.translatable("chat.seasons.mod_installed", Text.literal(info.name).formatted(Formatting.GREEN)).formatted(Formatting.YELLOW));
+                    MutableText second = Text.literal(("\n§e"+Text.translatable("chat.seasons.compatibility").getString()).replace("Fabric Seasons", "§aFabric Seasons§e")+"\n");
                     MutableText third = Text.literal("§e"+Text.translatable("chat.seasons.available_at").getString());
-                    MutableText curse = Text.literal("§6§nCurseForge§r ").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/"+info.compat())));
-                    MutableText modrinth = Text.literal("§2§nModrinth§r ").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/"+info.compat())));
-                    MutableText github = Text.literal("§5§nGitHub§r\n").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/lucaargolo/"+info.compat()+"/releases")));
+                    MutableText curse = Text.literal("§6§nCurseForge§r ").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/"+info.url())));
+                    MutableText modrinth = Text.literal("§2§nModrinth§r ").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/"+info.url())));
+                    MutableText github = Text.literal("§5§nGitHub§r\n").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/lucaargolo/"+info.url()+"/releases")));
                     MutableText fourth = Text.literal("§e"+Text.translatable("chat.seasons.show_once").getString()+"\n");
                     player.sendMessage(first.append(second).append(third).append(curse).append(modrinth).append(github).append(fourth));
                 }
@@ -95,7 +97,7 @@ public class CompatWarnState {
         });
     }
 
-    public record ModInfo(String id, String compat, String name) {
+    public record ModInfo(String id, String url, String name) {
 
     }
 

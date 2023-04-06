@@ -6,17 +6,23 @@ import net.minecraft.util.StringIdentifiable;
 import java.util.Locale;
 
 public enum Season implements StringIdentifiable {
-    SPRING(Formatting.GREEN, Formatting.DARK_GREEN),
-    SUMMER(Formatting.GOLD, Formatting.GOLD),
-    FALL(Formatting.RED, Formatting.RED),
-    WINTER(Formatting.AQUA, Formatting.DARK_AQUA);
+    SPRING(2, Formatting.GREEN, Formatting.DARK_GREEN),
+    SUMMER(3, Formatting.GOLD, Formatting.GOLD),
+    FALL(1, Formatting.RED, Formatting.RED),
+    WINTER(0, Formatting.AQUA, Formatting.DARK_AQUA);
 
+    private final int temperature;
     private final Formatting formatting;
     private final Formatting darkFormatting;
 
-    Season(Formatting formatting, Formatting darkFormatting) {
+    Season(int temperature, Formatting formatting, Formatting darkFormatting) {
+        this.temperature = temperature;
         this.formatting = formatting;
         this.darkFormatting = darkFormatting;
+    }
+
+    public int getTemperature() {
+        return temperature;
     }
 
     public Formatting getFormatting() {

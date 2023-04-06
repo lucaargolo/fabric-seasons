@@ -10,8 +10,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
-import java.util.Locale;
-
 public class SeasonCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -34,8 +32,15 @@ public class SeasonCommand {
                 .executes(context -> {
                     World world = context.getSource().getWorld();
                     Season season = FabricSeasons.getCurrentSeason(world);
-                    context.getSource().sendFeedback(Text.translatable("tooltip.seasons.calendar_info_1").append(Text.translatable("tooltip.seasons."+season.name().toLowerCase(Locale.ROOT))), false);
-                    context.getSource().sendFeedback(Text.literal(Long.toString(((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength())/24000L)).append(Text.translatable("tooltip.seasons.calendar_info_2").append(Text.translatable("tooltip.seasons."+season.getNext().name().toLowerCase(Locale.ROOT)))), false);
+                    long ticksLeft = ((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength());
+                    context.getSource().sendFeedback(Text.translatable("commands.seasons.query_1",
+                            Text.translatable(season.getTranslationKey()).formatted(season.getFormatting())
+                    ), false);
+                    context.getSource().sendFeedback(Text.translatable("commands.seasons.query_2",
+                            Long.toString(ticksLeft/24000L),
+                            Long.toString(ticksLeft),
+                            Text.translatable(season.getNext().getTranslationKey()).formatted(season.getNext().getFormatting())
+                    ), false);
                     return season.ordinal();
                 })
             )

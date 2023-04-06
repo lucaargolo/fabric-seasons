@@ -58,7 +58,7 @@ public class ItemMixin {
                         }
                     }
                 }else {
-                    tooltip.add(Text.literal(("§7"+Text.translatable("tooltip.seasons.show_more").getString()).replace("{KEY}", "§9"+Text.translatable(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).getString()+"§7")));
+                    tooltip.add(Text.translatable("tooltip.seasons.show_more", Text.translatable(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).formatted(Formatting.BLUE)).formatted(Formatting.GRAY));
                 }
             }
         }

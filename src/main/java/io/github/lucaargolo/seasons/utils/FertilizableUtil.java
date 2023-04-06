@@ -13,8 +13,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Set;
-
 public class FertilizableUtil {
 
     private static boolean seasons$shouldInject = true;
@@ -52,26 +50,17 @@ public class FertilizableUtil {
         }
     }
 
+    //TODO: Check if this is working
     private static float getMultiplier(ServerWorld world, BlockPos pos, BlockState state) {
         float multiplier;
-        if(world.getLightLevel(LightType.SKY, pos) == 0 && FabricSeasons.CONFIG.doCropsGrowsNormallyUnderground()) {
+        if(FabricSeasons.CONFIG.doCropsGrowsNormallyUnderground() && world.getLightLevel(LightType.SKY, pos) == 0) {
             //Plant is not being affected by seasons
             multiplier = 1f;
         }else{
-            //Plant is being affected by current season
+            //Plant is being affected by warmest greenhouse season or the current one
             Identifier cropIdentifier = Registry.BLOCK.getId(state.getBlock());
-            multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, FabricSeasons.getCurrentSeason(world));
-
-            //Plant is being affected by best available season
-            Set<Season> greenhouseSeasons = GreenhouseCache.test(world, pos);
-            if(!greenhouseSeasons.isEmpty()) {
-                for(Season greenhouseSeason : greenhouseSeasons) {
-                    float greenHouseMultiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, greenhouseSeason);
-                    if(greenHouseMultiplier > multiplier) {
-                        multiplier = greenHouseMultiplier;
-                    }
-                }
-            }
+            Season warmestSeason = GreenhouseCache.test(world, pos);
+            multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, warmestSeason);
         }
         return multiplier;
     }

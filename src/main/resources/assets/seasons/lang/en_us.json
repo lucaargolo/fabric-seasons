@@ -7,10 +7,13 @@
   "tooltip.seasons.normal_grow": "Grows normally this season",
   "tooltip.seasons.slowed_grow": "Grows slower this season",
   "tooltip.seasons.not_grow": "Won't grow this season",
-  "tooltip.seasons.show_more": "Press {KEY} to show more",
+  "tooltip.seasons.show_more": "Press %s to show more",
 
-  "chat.seasons.mod_installed": "Looks like you have {MOD} installed!",
+  "chat.seasons.mod_installed": "Looks like you have %s installed!",
   "chat.seasons.compatibility": "Get full Fabric Seasons compatibility installing the addon.",
   "chat.seasons.available_at": "Available at: ",
-  "chat.seasons.show_once": "This message will only show once."
+  "chat.seasons.show_once": "This message will only show once.",
+
+  "commands.seasons.query_1": "The current season is %s.",
+  "commands.seasons.query_2": "There are %s days (%s ticks) left until %s."
 }

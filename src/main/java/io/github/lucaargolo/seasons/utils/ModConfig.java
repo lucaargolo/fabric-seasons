@@ -26,7 +26,7 @@ public class ModConfig {
 
     private boolean isSeasonMessingCrops = true;
     private boolean isSeasonMessingBonemeal = false;
-    private boolean doCropsGrowsNormallyUnderground = true;
+    private boolean doCropsGrowsNormallyUnderground = false;
 
     private boolean doAnimalsBreedInWinter = true;
 
