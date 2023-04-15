@@ -5,6 +5,8 @@ import io.github.lucaargolo.seasons.mixed.BiomeMixed;
 import io.github.lucaargolo.seasons.resources.FoliageSeasonColors;
 import io.github.lucaargolo.seasons.resources.GrassSeasonColors;
 import io.github.lucaargolo.seasons.utils.ColorsCache;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -29,6 +31,7 @@ public class BiomeMixin implements BiomeMixed {
     private Biome.Weather originalWeather;
 
     @SuppressWarnings("ConstantConditions")
+    @Environment(EnvType.CLIENT)
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects;getGrassColor()Ljava/util/Optional;"), method = "getGrassColorAt")
     public Optional<Integer> getSeasonGrassColor(BiomeEffects effects) {
         Biome biome = (Biome) ((Object) this);
@@ -50,6 +53,7 @@ public class BiomeMixin implements BiomeMixed {
     }
 
     @SuppressWarnings("ConstantConditions")
+    @Environment(EnvType.CLIENT)
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects;getFoliageColor()Ljava/util/Optional;"), method = "getFoliageColor")
     public Optional<Integer> getSeasonFoliageColor(BiomeEffects effects) {
         Biome biome = (Biome) ((Object) this);
@@ -72,6 +76,7 @@ public class BiomeMixin implements BiomeMixed {
     }
 
     @SuppressWarnings("removal")
+    @Environment(EnvType.CLIENT)
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects$GrassColorModifier;getModifiedGrassColor(DDI)I"), method = "getGrassColorAt")
     public int getSeasonModifiedGrassColor(BiomeEffects.GrassColorModifier gcm, double x, double z, int color) {
         if(gcm == BiomeEffects.GrassColorModifier.SWAMP) {
@@ -85,6 +90,7 @@ public class BiomeMixin implements BiomeMixed {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(at = @At("HEAD"), method = "getDefaultFoliageColor", cancellable = true)
     public void getSeasonDefaultFolliageColor(CallbackInfoReturnable<Integer> cir) {
         if(this.originalWeather != null) {
@@ -98,6 +104,7 @@ public class BiomeMixin implements BiomeMixed {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(at = @At("HEAD"), method = "getDefaultGrassColor", cancellable = true)
     public void getSeasonDefaultGrassColor(CallbackInfoReturnable<Integer> cir) {
         if(this.originalWeather != null) {

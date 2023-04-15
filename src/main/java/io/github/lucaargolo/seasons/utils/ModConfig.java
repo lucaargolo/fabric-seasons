@@ -1,5 +1,6 @@
 package io.github.lucaargolo.seasons.utils;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
@@ -16,10 +17,16 @@ public class ModConfig {
 
     private SeasonLock seasonLock = new SeasonLock();
 
-    private List<String> dimensionWhitelist = List.of("minecraft:overworld");
+    private List<String> dimensionAllowlist = List.of(
+            "minecraft:overworld"
+    );
     
     private boolean doTemperatureChanges = true;
-    
+
+    private List<String> biomeDenylist = List.of(
+            "terralith:glacial_chasm"
+    );
+
     private boolean isSeasonTiedWithSystemTime = false;
     
     private boolean isInNorthHemisphere = true;
@@ -46,8 +53,8 @@ public class ModConfig {
         return doCropsGrowsNormallyUnderground;
     }
 
-    public boolean doTemperatureChanges() {
-        return doTemperatureChanges;
+    public boolean doTemperatureChanges(Identifier biomeId) {
+        return doTemperatureChanges && !biomeDenylist.contains(biomeId.toString());
     }
 
     public int getSeasonLength() {
@@ -63,7 +70,7 @@ public class ModConfig {
     }
 
     public boolean isValidInDimension(RegistryKey<World> dimension) {
-        return dimensionWhitelist.contains(dimension.getValue().toString());
+        return dimensionAllowlist.contains(dimension.getValue().toString());
     }
 
     public boolean isSeasonTiedWithSystemTime() {

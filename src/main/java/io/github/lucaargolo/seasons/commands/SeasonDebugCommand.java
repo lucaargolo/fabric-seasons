@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.github.lucaargolo.seasons.FabricSeasons;
+import io.github.lucaargolo.seasons.resources.CropConfigs;
 import io.github.lucaargolo.seasons.utils.Season;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -16,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.BlockStateArgument;
 import net.minecraft.command.argument.BlockStateArgumentType;
@@ -36,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SeasonDebugCommand {
@@ -43,6 +46,29 @@ public class SeasonDebugCommand {
     @SuppressWarnings("deprecation")
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistry)  {
         dispatcher.register(ClientCommandManager.literal("season_debug")
+            .then(ClientCommandManager.literal("create_all_crops").executes(context -> {
+                AtomicInteger index = new AtomicInteger();
+                FabricSeasons.SEEDS_MAP.values().forEach(block -> {
+                    Identifier cropId = Registry.BLOCK.getId(block);
+                    index.getAndIncrement();
+                    createCrop(cropId);
+                });
+                context.getSource().sendFeedback(Text.literal("Successfully created "+index.get()+" crop entries."));
+                return 1;
+            }))
+            .then(ClientCommandManager.literal("create_biome_translations").executes(context -> {
+                AtomicInteger index = new AtomicInteger();
+                ClientPlayerEntity player = context.getSource().getPlayer();
+                player.getWorld().getRegistryManager().get(Registry.BIOME_KEY).getIndexedEntries().forEach(biomeEntry -> {
+                    biomeEntry.getKey().ifPresent(biomeKey -> {
+                        if(createTranslation(biomeKey.getValue())) {
+                            index.getAndIncrement();
+                        }
+                    });
+                });
+                context.getSource().sendFeedback(Text.literal("Successfully created "+index.get()+" biome translations."));
+                return 1;
+            }))
             .then(ClientCommandManager.literal("create_block_variants")
                 .then(ClientCommandManager.argument("block", BlockStateArgumentType.blockState(commandRegistry)).executes(context -> {
                     BlockState state = context.getArgument("block", BlockStateArgument.class).getBlockState();
@@ -335,6 +361,70 @@ public class SeasonDebugCommand {
             throw new RuntimeException(exception);
         }
         return Text.literal("Successfully set "+id+" "+type+" color to "+color+" at "+biomeFile.getPath()).styled(style -> style.withColor(color).withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, Integer.toHexString(color))));
+    }
+
+    private static void createCrop(Identifier id)  {
+        Path gamePath = FabricLoader.getInstance().getGameDir();
+        File dataPath = new File(gamePath + File.separator + "datapacks" + File.separator + "seasons_debug" + File.separator + "data" + File.separator + id.getNamespace() + File.separator + "seasons" + File.separator + "crop");
+        dataPath.mkdirs();
+        File cropFile = new File(dataPath.getPath() + File.separator + id.getPath() + ".json");
+        JsonObject cropJson;
+        try {
+            if (cropFile.createNewFile()) {
+                cropJson = new JsonObject();
+                cropJson.add(Season.SPRING.name().toLowerCase(Locale.ROOT), new JsonPrimitive(CropConfigs.getSeasonCropMultiplier(id, Season.SPRING)));
+                cropJson.add(Season.SUMMER.name().toLowerCase(Locale.ROOT), new JsonPrimitive(CropConfigs.getSeasonCropMultiplier(id, Season.SUMMER)));
+                cropJson.add(Season.FALL.name().toLowerCase(Locale.ROOT), new JsonPrimitive(CropConfigs.getSeasonCropMultiplier(id, Season.FALL)));
+                cropJson.add(Season.WINTER.name().toLowerCase(Locale.ROOT), new JsonPrimitive(CropConfigs.getSeasonCropMultiplier(id, Season.WINTER)));
+            } else {
+                cropJson = JsonParser.parseString(new String(Files.readAllBytes(cropFile.toPath()))).getAsJsonObject();
+            }
+            String json = FabricSeasons.GSON.toJson(cropJson);
+            try (PrintWriter out = new PrintWriter(cropFile)) {
+                out.println(json);
+            }
+        }catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    private static boolean createTranslation(Identifier id)  {
+        Path gamePath = FabricLoader.getInstance().getGameDir();
+        String translationKey = "biome."+id.getNamespace()+"."+id.getPath();
+        String[] split = id.getPath().split("_");
+        for(int i = 0; i < split.length; i++) {
+            String s = split[i];
+            String[] innerSplit = s.split("/");
+            s = innerSplit[0];
+            char c = s.charAt(0);
+            s = s.replaceFirst(String.valueOf(c), String.valueOf(Character.toUpperCase(c)));
+            split[i] = s;
+        }
+        String translation = String.join(" ", split);
+        if(I18n.hasTranslation(translationKey)) {
+            return false;
+        }
+        File dataPath = new File(gamePath + File.separator + "resourcepacks" + File.separator + "seasons_debug" + File.separator + "assets" + File.separator + id.getNamespace());
+        dataPath.mkdirs();
+        File langFile = new File(dataPath.getPath() + File.separator + "en_us.json");
+        JsonObject langJson;
+        try {
+            if (langFile.createNewFile()) {
+                langJson = new JsonObject();
+            } else {
+                langJson = JsonParser.parseString(new String(Files.readAllBytes(langFile.toPath()))).getAsJsonObject();
+            }
+            if(!langJson.has(translationKey)) {
+                langJson.add(translationKey, new JsonPrimitive(translation));
+                String json = FabricSeasons.GSON.toJson(langJson);
+                try (PrintWriter out = new PrintWriter(langFile)) {
+                    out.println(json);
+                }
+            }
+        }catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
+        return true;
     }
 
 }

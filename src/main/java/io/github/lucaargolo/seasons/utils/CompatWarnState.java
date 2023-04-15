@@ -38,8 +38,8 @@ public class CompatWarnState {
                 entry.getKey().ifPresent(key -> biomeNamespaces.add(key.getValue().getNamespace()));
             });
         }
-        compatibilityMap.put("byg", new ModInfo("seasonsbygcompat", "fabric-seasons-byg-url", "Oh The Biomes You'll Go"));
-        compatibilityMap.put("terralith", new ModInfo("seasonsterralithcompat", "fabric-seasons-terralith-url", "Terralith"));
+        compatibilityMap.put("byg", new ModInfo("seasonsbygcompat", "fabric-seasons-byg-compat", "Oh The Biomes You'll Go"));
+        compatibilityMap.put("terralith", new ModInfo("seasonsterralithcompat", "fabric-seasons-terralith-compat", "Terralith"));
     }
     
     private void saveState() {

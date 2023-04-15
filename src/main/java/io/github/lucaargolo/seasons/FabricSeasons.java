@@ -51,14 +51,10 @@ import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
 
-    //TODO: Add Extras items/blocks (fallen leaves, greenhouse variants, patchouli book)
-    //TODO: Fix calendar design
-
     //TODO: Update terralith compat
     //TODO: Traverse Resource Pack
     //TODO: Terrestria Resource Pack
 
-    //TODO: Vanilla Crops Datapack
     //TODO: Croptopia Data Pack
     //TODO: Farmer's Delight Data Pack
 
@@ -66,7 +62,6 @@ public class FabricSeasons implements ModInitializer {
     //TODO: Create extras page/readme
     //TODO: Update mod page/readme
     //TODO: Set up maven publish for addons
-
 
     private static final LongArraySet temporaryMeltableCache = new LongArraySet();
     public static final String MOD_ID = "seasons";
@@ -244,14 +239,13 @@ public class FabricSeasons implements ModInitializer {
 
     @SuppressWarnings("ConstantValue")
     public static void injectBiomeTemperature(RegistryEntry<Biome> entry, World world) {
-        if(!CONFIG.doTemperatureChanges()) return;
-
         List<TagKey<Biome>> ignoredCategories = Arrays.asList(BiomeTags.IS_NETHER, BiomeTags.IS_END, BiomeTags.IS_OCEAN);
         if(ignoredCategories.stream().anyMatch(entry::isIn)) return;
 
-        Season season = FabricSeasons.getCurrentSeason(world);
-
         Biome biome = entry.value();
+        Identifier biomeId = entry.getKey().orElse(RegistryKey.of(Registry.BIOME_KEY, new Identifier("plains"))).getValue();
+        if(!CONFIG.doTemperatureChanges(biomeId)) return;
+
         Biome.Weather currentWeather = biome.weather;
         Biome.Weather originalWeather = ((BiomeMixed) (Object) biome).getOriginalWeather();
         if (originalWeather == null) {
@@ -261,13 +255,17 @@ public class FabricSeasons implements ModInitializer {
         WeatherAccessor weatherAccessor = ((WeatherAccessor) (Object) currentWeather);
         assert weatherAccessor != null;
 
+        Season season = FabricSeasons.getCurrentSeason(world);
         boolean isJungle = entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG);
-        Pair<Biome.Precipitation, Float> modifiedWeather = getSeasonWeather(season, isJungle, originalWeather.precipitation, originalWeather.temperature);
+        Pair<Biome.Precipitation, Float> modifiedWeather = getSeasonWeather(season, biomeId, isJungle, originalWeather.precipitation, originalWeather.temperature);
         weatherAccessor.setPrecipitation(modifiedWeather.getLeft());
         weatherAccessor.setTemperature(modifiedWeather.getRight());
     }
 
-    public static Pair<Biome.Precipitation, Float> getSeasonWeather(Season season, boolean jungle, Biome.Precipitation precipitation, float temp) {
+    public static Pair<Biome.Precipitation, Float> getSeasonWeather(Season season, Identifier biomeId, boolean jungle, Biome.Precipitation precipitation, float temp) {
+        if(!CONFIG.doTemperatureChanges(biomeId)) {
+            return new Pair<>(precipitation, temp);
+        }
         if(jungle) {
             //Jungle Biomes
             if (season == Season.WINTER) {

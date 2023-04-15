@@ -20,8 +20,9 @@ public class FertilizableUtil {
     @SuppressWarnings("deprecation")
     public static <F extends Block & Fertilizable> void randomTickInject(F fertilizable, BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if(FabricSeasons.CONFIG.isSeasonMessingCrops() && seasons$shouldInject) {
-            float multiplier = getMultiplier(world, pos, state);
+            float multiplier = 1f + getMultiplier(world, pos, state);
             while(multiplier > 0f) {
+                multiplier -= 1f;
                 float rand = random.nextFloat();
                 if(multiplier >= rand) {
                     seasons$shouldInject = false;
@@ -36,22 +37,20 @@ public class FertilizableUtil {
 
     public static <F extends Block & Fertilizable> void growInject(F fertilizable, ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
         if(FabricSeasons.CONFIG.isSeasonMessingBonemeal() && seasons$shouldInject) {
-            float multiplier = getMultiplier(world, pos, state);
+            float multiplier = 1f + getMultiplier(world, pos, state);
             while(multiplier > 0f) {
+                multiplier -= 1f;
                 float rand = random.nextFloat();
                 if(multiplier >= rand) {
                     seasons$shouldInject = false;
                     fertilizable.grow(world, random, pos, state);
-                    multiplier -= 1f;
                 }
             }
             seasons$shouldInject = true;
             ci.cancel();
         }
     }
-
-    //TODO: Check if this is working
-    private static float getMultiplier(ServerWorld world, BlockPos pos, BlockState state) {
+    public static float getMultiplier(ServerWorld world, BlockPos pos, BlockState state) {
         float multiplier;
         if(FabricSeasons.CONFIG.doCropsGrowsNormallyUnderground() && world.getLightLevel(LightType.SKY, pos) == 0) {
             //Plant is not being affected by seasons
