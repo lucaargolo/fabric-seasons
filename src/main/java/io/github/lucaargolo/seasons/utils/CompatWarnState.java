@@ -23,7 +23,7 @@ public class CompatWarnState {
 
     private final HashMap<String, ModInfo> compatibilityMap = new HashMap<>();
 
-    private final HashSet<String> biomeNamespaces = new HashSet<>();
+    private final HashSet<String> namespaces = new HashSet<>();
     private final HashSet<String> warnedIds = new HashSet<>();
 
 
@@ -33,13 +33,18 @@ public class CompatWarnState {
         this.client = client;
         ClientPlayNetworkHandler handler = client.getNetworkHandler();
         if(handler != null) {
-            biomeNamespaces.clear();
+            namespaces.clear();
             handler.getRegistryManager().get(Registry.BIOME_KEY).getIndexedEntries().forEach(entry -> {
-                entry.getKey().ifPresent(key -> biomeNamespaces.add(key.getValue().getNamespace()));
+                entry.getKey().ifPresent(key -> namespaces.add(key.getValue().getNamespace()));
+            });
+            FabricSeasons.SEEDS_MAP.forEach((item, block) -> {
+                namespaces.add(Registry.BLOCK.getId(block).getNamespace());
             });
         }
+        compatibilityMap.put("minecraft", new ModInfo("seasonsextras", "fabric-seasons-extras", "Fabric Seasons: Extras"));
         compatibilityMap.put("byg", new ModInfo("seasonsbygcompat", "fabric-seasons-byg-compat", "Oh The Biomes You'll Go"));
         compatibilityMap.put("terralith", new ModInfo("seasonsterralithcompat", "fabric-seasons-terralith-compat", "Terralith"));
+        compatibilityMap.put("croptopia", new ModInfo("seasonscroptopiacompat", "fabric-seasons-croptopia-compat", "Croptopia"));
     }
     
     private void saveState() {
@@ -76,14 +81,19 @@ public class CompatWarnState {
     }
 
     public void join() {
-        biomeNamespaces.forEach(namespace -> {
+        namespaces.forEach(namespace -> {
             ModInfo info = compatibilityMap.get(namespace);
             if(info != null && !warnedIds.contains(namespace) && !FabricLoader.getInstance().isModLoaded(info.id)) {
                 ClientPlayerEntity player = client.player;
                 if(player != null) {
-
-                    MutableText first = Text.literal("\n").append(Text.translatable("chat.seasons.mod_installed", Text.literal(info.name).formatted(Formatting.GREEN)).formatted(Formatting.YELLOW));
-                    MutableText second = Text.literal(("\n§e"+Text.translatable("chat.seasons.compatibility").getString()).replace("Fabric Seasons", "§aFabric Seasons§e")+"\n");
+                    MutableText first, second;
+                    if(!namespace.equals("minecraft")) {
+                        first = Text.literal("\n").append(Text.translatable("chat.seasons.mod_installed", Text.literal(info.name).formatted(Formatting.GREEN)).formatted(Formatting.YELLOW));
+                        second = Text.literal(("\n§e"+Text.translatable("chat.seasons.compatibility").getString()).replace("Fabric Seasons", "§aFabric Seasons§e")+"\n");
+                    }else{
+                        first = Text.literal("\n").append(Text.translatable("chat.seasons.mod_not_installed", Text.literal(info.name).formatted(Formatting.RED)).formatted(Formatting.YELLOW));
+                        second = Text.literal(("\n§e"+Text.translatable("chat.seasons.extras").getString())+"\n");
+                    }
                     MutableText third = Text.literal("§e"+Text.translatable("chat.seasons.available_at").getString());
                     MutableText curse = Text.literal("§6§nCurseForge§r ").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/"+info.url())));
                     MutableText modrinth = Text.literal("§2§nModrinth§r ").styled(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/mod/"+info.url())));

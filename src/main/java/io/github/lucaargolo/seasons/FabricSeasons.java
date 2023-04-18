@@ -51,18 +51,6 @@ import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
 
-    //TODO: Update terralith compat
-    //TODO: Traverse Resource Pack
-    //TODO: Terrestria Resource Pack
-
-    //TODO: Croptopia Data Pack
-    //TODO: Farmer's Delight Data Pack
-
-    //TODO: Create compat pages/readme
-    //TODO: Create extras page/readme
-    //TODO: Update mod page/readme
-    //TODO: Set up maven publish for addons
-
     private static final LongArraySet temporaryMeltableCache = new LongArraySet();
     public static final String MOD_ID = "seasons";
     public static final String MOD_NAME = "Fabric Seasons";
