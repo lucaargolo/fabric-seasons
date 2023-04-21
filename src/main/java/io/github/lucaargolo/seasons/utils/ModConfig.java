@@ -1,7 +1,7 @@
 package io.github.lucaargolo.seasons.utils;
 
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import java.util.List;

@@ -6,11 +6,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,11 +35,11 @@ public class CompatWarnState {
         ClientPlayNetworkHandler handler = client.getNetworkHandler();
         if(handler != null) {
             namespaces.clear();
-            handler.getRegistryManager().get(Registry.BIOME_KEY).getIndexedEntries().forEach(entry -> {
+            handler.getRegistryManager().get(RegistryKeys.BIOME).getIndexedEntries().forEach(entry -> {
                 entry.getKey().ifPresent(key -> namespaces.add(key.getValue().getNamespace()));
             });
             FabricSeasons.SEEDS_MAP.forEach((item, block) -> {
-                namespaces.add(Registry.BLOCK.getId(block).getNamespace());
+                namespaces.add(Registries.BLOCK.getId(block).getNamespace());
             });
         }
         compatibilityMap.put("minecraft", new ModInfo("seasonsextras", "fabric-seasons-extras", "Fabric Seasons: Extras"));

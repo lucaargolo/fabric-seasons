@@ -9,11 +9,11 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public class ItemMixin {
             Item item = stack.getItem();
             Block block = FabricSeasons.SEEDS_MAP.getOrDefault(item, null);
             if (block != null) {
-                Identifier cropIdentifier = Registry.BLOCK.getId(block);
+                Identifier cropIdentifier = Registries.BLOCK.getId(block);
                 float multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, season);
                 if (multiplier == 0f) {
                     tooltip.add(Text.translatable("tooltip.seasons.not_grow").formatted(Formatting.RED));

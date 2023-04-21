@@ -8,16 +8,14 @@ import com.mojang.datafixers.util.Either;
 import io.github.lucaargolo.seasons.FabricSeasons;
 import io.github.lucaargolo.seasons.mixed.JsonUnbakedModelMixed;
 import io.github.lucaargolo.seasons.utils.Season;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -35,11 +33,10 @@ import static io.github.lucaargolo.seasons.FabricSeasons.MOD_NAME;
 @Mixin(ModelLoader.class)
 public class ModelLoaderMixin {
 
-    @Shadow @Final private ResourceManager resourceManager;
-
     @Inject(at = @At("RETURN"), method = "loadModelFromJson", locals = LocalCapture.CAPTURE_FAILSOFT)
     public void injectSeasonalModels(Identifier id, CallbackInfoReturnable<JsonUnbakedModel> cir) {
-        Optional<Resource> optional = this.resourceManager.getResource(new Identifier(id.getNamespace(), "seasons/models/" + id.getPath() + ".json"));
+        MinecraftClient client = MinecraftClient.getInstance();
+        Optional<Resource> optional = client.getResourceManager().getResource(new Identifier(id.getNamespace(), "seasons/models/" + id.getPath() + ".json"));
         if(optional.isPresent()) {
             Resource resource = optional.get();
             try {

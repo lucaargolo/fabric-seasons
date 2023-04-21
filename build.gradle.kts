@@ -86,6 +86,12 @@ dependencies {
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project["rei_version"]}")
 }
 
+configurations.all {
+    resolutionStrategy {
+        force("net.fabricmc:fabric-loader:${project["loader_version"]}")
+    }
+}
+
 tasks.processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 

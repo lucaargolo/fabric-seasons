@@ -6,12 +6,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biome;
 
@@ -28,7 +28,7 @@ public interface Meltable {
 
     static void replaceBlockOnSnow(ServerWorld world, BlockPos blockPos, Biome biome) {
         BlockState plantState = world.getBlockState(blockPos);
-        if(plantState.isIn(BlockTags.REPLACEABLE_PLANTS) || plantState.isIn(BlockTags.FLOWERS) || plantState.isIn(BlockTags.TALL_FLOWERS) || plantState.isIn(BlockTags.SAPLINGS) || plantState.isIn(TagKey.of(Registry.BLOCK_KEY, new Identifier("c:flowers")))) {
+        if(plantState.isIn(BlockTags.REPLACEABLE_PLANTS) || plantState.isIn(BlockTags.FLOWERS) || plantState.isIn(BlockTags.TALL_FLOWERS) || plantState.isIn(BlockTags.SAPLINGS) || plantState.isIn(TagKey.of(RegistryKeys.BLOCK, new Identifier("c:flowers")))) {
             if (!biome.doesNotSnow(blockPos) && blockPos.getY() >= world.getBottomY() && blockPos.getY() < world.getTopY() && world.getLightLevel(LightType.BLOCK, blockPos) < 10) {
                 BlockState upperState = world.getBlockState(blockPos.up());
                 if(plantState.getProperties().contains(TallPlantBlock.HALF) && upperState.getProperties().contains(TallPlantBlock.HALF)) {

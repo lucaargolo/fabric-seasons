@@ -8,9 +8,9 @@ import io.github.lucaargolo.seasons.utils.ColorsCache;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
@@ -41,7 +41,7 @@ public class BiomeMixin implements BiomeMixed {
             Optional<Integer> returnColor = effects.getGrassColor();
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
-                Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
+                Identifier biomeIdentifier = world.getRegistryManager().get(RegistryKeys.BIOME).getId(biome);
                 Optional<Integer> seasonGrassColor = GrassSeasonColors.getSeasonGrassColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonGrassColor.isPresent()) {
                     returnColor = seasonGrassColor;
@@ -63,7 +63,7 @@ public class BiomeMixin implements BiomeMixed {
             Optional<Integer> returnColor = effects.getFoliageColor();
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
-                Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
+                Identifier biomeIdentifier = world.getRegistryManager().get(RegistryKeys.BIOME).getId(biome);
                 Optional<Integer> seasonFoliageColor = FoliageSeasonColors.getSeasonFoliageColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonFoliageColor.isPresent()) {
                     returnColor = seasonFoliageColor;

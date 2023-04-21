@@ -5,11 +5,11 @@ import io.github.lucaargolo.seasons.resources.CropConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -57,7 +57,7 @@ public class FertilizableUtil {
             multiplier = 1f;
         }else{
             //Plant is being affected by warmest greenhouse season or the current one
-            Identifier cropIdentifier = Registry.BLOCK.getId(state.getBlock());
+            Identifier cropIdentifier = Registries.BLOCK.getId(state.getBlock());
             Season warmestSeason = GreenhouseCache.test(world, pos);
             multiplier = CropConfigs.getSeasonCropMultiplier(cropIdentifier, warmestSeason);
         }

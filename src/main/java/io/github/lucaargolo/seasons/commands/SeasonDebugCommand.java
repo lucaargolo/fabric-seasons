@@ -23,14 +23,15 @@ import net.minecraft.command.argument.BlockStateArgument;
 import net.minecraft.command.argument.BlockStateArgumentType;
 import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 
 import java.io.*;
@@ -49,7 +50,7 @@ public class SeasonDebugCommand {
             .then(ClientCommandManager.literal("create_all_crops").executes(context -> {
                 AtomicInteger index = new AtomicInteger();
                 FabricSeasons.SEEDS_MAP.values().forEach(block -> {
-                    Identifier cropId = Registry.BLOCK.getId(block);
+                    Identifier cropId = Registries.BLOCK.getId(block);
                     index.getAndIncrement();
                     createCrop(cropId);
                 });
@@ -59,7 +60,7 @@ public class SeasonDebugCommand {
             .then(ClientCommandManager.literal("create_biome_translations").executes(context -> {
                 AtomicInteger index = new AtomicInteger();
                 ClientPlayerEntity player = context.getSource().getPlayer();
-                player.getWorld().getRegistryManager().get(Registry.BIOME_KEY).getIndexedEntries().forEach(biomeEntry -> {
+                player.getWorld().getRegistryManager().get(RegistryKeys.BIOME).getIndexedEntries().forEach(biomeEntry -> {
                     biomeEntry.getKey().ifPresent(biomeKey -> {
                         if(createTranslation(biomeKey.getValue())) {
                             index.getAndIncrement();
@@ -150,10 +151,10 @@ public class SeasonDebugCommand {
             .then(ClientCommandManager.literal("print_biomes").executes(context -> {
                 ClientPlayerEntity player = context.getSource().getPlayer();
                 List<RegistryEntry<Biome>> entries = new ArrayList<>();
-                player.getWorld().getRegistryManager().get(Registry.BIOME_KEY).getIndexedEntries().forEach(entries::add);
-                entries.sort(Comparator.comparing(entry -> entry.getKey().orElse(RegistryKey.of(Registry.BIOME_KEY, new Identifier("missingno"))).getValue().toString()));
+                player.getWorld().getRegistryManager().get(RegistryKeys.BIOME).getIndexedEntries().forEach(entries::add);
+                entries.sort(Comparator.comparing(entry -> entry.getKey().orElse(RegistryKey.of(RegistryKeys.BIOME, new Identifier("missingno"))).getValue().toString()));
                 AtomicReference<String> str = new AtomicReference<>("\n");
-                entries.forEach((entry) -> str.updateAndGet(s -> s + entry.getKey().orElse(RegistryKey.of(Registry.BIOME_KEY, new Identifier("missingno"))).getValue().toString() + "\n"));
+                entries.forEach((entry) -> str.updateAndGet(s -> s + entry.getKey().orElse(RegistryKey.of(RegistryKeys.BIOME, new Identifier("missingno"))).getValue().toString() + "\n"));
                 System.out.println(str.get());
                 return 1;
             }))
