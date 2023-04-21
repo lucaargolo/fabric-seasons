@@ -238,7 +238,7 @@ public class FabricSeasons implements ModInitializer {
         Biome.Weather currentWeather = biome.weather;
         Biome.Weather originalWeather = ((BiomeMixed) (Object) biome).getOriginalWeather();
         if (originalWeather == null) {
-            originalWeather = new Biome.Weather(currentWeather.precipitation, currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
+            originalWeather = new Biome.Weather(currentWeather.hasPrecipitation(), currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
             ((BiomeMixed) (Object) biome).setOriginalWeather(originalWeather);
         }
         WeatherAccessor weatherAccessor = ((WeatherAccessor) (Object) currentWeather);
@@ -246,78 +246,75 @@ public class FabricSeasons implements ModInitializer {
 
         Season season = FabricSeasons.getCurrentSeason(world);
         boolean isJungle = entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG);
-        Pair<Biome.Precipitation, Float> modifiedWeather = getSeasonWeather(season, biomeId, isJungle, originalWeather.precipitation, originalWeather.temperature);
-        weatherAccessor.setPrecipitation(modifiedWeather.getLeft());
+        Pair<Boolean, Float> modifiedWeather = getSeasonWeather(season, biomeId, isJungle, originalWeather.hasPrecipitation, originalWeather.temperature);
+        weatherAccessor.setHasPrecipitation(modifiedWeather.getLeft());
         weatherAccessor.setTemperature(modifiedWeather.getRight());
     }
 
-    public static Pair<Biome.Precipitation, Float> getSeasonWeather(Season season, Identifier biomeId, boolean jungle, Biome.Precipitation precipitation, float temp) {
+    public static Pair<Boolean, Float> getSeasonWeather(Season season, Identifier biomeId, boolean jungle, Boolean hasPrecipitation, float temp) {
         if(!CONFIG.doTemperatureChanges(biomeId)) {
-            return new Pair<>(precipitation, temp);
+            return new Pair<>(hasPrecipitation, temp);
         }
         if(jungle) {
             //Jungle Biomes
             if (season == Season.WINTER) {
-                return new Pair<>(precipitation, temp-0.1f);
+                return new Pair<>(hasPrecipitation, temp-0.1f);
             } else {
-                return new Pair<>(precipitation, temp);
+                return new Pair<>(hasPrecipitation, temp);
             }
         }else if(temp <= 0.1) {
             //Frozen Biomes
             switch (season) {
                 case SUMMER -> {
-                    return new Pair<>(Biome.Precipitation.RAIN, temp + 0.3f);
+                    return new Pair<>(hasPrecipitation, temp + 0.3f);
                 }
                 case WINTER -> {
-                    return new Pair<>(Biome.Precipitation.SNOW, temp - 0.2f);
+                    return new Pair<>(hasPrecipitation, temp - 0.2f);
                 }
                 default -> {
-                    return new Pair<>(precipitation, temp);
+                    return new Pair<>(hasPrecipitation, temp);
                 }
             }
         }else if(temp <= 0.3) {
             //Cold Biomes
             switch (season) {
-                case SPRING -> {
-                    return new Pair<>(Biome.Precipitation.RAIN, temp);
-                }
                 case SUMMER -> {
-                    return new Pair<>(Biome.Precipitation.RAIN, temp + 0.2f);
+                    return new Pair<>(hasPrecipitation, temp + 0.2f);
                 }
                 case WINTER -> {
-                    return new Pair<>(Biome.Precipitation.SNOW, temp - 0.2f);
+                    return new Pair<>(hasPrecipitation, temp - 0.2f);
                 }
                 default -> {
-                    return new Pair<>(precipitation, temp);
+                    return new Pair<>(hasPrecipitation, temp);
                 }
             }
         }else if(temp <= 0.95) {
             //Temperate Biomes
             switch (season) {
                 case SUMMER -> {
-                    return new Pair<>(precipitation, temp + 0.2f);
+                    return new Pair<>(hasPrecipitation, temp + 0.2f);
                 }
                 case FALL -> {
-                    return new Pair<>(precipitation, temp - 0.1f);
+                    return new Pair<>(hasPrecipitation, temp - 0.1f);
                 }
                 case WINTER -> {
-                    return new Pair<>(Biome.Precipitation.SNOW, temp - 0.7f);
+                    return new Pair<>(hasPrecipitation, temp - 0.7f);
                 }
                 default -> {
-                    return new Pair<>(precipitation, temp);
+                    return new Pair<>(hasPrecipitation, temp);
                 }
             }
         }else{
             //Hot biomes
             switch (season) {
                 case SUMMER -> {
-                    return new Pair<>(precipitation, temp + 0.2f);
+                    return new Pair<>(hasPrecipitation, temp + 0.2f);
                 }
                 case WINTER -> {
-                    return new Pair<>(Biome.Precipitation.RAIN, temp - 0.2f);
+                    return new Pair<>(true, temp - 0.2f);
                 }
                 default -> {
-                    return new Pair<>(precipitation, temp);
+                    return new Pair<>(hasPrecipitation, temp);
                 }
             }
         }

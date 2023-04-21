@@ -39,7 +39,7 @@ public abstract class JsonUnbakedModelMixin implements JsonUnbakedModelMixed {
     private Map<String, Either<SpriteIdentifier, String>> originalTextureMap;
 
     @Inject(at = @At("TAIL"), method = "<init>")
-    public void collectOriginalTextureMap(@Nullable Identifier parentId, List<ModelElement> elements, Map<String, Either<SpriteIdentifier, String>> textureMap, boolean ambientOcclusion, @Nullable JsonUnbakedModel.GuiLight guiLight, ModelTransformation transformations, List<ModelOverride> overrides, CallbackInfo ci) {
+    public void collectOriginalTextureMap(@Nullable Identifier parentId, List<ModelElement> elements, Map<String, Either<SpriteIdentifier, String>> textureMap, Boolean ambientOcclusion, @Nullable JsonUnbakedModel.GuiLight guiLight, ModelTransformation transformations, List<ModelOverride> overrides, CallbackInfo ci) {
         this.originalTextureMap = textureMap;
     }
 

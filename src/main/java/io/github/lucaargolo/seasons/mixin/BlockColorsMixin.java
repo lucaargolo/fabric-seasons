@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockColors.class)
 public class BlockColorsMixin {
 
-    @Inject(method = "method_1693", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/world/GrassColors;getColor(DD)I"), cancellable = true)
+    @Inject(method = "method_1693", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/color/world/GrassColors;getDefaultColor()I"), cancellable = true)
     private static void injectGrassColor(BlockState state, @Nullable BlockRenderView world, @Nullable BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> info) {
         info.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), 0.5D, 1.0D));
     }

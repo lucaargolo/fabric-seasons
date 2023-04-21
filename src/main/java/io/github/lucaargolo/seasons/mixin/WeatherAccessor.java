@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Biome.Weather.class)
 public interface WeatherAccessor {
 
-    @Accessor @Final void setPrecipitation(Biome.Precipitation precipitation);
+    @Accessor @Final void setHasPrecipitation(boolean hasPrecipitation);
 
     @Accessor @Final void setTemperature(float temperature);
 
