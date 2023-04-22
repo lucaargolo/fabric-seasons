@@ -20,8 +20,8 @@ public class BiomeColorsMixin {
     private static void enhanceFallColors(Biome biome, double x, double z, CallbackInfoReturnable<Integer> cir) {
         Season season = FabricSeasons.getCurrentSeason();
         if(season == Season.FALL && ((Object) biome) instanceof BiomeMixed mixed && mixed.getOriginalWeather() != null) {
-            double d = MathHelper.clamp(mixed.getOriginalWeather().temperature, 0.0F, 1.0F);
-            double e = MathHelper.clamp(mixed.getOriginalWeather().downfall, 0.0F, 1.0F);
+            double d = MathHelper.clamp(mixed.getOriginalWeather().temperature(), 0.0F, 1.0F);
+            double e = MathHelper.clamp(mixed.getOriginalWeather().downfall(), 0.0F, 1.0F);
             int fallFoliageColor = FoliageSeasonColors.getColor(Season.FALL, d, e);
             if(cir.getReturnValue() == fallFoliageColor) {
                 double sample = Biome.FOLIAGE_NOISE.sample(x * 0.0225, z * 0.0225, false);

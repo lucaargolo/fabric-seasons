@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import io.github.lucaargolo.seasons.commands.SeasonCommand;
 import io.github.lucaargolo.seasons.mixed.BiomeMixed;
-import io.github.lucaargolo.seasons.mixin.WeatherAccessor;
 import io.github.lucaargolo.seasons.resources.CropConfigs;
 import io.github.lucaargolo.seasons.utils.*;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
@@ -238,17 +237,15 @@ public class FabricSeasons implements ModInitializer {
         Biome.Weather currentWeather = biome.weather;
         Biome.Weather originalWeather = ((BiomeMixed) (Object) biome).getOriginalWeather();
         if (originalWeather == null) {
-            originalWeather = new Biome.Weather(currentWeather.hasPrecipitation(), currentWeather.temperature, currentWeather.temperatureModifier, currentWeather.downfall);
+            originalWeather = new Biome.Weather(currentWeather.hasPrecipitation(), currentWeather.temperature(), currentWeather.temperatureModifier(), currentWeather.downfall());
             ((BiomeMixed) (Object) biome).setOriginalWeather(originalWeather);
         }
-        WeatherAccessor weatherAccessor = ((WeatherAccessor) (Object) currentWeather);
-        assert weatherAccessor != null;
-
         Season season = FabricSeasons.getCurrentSeason(world);
         boolean isJungle = entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG);
+
         Pair<Boolean, Float> modifiedWeather = getSeasonWeather(season, biomeId, isJungle, originalWeather.hasPrecipitation, originalWeather.temperature);
-        weatherAccessor.setHasPrecipitation(modifiedWeather.getLeft());
-        weatherAccessor.setTemperature(modifiedWeather.getRight());
+        currentWeather.hasPrecipitation = modifiedWeather.getLeft();
+        currentWeather.temperature = modifiedWeather.getRight();
     }
 
     public static Pair<Boolean, Float> getSeasonWeather(Season season, Identifier biomeId, boolean jungle, Boolean hasPrecipitation, float temp) {

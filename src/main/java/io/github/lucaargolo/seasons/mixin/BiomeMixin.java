@@ -94,12 +94,12 @@ public class BiomeMixin implements BiomeMixed {
     @Inject(at = @At("HEAD"), method = "getDefaultFoliageColor", cancellable = true)
     public void getSeasonDefaultFolliageColor(CallbackInfoReturnable<Integer> cir) {
         if(this.originalWeather != null) {
-            double originalTemperature = MathHelper.clamp(this.originalWeather.temperature, 0.0F, 1.0F);
-            double originalDownfall = MathHelper.clamp(this.originalWeather.downfall, 0.0F, 1.0F);
+            double originalTemperature = MathHelper.clamp(this.originalWeather.temperature(), 0.0F, 1.0F);
+            double originalDownfall = MathHelper.clamp(this.originalWeather.downfall(), 0.0F, 1.0F);
             cir.setReturnValue(FoliageSeasonColors.getColor(FabricSeasons.getCurrentSeason(), originalTemperature, originalDownfall));
         }else{
-            double temperature = MathHelper.clamp(this.weather.temperature, 0.0F, 1.0F);
-            double downfall = MathHelper.clamp(this.weather.downfall, 0.0F, 1.0F);
+            double temperature = MathHelper.clamp(this.weather.temperature(), 0.0F, 1.0F);
+            double downfall = MathHelper.clamp(this.weather.downfall(), 0.0F, 1.0F);
             cir.setReturnValue(FoliageSeasonColors.getColor(FabricSeasons.getCurrentSeason(), temperature, downfall));
         }
     }
@@ -108,12 +108,12 @@ public class BiomeMixin implements BiomeMixed {
     @Inject(at = @At("HEAD"), method = "getDefaultGrassColor", cancellable = true)
     public void getSeasonDefaultGrassColor(CallbackInfoReturnable<Integer> cir) {
         if(this.originalWeather != null) {
-            double d = MathHelper.clamp(this.originalWeather.temperature, 0.0F, 1.0F);
-            double e = MathHelper.clamp(this.originalWeather.downfall, 0.0F, 1.0F);
+            double d = MathHelper.clamp(this.originalWeather.temperature(), 0.0F, 1.0F);
+            double e = MathHelper.clamp(this.originalWeather.downfall(), 0.0F, 1.0F);
             cir.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
         }else{
-            double d = MathHelper.clamp(this.weather.temperature, 0.0F, 1.0F);
-            double e = MathHelper.clamp(this.weather.downfall, 0.0F, 1.0F);
+            double d = MathHelper.clamp(this.weather.temperature(), 0.0F, 1.0F);
+            double e = MathHelper.clamp(this.weather.downfall(), 0.0F, 1.0F);
             cir.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
         }
     }

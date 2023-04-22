@@ -13,7 +13,6 @@
     "ServerWorldMixin",
     "SnowBlockMixin",
     "VanillaFertilizablesMixin",
-    "WeatherAccessor",
     "WorldViewMixin"
   ],
   "client": [
