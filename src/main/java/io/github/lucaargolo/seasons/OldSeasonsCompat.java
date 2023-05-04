@@ -11,7 +11,7 @@ import net.minecraft.util.registry.Registry;
 public class OldSeasonsCompat implements ModInitializer {
 	@Override
 	public void onInitialize() {
-		Registry.register(Registry.BLOCK, new ModIdentifier("ice"), new SeasonalIceBlock(FabricBlockSettings.copyOf(Blocks.ICE)));
-		Registry.register(Registry.BLOCK, new ModIdentifier("snow"), new SeasonalSnowBlock(FabricBlockSettings.copyOf(Blocks.SNOW)));
+		Registry.register(Registry.BLOCK, new ModIdentifier("seasonal_ice"), new SeasonalIceBlock(FabricBlockSettings.copyOf(Blocks.ICE)));
+		Registry.register(Registry.BLOCK, new ModIdentifier("seasonal_snow"), new SeasonalSnowBlock(FabricBlockSettings.copyOf(Blocks.SNOW)));
 	}
 }
