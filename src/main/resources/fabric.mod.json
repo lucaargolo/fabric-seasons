@@ -20,7 +20,8 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.lucaargolo.seasons.FabricSeasons"
+      "io.github.lucaargolo.seasons.FabricSeasons",
+      "io.github.lucaargolo.seasons.OldSeasonsCompat"
     ],
     "client": [
       "io.github.lucaargolo.seasons.FabricSeasonsClient"
