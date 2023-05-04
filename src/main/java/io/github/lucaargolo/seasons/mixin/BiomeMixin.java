@@ -19,75 +19,76 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
 @Mixin(Biome.class)
-public class BiomeMixin implements BiomeMixed {
+public abstract class BiomeMixin implements BiomeMixed {
 
     @Shadow @Final public Biome.Weather weather;
+    @Shadow @Final private BiomeEffects effects;
+
+    @Shadow protected abstract int getDefaultGrassColor();
+
+    @Shadow protected abstract int getDefaultFoliageColor();
+
     private Biome.Weather originalWeather;
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "removal"})
     @Environment(EnvType.CLIENT)
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects;getGrassColor()Ljava/util/Optional;"), method = "getGrassColorAt")
-    public Optional<Integer> getSeasonGrassColor(BiomeEffects effects) {
+    @Inject(at = @At("TAIL"), method = "getGrassColorAt", cancellable = true)
+    public void getSeasonGrassColor(double x, double z, CallbackInfoReturnable<Integer> cir) {
         Biome biome = (Biome) ((Object) this);
+        Optional<Integer> overridedColor;
         if(ColorsCache.hasGrassCache(biome)) {
-            return ColorsCache.getGrassCache(biome);
+            overridedColor = ColorsCache.getGrassCache(biome);
         }else {
-            Optional<Integer> returnColor = effects.getGrassColor();
+            overridedColor = effects.getGrassColor();
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
                 Optional<Integer> seasonGrassColor = GrassSeasonColors.getSeasonGrassColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonGrassColor.isPresent()) {
-                    returnColor = seasonGrassColor;
+                    overridedColor = seasonGrassColor;
                 }
             }
-            ColorsCache.createGrassCache(biome, returnColor);
-            return returnColor;
+            ColorsCache.createGrassCache(biome, overridedColor);
+        }
+        if(effects.getGrassColorModifier() == BiomeEffects.GrassColorModifier.SWAMP) {
+            int swampColor1 = GrassSeasonColors.getSwampColor1(FabricSeasons.getCurrentSeason());
+            int swampColor2 = GrassSeasonColors.getSwampColor2(FabricSeasons.getCurrentSeason());
+
+            double d = Biome.FOLIAGE_NOISE.sample(x * 0.0225D, z * 0.0225D, false);
+            cir.setReturnValue(d < -0.1D ? swampColor1 : swampColor2);
+        }else{
+            Integer integer = overridedColor.orElseGet(this::getDefaultGrassColor);
+            cir.setReturnValue(effects.getGrassColorModifier().getModifiedGrassColor(x, z, integer));
         }
     }
 
     @SuppressWarnings("ConstantConditions")
     @Environment(EnvType.CLIENT)
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects;getFoliageColor()Ljava/util/Optional;"), method = "getFoliageColor")
-    public Optional<Integer> getSeasonFoliageColor(BiomeEffects effects) {
+    @Inject(at = @At("TAIL"), method = "getFoliageColor", cancellable = true)
+    public void getSeasonFoliageColor(CallbackInfoReturnable<Integer> cir) {
         Biome biome = (Biome) ((Object) this);
+        Optional<Integer> overridedColor;
         if(ColorsCache.hasFoliageCache(biome)) {
-            return ColorsCache.getFoliageCache(biome);
+            overridedColor = ColorsCache.getFoliageCache(biome);
         }else{
-            Optional<Integer> returnColor = effects.getFoliageColor();
+            overridedColor = effects.getFoliageColor();
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(Registry.BIOME_KEY).getId(biome);
                 Optional<Integer> seasonFoliageColor = FoliageSeasonColors.getSeasonFoliageColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
                 if(seasonFoliageColor.isPresent()) {
-                    returnColor = seasonFoliageColor;
+                    overridedColor = seasonFoliageColor;
                 }
             }
-            ColorsCache.createFoliageCache(biome, returnColor);
-            return returnColor;
+            ColorsCache.createFoliageCache(biome, overridedColor);
         }
-
-    }
-
-    @SuppressWarnings("removal")
-    @Environment(EnvType.CLIENT)
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/BiomeEffects$GrassColorModifier;getModifiedGrassColor(DDI)I"), method = "getGrassColorAt")
-    public int getSeasonModifiedGrassColor(BiomeEffects.GrassColorModifier gcm, double x, double z, int color) {
-        if(gcm == BiomeEffects.GrassColorModifier.SWAMP) {
-            int swampColor1 = GrassSeasonColors.getSwampColor1(FabricSeasons.getCurrentSeason());
-            int swampColor2 = GrassSeasonColors.getSwampColor2(FabricSeasons.getCurrentSeason());
-
-            double d = Biome.FOLIAGE_NOISE.sample(x * 0.0225D, z * 0.0225D, false);
-            return d < -0.1D ? swampColor1 : swampColor2;
-        }else{
-            return gcm.getModifiedGrassColor(x, z, color);
-        }
+        Integer integer = overridedColor.orElseGet(this::getDefaultFoliageColor);
+        cir.setReturnValue(integer);
     }
 
     @Environment(EnvType.CLIENT)
