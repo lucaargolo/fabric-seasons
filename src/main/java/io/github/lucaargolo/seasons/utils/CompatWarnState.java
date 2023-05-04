@@ -52,9 +52,10 @@ public class CompatWarnState {
         NbtList list = new NbtList();
         warnedIds.forEach(s -> list.add(NbtString.of(s)));
         nbt.put("list", list);
-        File compatWarnFile = new File(MinecraftClient.getInstance().runDirectory, File.separator+"data"+File.separator+"seasons_compat_warn.nbt");
-        Boolean ignored = compatWarnFile.getParentFile().mkdirs();
+        File compatWarnFile = new File(MinecraftClient.getInstance().runDirectory, File.separator+"data"+File.separator+"seasons_compat_warn.dat");
         try {
+            Boolean ignored = compatWarnFile.getParentFile().mkdirs();
+            Boolean ignored2 = compatWarnFile.createNewFile();
             NbtIo.writeCompressed(nbt, compatWarnFile);
         } catch (IOException e) {
             FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to save season url warn state.", e);
@@ -63,7 +64,7 @@ public class CompatWarnState {
 
     public static CompatWarnState getState(MinecraftClient client) {
         CompatWarnState state = new CompatWarnState(client);
-        File compatWarnFile = new File(MinecraftClient.getInstance().runDirectory, File.separator+"data"+File.separator+"seasons_compat_warn.nbt");
+        File compatWarnFile = new File(MinecraftClient.getInstance().runDirectory, File.separator+"data"+File.separator+"seasons_compat_warn.dat");
         NbtCompound nbt;
         try {
             nbt = NbtIo.readCompressed(compatWarnFile);
