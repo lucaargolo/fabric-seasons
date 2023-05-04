@@ -53,6 +53,7 @@ public class CompatWarnState {
         warnedIds.forEach(s -> list.add(NbtString.of(s)));
         nbt.put("list", list);
         File compatWarnFile = new File(MinecraftClient.getInstance().runDirectory, File.separator+"data"+File.separator+"seasons_compat_warn.nbt");
+        Boolean ignored = compatWarnFile.getParentFile().mkdirs();
         try {
             NbtIo.writeCompressed(nbt, compatWarnFile);
         } catch (IOException e) {
