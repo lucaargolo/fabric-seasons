@@ -13,9 +13,19 @@ public class ModConfig {
         private boolean isSeasonLocked = false;
         private Season lockedSeason = Season.SPRING;
     }
-    private int seasonLength = 672000;
+
+    private static class SeasonLength {
+        private int springLength = 672000;
+        private int summerLength = 672000;
+        private int fallLength = 672000;
+        private int winterLength = 672000;
+
+    }
+
+    private SeasonLength seasonLength = new SeasonLength();
 
     private SeasonLock seasonLock = new SeasonLock();
+
 
     private List<String> dimensionAllowlist = List.of(
             "minecraft:overworld"
@@ -63,8 +73,29 @@ public class ModConfig {
         return doTemperatureChanges && !biomeDenylist.contains(biomeId.toString());
     }
 
+    public int getSpringLength() {
+        return seasonLength.springLength;
+    }
+
+    public int getSummerLength() {
+        return seasonLength.summerLength;
+    }
+
+    public int getFallLength() {
+        return seasonLength.fallLength;
+    }
+
+    public int getWinterLength() {
+        return seasonLength.winterLength;
+    }
+
+    public int getYearLength() {
+        return seasonLength.springLength + seasonLength.summerLength + seasonLength.fallLength + seasonLength.winterLength;
+    }
+
+    @Deprecated
     public int getSeasonLength() {
-        return seasonLength;
+        return getSpringLength();
     }
 
     public boolean isSeasonLocked() {
