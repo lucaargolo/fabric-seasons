@@ -37,6 +37,12 @@ public class ModConfig {
 
     private boolean doAnimalsBreedInWinter = true;
 
+    private boolean notifyCompat = true;
+
+    public boolean shouldNotifyCompat() {
+        return notifyCompat;
+    }
+
     public boolean doAnimalsBreedInWinter() {
         return doAnimalsBreedInWinter;
     }
