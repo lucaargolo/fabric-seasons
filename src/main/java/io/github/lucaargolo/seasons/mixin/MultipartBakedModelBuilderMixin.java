@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -24,13 +25,27 @@ public class MultipartBakedModelBuilderMixin {
 
     @Unique
     private final HashMap<Season, List<Pair<Predicate<BlockState>, BakedModel>>> seasonalComponentsMap = new HashMap<>();
+    @Unique
+    private final HashSet<Season> validSeasonalComponents = new HashSet<>();
+
+    @Inject(at = @At("TAIL"), method = "<init>")
+    public void createSeasonalComponentsMap(CallbackInfo ci) {
+        for(Season season : Season.values()) {
+            seasonalComponentsMap.put(season, Lists.newArrayList());
+        }
+    }
 
     @Inject(at = @At("HEAD"), method = "addComponent")
     public void addSeasonalComponent(Predicate<BlockState> predicate, BakedModel model, CallbackInfo ci) {
         Map<Season, BakedModel> seasonModelMap = FabricSeasonsClient.originalToSeasonModelMap.get(model);
         if(seasonModelMap != null) {
             seasonModelMap.forEach((season, seasonalModel) -> {
-                seasonalComponentsMap.computeIfAbsent(season, s -> Lists.newArrayList()).add(Pair.of(predicate, seasonalModel));
+                validSeasonalComponents.add(season);
+                seasonalComponentsMap.get(season).add(Pair.of(predicate, seasonalModel));
+            });
+        }else {
+            seasonalComponentsMap.forEach((season, list) -> {
+                list.add(Pair.of(predicate, model));
             });
         }
     }
@@ -40,7 +55,9 @@ public class MultipartBakedModelBuilderMixin {
         BakedModel bakedModel = cir.getReturnValue();
         Map<Season, BakedModel> seasonModelMap = new HashMap<>();
         seasonalComponentsMap.forEach((season, seasonalComponents) -> {
-            seasonModelMap.put(season, new MultipartBakedModel(seasonalComponents));
+            if (validSeasonalComponents.contains(season)) {
+                seasonModelMap.put(season, new MultipartBakedModel(seasonalComponents));
+            }
         });
         if(!seasonModelMap.isEmpty()) {
             FabricSeasonsClient.originalToSeasonModelMap.put(bakedModel, seasonModelMap);
