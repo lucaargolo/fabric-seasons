@@ -24,6 +24,7 @@
     "ItemModelsMixin",
     "JsonUnbakedModelMixin",
     "ModelLoaderMixin",
+    "MultipartBakedModelBuilderMixin",
     "WorldRendererMixin"
   ],
   "injectors": {
