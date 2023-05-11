@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -151,6 +152,69 @@ public class FabricSeasons implements ModInitializer {
     public static ReplacedMeltablesState getReplacedMeltablesState(ServerWorld world) {
         return world.getPersistentStateManager().getOrCreate(ReplacedMeltablesState::createFromNbt, ReplacedMeltablesState::new, "seasons_replaced_meltables");
     }
+    public static long getTimeToNextSeason(World world) {
+        RegistryKey<World> dimension = world.getRegistryKey();
+        if (CONFIG.isValidInDimension(dimension) && !CONFIG.isSeasonLocked()) {
+            if(CONFIG.isSeasonTiedWithSystemTime()) {
+                return getTimeToNextSystemSeason() * 24000;
+            }
+            long springTime = world.getTimeOfDay() % CONFIG.getYearLength();
+            long summerTime = springTime - CONFIG.getSpringLength();
+            long fallTime = summerTime - CONFIG.getSummerLength();
+            long winterTime = fallTime - CONFIG.getFallLength();
+
+            long seasonTime = switch (getCurrentSeason(world)) {
+                case SPRING -> springTime;
+                case SUMMER -> summerTime;
+                case FALL -> fallTime;
+                case WINTER -> winterTime;
+            };
+            return getCurrentSeason().getSeasonLength() - seasonTime;
+        }
+        return Long.MAX_VALUE;
+    }
+
+    public static Season getNextSeason(World world) {
+        RegistryKey<World> dimension = world.getRegistryKey();
+        if (CONFIG.isValidInDimension(dimension)) {
+            if(CONFIG.isSeasonLocked()) {
+                return CONFIG.getLockedSeason();
+            }
+            if(CONFIG.isSeasonTiedWithSystemTime()) {
+                return getCurrentSystemSeason().getNext();
+            }
+
+            long springTime = world.getTimeOfDay() % CONFIG.getYearLength();
+            long summerTime = springTime - CONFIG.getSpringLength();
+            long fallTime = summerTime - CONFIG.getSummerLength();
+            long winterTime = fallTime - CONFIG.getFallLength();
+
+            long seasonTime = switch (getCurrentSeason(world)) {
+                case SPRING -> springTime;
+                case SUMMER -> summerTime;
+                case FALL -> fallTime;
+                case WINTER -> winterTime;
+            };
+
+            long worldTime = world.getTimeOfDay() + seasonTime;
+
+            springTime = worldTime % CONFIG.getYearLength();
+            summerTime = springTime - CONFIG.getSpringLength();
+            fallTime = summerTime - CONFIG.getSummerLength();
+            winterTime = fallTime - CONFIG.getFallLength();
+
+            if(winterTime >= 0 && CONFIG.getWinterLength() > 0) {
+                return Season.WINTER;
+            }else if(fallTime >= 0 && CONFIG.getFallLength() > 0) {
+                return Season.FALL;
+            }else if(summerTime >= 0 && CONFIG.getSummerLength() > 0) {
+                return Season.SUMMER;
+            }else if(springTime >= 0 && CONFIG.getSpringLength() > 0) {
+                return Season.SPRING;
+            }
+        }
+        return Season.SPRING;
+    }
 
     public static Season getCurrentSeason(World world) {
         RegistryKey<World> dimension = world.getRegistryKey();
@@ -161,9 +225,21 @@ public class FabricSeasons implements ModInitializer {
             if(CONFIG.isSeasonTiedWithSystemTime()) {
                 return getCurrentSystemSeason();
             }
-            long worldTime = world.getTimeOfDay();
-            long seasonTime = (worldTime / CONFIG.getSeasonLength());
-            return Season.values()[(int) (seasonTime % 4)];
+
+            long springTime = world.getTimeOfDay() % CONFIG.getYearLength();
+            long summerTime = springTime - CONFIG.getSpringLength();
+            long fallTime = summerTime - CONFIG.getSummerLength();
+            long winterTime = fallTime - CONFIG.getFallLength();
+
+            if(winterTime >= 0 && CONFIG.getWinterLength() > 0) {
+                return Season.WINTER;
+            }else if(fallTime >= 0 && CONFIG.getFallLength() > 0) {
+                return Season.FALL;
+            }else if(summerTime >= 0 && CONFIG.getSummerLength() > 0) {
+                return Season.SUMMER;
+            }else if(springTime >= 0 && CONFIG.getSpringLength() > 0) {
+                return Season.SPRING;
+            }
         }
         return Season.SPRING;
     }
@@ -176,6 +252,31 @@ public class FabricSeasons implements ModInitializer {
             return getCurrentSeason(player.world);
         }
         return Season.SPRING;
+    }
+
+    private static long getTimeToNextSystemSeason() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextSeasonStart;
+
+        Season currentSeason = getCurrentSystemSeason();
+        if(CONFIG.isInNorthHemisphere()) {
+            nextSeasonStart = switch (currentSeason) {
+                case WINTER -> LocalDateTime.of(now.getYear(), 3, 20, 0, 0);
+                case SPRING -> LocalDateTime.of(now.getYear(), 6, 21, 0, 0);
+                case SUMMER -> LocalDateTime.of(now.getYear(), 9, 22, 0, 0);
+                case FALL -> LocalDateTime.of(now.getYear(), 12, 21, 0, 0);
+            };
+        }else{
+            nextSeasonStart = switch (currentSeason) {
+                case SUMMER -> LocalDateTime.of(now.getYear(), 3, 20, 0, 0);
+                case FALL -> LocalDateTime.of(now.getYear(), 6, 21, 0, 0);
+                case WINTER -> LocalDateTime.of(now.getYear(), 9, 22, 0, 0);
+                case SPRING -> LocalDateTime.of(now.getYear(), 12, 21, 0, 0);
+            };
+        }
+
+        Duration timeToNextSeason = Duration.between(now, nextSeasonStart);
+        return timeToNextSeason.toDays();
     }
 
     private static Season getCurrentSystemSeason() {

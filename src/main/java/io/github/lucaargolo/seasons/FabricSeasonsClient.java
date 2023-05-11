@@ -86,7 +86,9 @@ public class FabricSeasonsClient implements ClientModInitializer {
 
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            CompatWarnState.getState(client).join();
+            if(CONFIG.shouldNotifyCompat()) {
+                CompatWarnState.join(client);
+            }
             if(!client.isIntegratedServerRunning()) {
                 FabricSeasons.LOGGER.info("["+MOD_NAME+"] Joined dedicated server, asking for config.");
                 ClientPlayNetworking.send(ASK_FOR_CONFIG, PacketByteBufs.empty());

@@ -19,43 +19,43 @@ public class SeasonCommand {
                     .executes(context -> TimeCommand.executeSet(context.getSource(), 0))
                 )
                 .then(CommandManager.literal("summer")
-                    .executes(context -> TimeCommand.executeSet(context.getSource(), FabricSeasons.CONFIG.getSeasonLength()))
+                    .executes(context -> TimeCommand.executeSet(context.getSource(), FabricSeasons.CONFIG.getSpringLength()))
                 )
                 .then(CommandManager.literal("fall")
-                    .executes(context -> TimeCommand.executeSet(context.getSource(), FabricSeasons.CONFIG.getSeasonLength()*2))
+                    .executes(context -> TimeCommand.executeSet(context.getSource(), FabricSeasons.CONFIG.getSpringLength() + FabricSeasons.CONFIG.getSummerLength()))
                 )
                 .then(CommandManager.literal("winter")
-                    .executes(context -> TimeCommand.executeSet(context.getSource(), FabricSeasons.CONFIG.getSeasonLength()*3))
+                    .executes(context -> TimeCommand.executeSet(context.getSource(), FabricSeasons.CONFIG.getSpringLength() + FabricSeasons.CONFIG.getSummerLength() + FabricSeasons.CONFIG.getFallLength()))
                 )
             )
             .then(CommandManager.literal("query")
                 .executes(context -> {
                     World world = context.getSource().getWorld();
-                    Season season = FabricSeasons.getCurrentSeason(world);
-                    long ticksLeft = ((FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength());
+                    Season currentSeason = FabricSeasons.getCurrentSeason(world);
+                    Season nextSeason = FabricSeasons.getNextSeason(world);
+                    long ticksLeft = FabricSeasons.getTimeToNextSeason(world);
                     context.getSource().sendFeedback(Text.translatable("commands.seasons.query_1",
-                            Text.translatable(season.getTranslationKey()).formatted(season.getFormatting())
+                            Text.translatable(currentSeason.getTranslationKey()).formatted(currentSeason.getFormatting())
                     ), false);
                     context.getSource().sendFeedback(Text.translatable("commands.seasons.query_2",
                             Long.toString(ticksLeft/24000L),
                             Long.toString(ticksLeft),
-                            Text.translatable(season.getNext().getTranslationKey()).formatted(season.getNext().getFormatting())
+                            Text.translatable(nextSeason.getTranslationKey()).formatted(nextSeason.getFormatting())
                     ), false);
-                    return season.ordinal();
+                    return currentSeason.ordinal();
                 })
             )
             .then(CommandManager.literal("skip")
-                .executes(context -> executeLongAdd(context.getSource(), FabricSeasons.CONFIG.getSeasonLength()))
+                .executes(context -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(context.getSource().getWorld())))
                 .then(CommandManager.literal("spring")
                     .executes(context -> {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
-                        long timeToNextSeason = (FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength();
                         return switch (season) {
-                            case SPRING -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3L));
-                            case SUMMER -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2L));
-                            case FALL -> executeLongAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
-                            case WINTER -> executeLongAdd(context.getSource(), timeToNextSeason);
+                            case SPRING -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.SUMMER.getSeasonLength() + Season.FALL.getSeasonLength() + Season.WINTER.getSeasonLength());
+                            case SUMMER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.FALL.getSeasonLength() + Season.WINTER.getSeasonLength());
+                            case FALL -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.WINTER.getSeasonLength());
+                            case WINTER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world));
                         };
                     })
                 )
@@ -63,12 +63,11 @@ public class SeasonCommand {
                     .executes(context -> {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
-                        long timeToNextSeason = (FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength();
                         return switch (season) {
-                            case SPRING -> executeLongAdd(context.getSource(), timeToNextSeason);
-                            case SUMMER -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3L));
-                            case FALL -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2L));
-                            case WINTER -> executeLongAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
+                            case SPRING -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world));
+                            case SUMMER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.FALL.getSeasonLength() + Season.WINTER.getSeasonLength() + Season.SPRING.getSeasonLength());
+                            case FALL -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.WINTER.getSeasonLength() + Season.SPRING.getSeasonLength());
+                            case WINTER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.SPRING.getSeasonLength());
                         };
                     })
                 )
@@ -76,12 +75,11 @@ public class SeasonCommand {
                     .executes(context -> {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
-                        long timeToNextSeason = (FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength();
                         return switch (season) {
-                            case SPRING -> executeLongAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
-                            case SUMMER -> executeLongAdd(context.getSource(), timeToNextSeason);
-                            case FALL -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3L));
-                            case WINTER -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2L));
+                            case SPRING -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.SUMMER.getSeasonLength());
+                            case SUMMER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world));
+                            case FALL -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.WINTER.getSeasonLength() + Season.SPRING.getSeasonLength() + Season.SUMMER.getSeasonLength());
+                            case WINTER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.SPRING.getSeasonLength() + Season.SUMMER.getSeasonLength());
                         };
                     })
                 )
@@ -89,12 +87,11 @@ public class SeasonCommand {
                     .executes(context -> {
                         World world = context.getSource().getWorld();
                         Season season = FabricSeasons.getCurrentSeason(world);
-                        long timeToNextSeason = (FabricSeasons.CONFIG.getSeasonLength() - (world.getTimeOfDay() - ((world.getTimeOfDay()/FabricSeasons.CONFIG.getSeasonLength())*FabricSeasons.CONFIG.getSeasonLength()) )) % FabricSeasons.CONFIG.getSeasonLength();
                         return switch (season) {
-                            case SPRING -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 2L));
-                            case SUMMER -> executeLongAdd(context.getSource(), timeToNextSeason + FabricSeasons.CONFIG.getSeasonLength());
-                            case FALL -> executeLongAdd(context.getSource(), timeToNextSeason);
-                            case WINTER -> executeLongAdd(context.getSource(), timeToNextSeason + (FabricSeasons.CONFIG.getSeasonLength() * 3L));
+                            case SPRING -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.SUMMER.getSeasonLength() + Season.FALL.getSeasonLength());
+                            case SUMMER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.FALL.getSeasonLength());
+                            case FALL -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world));
+                            case WINTER -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(world) + Season.SPRING.getSeasonLength() + Season.SUMMER.getSeasonLength() + Season.FALL.getSeasonLength());
                         };
                     })
                 )

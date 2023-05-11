@@ -35,7 +35,7 @@ public abstract class BiomeMixin implements BiomeMixed {
 
     private Biome.Weather originalWeather;
 
-    @SuppressWarnings({"ConstantConditions", "removal"})
+    @SuppressWarnings({"ConstantConditions", "removal", "OptionalAssignedToNull"})
     @Environment(EnvType.CLIENT)
     @Inject(at = @At("TAIL"), method = "getGrassColorAt", cancellable = true)
     public void getSeasonGrassColor(double x, double z, CallbackInfoReturnable<Integer> cir) {
@@ -61,13 +61,13 @@ public abstract class BiomeMixin implements BiomeMixed {
 
             double d = Biome.FOLIAGE_NOISE.sample(x * 0.0225D, z * 0.0225D, false);
             cir.setReturnValue(d < -0.1D ? swampColor1 : swampColor2);
-        }else{
+        }else if(overridedColor != null){
             Integer integer = overridedColor.orElseGet(this::getDefaultGrassColor);
             cir.setReturnValue(effects.getGrassColorModifier().getModifiedGrassColor(x, z, integer));
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "OptionalAssignedToNull"})
     @Environment(EnvType.CLIENT)
     @Inject(at = @At("TAIL"), method = "getFoliageColor", cancellable = true)
     public void getSeasonFoliageColor(CallbackInfoReturnable<Integer> cir) {
@@ -87,8 +87,10 @@ public abstract class BiomeMixin implements BiomeMixed {
             }
             ColorsCache.createFoliageCache(biome, overridedColor);
         }
-        Integer integer = overridedColor.orElseGet(this::getDefaultFoliageColor);
-        cir.setReturnValue(integer);
+        if(overridedColor != null) {
+            Integer integer = overridedColor.orElseGet(this::getDefaultFoliageColor);
+            cir.setReturnValue(integer);
+        }
     }
 
     @Environment(EnvType.CLIENT)
