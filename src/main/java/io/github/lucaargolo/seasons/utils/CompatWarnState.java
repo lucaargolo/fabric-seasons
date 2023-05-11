@@ -8,11 +8,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -63,11 +64,11 @@ public class CompatWarnState {
         HashSet<String> availableNamespaces = new HashSet<>();
         ClientPlayNetworkHandler handler = client.getNetworkHandler();
         if(handler != null) {
-            handler.getRegistryManager().get(Registry.BIOME_KEY).getIndexedEntries().forEach(entry -> {
+            handler.getRegistryManager().get(RegistryKeys.BIOME).getIndexedEntries().forEach(entry -> {
                 entry.getKey().ifPresent(key -> availableNamespaces.add(key.getValue().getNamespace()));
             });
             FabricSeasons.SEEDS_MAP.forEach((item, block) -> {
-                availableNamespaces.add(Registry.BLOCK.getId(block).getNamespace());
+                availableNamespaces.add(Registries.BLOCK.getId(block).getNamespace());
             });
         }
         availableNamespaces.stream().filter(namespace -> !alreadyWarned.contains(namespace)).forEach((namespace) -> {
