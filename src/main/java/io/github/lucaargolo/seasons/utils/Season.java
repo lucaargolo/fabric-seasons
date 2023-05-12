@@ -1,5 +1,6 @@
 package io.github.lucaargolo.seasons.utils;
 
+import io.github.lucaargolo.seasons.FabricSeasons;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 
@@ -48,6 +49,15 @@ public enum Season implements StringIdentifiable {
             case FALL -> Season.WINTER;
             case WINTER -> Season.SPRING;
             default -> Season.SUMMER;
+        };
+    }
+
+    public int getSeasonLength() {
+        return switch (this) {
+            case SUMMER -> FabricSeasons.CONFIG.getSummerLength();
+            case FALL -> FabricSeasons.CONFIG.getFallLength();
+            case WINTER -> FabricSeasons.CONFIG.getWinterLength();
+            default -> FabricSeasons.CONFIG.getSpringLength();
         };
     }
 }
