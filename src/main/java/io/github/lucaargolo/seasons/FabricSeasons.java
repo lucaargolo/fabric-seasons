@@ -29,7 +29,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.world.ServerWorld;
@@ -326,8 +325,8 @@ public class FabricSeasons implements ModInitializer {
         return season;
     }
 
-    private static final TagKey<Biome> IGNORED_CATEGORIES_TAG = TagKey.of(Registry.BIOME_KEY, new Identifier(FabricSeasons.MOD_ID, "ignored"));
-    private static final TagKey<Biome> JUNGLE_LIKE_TAG = TagKey.of(Registry.BIOME_KEY, new Identifier(FabricSeasons.MOD_ID, "jungle_like"));
+    private static final TagKey<Biome> IGNORED_CATEGORIES_TAG = TagKey.of(RegistryKeys.BIOME, new Identifier(FabricSeasons.MOD_ID, "ignored"));
+    private static final TagKey<Biome> JUNGLE_LIKE_TAG = TagKey.of(RegistryKeys.BIOME, new Identifier(FabricSeasons.MOD_ID, "jungle_like"));
 
     @SuppressWarnings("ConstantValue")
     public static void injectBiomeTemperature(RegistryEntry<Biome> entry, World world) {
