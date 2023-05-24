@@ -107,7 +107,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(Registry.BLOCK.get(new ModIdentifier("greenhouse_glass")), RenderLayer.getTranslucent());
 
-        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if(FabricLoader.getInstance().isDevelopmentEnvironment() || CONFIG.isDebugCommandEnabled()) {
             ClientCommandRegistrationCallback.EVENT.register((SeasonDebugCommand::register));
         }
 

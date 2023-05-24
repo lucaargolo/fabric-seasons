@@ -51,6 +51,8 @@ public class ModConfig {
 
     private boolean notifyCompat = true;
 
+    private boolean debugCommandEnabled = false;
+
     public boolean shouldNotifyCompat() {
         return notifyCompat;
     }
@@ -123,5 +125,7 @@ public class ModConfig {
     public boolean isInNorthHemisphere() {
         return isInNorthHemisphere;
     }
+
+    public boolean isDebugCommandEnabled() { return debugCommandEnabled; }
 
 }
