@@ -104,7 +104,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
             }
         }));
 
-        if(FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if(FabricLoader.getInstance().isDevelopmentEnvironment() || CONFIG.isDebugCommandEnabled()) {
             ClientCommandRegistrationCallback.EVENT.register((SeasonDebugCommand::register));
         }
 

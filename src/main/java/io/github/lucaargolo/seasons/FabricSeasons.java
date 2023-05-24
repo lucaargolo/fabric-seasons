@@ -28,7 +28,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.world.ServerWorld;
@@ -37,6 +36,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,9 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class FabricSeasons implements ModInitializer {
 
@@ -326,13 +324,17 @@ public class FabricSeasons implements ModInitializer {
         return season;
     }
 
+    private static final TagKey<Biome> IGNORED_CATEGORIES_TAG = TagKey.of(RegistryKeys.BIOME, new Identifier(FabricSeasons.MOD_ID, "ignored"));
+    private static final TagKey<Biome> JUNGLE_LIKE_TAG = TagKey.of(RegistryKeys.BIOME, new Identifier(FabricSeasons.MOD_ID, "jungle_like"));
+
     @SuppressWarnings("ConstantValue")
     public static void injectBiomeTemperature(RegistryEntry<Biome> entry, World world) {
-        List<TagKey<Biome>> ignoredCategories = Arrays.asList(BiomeTags.IS_NETHER, BiomeTags.IS_END, BiomeTags.IS_OCEAN);
-        if(ignoredCategories.stream().anyMatch(entry::isIn)) return;
+        if(entry.isIn(IGNORED_CATEGORIES_TAG))
+            return;
 
+        // legacy, prefer use of tag where possible
         Biome biome = entry.value();
-        Identifier biomeId = entry.getKey().orElse(RegistryKey.of(RegistryKeys.BIOME, new Identifier("plains"))).getValue();
+        Identifier biomeId = entry.getKey().orElse(BiomeKeys.PLAINS).getValue();
         if(!CONFIG.doTemperatureChanges(biomeId)) return;
 
         Biome.Weather currentWeather = biome.weather;
@@ -342,7 +344,7 @@ public class FabricSeasons implements ModInitializer {
             ((BiomeMixed) (Object) biome).setOriginalWeather(originalWeather);
         }
         Season season = FabricSeasons.getCurrentSeason(world);
-        boolean isJungle = entry.isIn(BiomeTags.IS_JUNGLE) || entry.isIn(BiomeTags.HAS_CLOSER_WATER_FOG);
+        boolean isJungle = entry.isIn(JUNGLE_LIKE_TAG);
 
         Pair<Boolean, Float> modifiedWeather = getSeasonWeather(season, biomeId, isJungle, originalWeather.hasPrecipitation, originalWeather.temperature);
         currentWeather.hasPrecipitation = modifiedWeather.getLeft();
@@ -364,7 +366,9 @@ public class FabricSeasons implements ModInitializer {
             //Frozen Biomes
             switch (season) {
                 case SUMMER -> {
-                    return new Pair<>(hasPrecipitation, temp + 0.3f);
+                    if (CONFIG.shouldSnowyBiomesMeltInSummer())
+                        return new Pair<>(hasPrecipitation, temp + 0.3f);
+                    else return new Pair<>(hasPrecipitation, temp);
                 }
                 case WINTER -> {
                     return new Pair<>(hasPrecipitation, temp - 0.2f);
