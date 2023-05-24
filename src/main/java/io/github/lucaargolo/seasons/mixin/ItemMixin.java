@@ -6,6 +6,7 @@ import io.github.lucaargolo.seasons.utils.Season;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -44,7 +46,16 @@ public class ItemMixin {
                 } else {
                     tooltip.add(Text.translatable("tooltip.seasons.faster_grow").formatted(Formatting.LIGHT_PURPLE));
                 }
-                boolean sneak = InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), MinecraftClient.getInstance().options.sneakKey.boundKey.getCode());
+                MinecraftClient client = MinecraftClient.getInstance();
+                long handle = client.getWindow().getHandle();
+                KeyBinding sneakKey = client.options.sneakKey;
+                InputUtil.Key boundKey = sneakKey.boundKey;
+                boolean sneak = false;
+                if(boundKey.getCategory() == InputUtil.Type.MOUSE) {
+                    sneak = GLFW.glfwGetMouseButton(handle, boundKey.getCode()) == 1;
+                }else if(boundKey.getCategory() == InputUtil.Type.KEYSYM) {
+                    sneak = GLFW.glfwGetKey(handle, boundKey.getCode()) == 1;
+                }
                 if (sneak) {
                     for (Season s : Season.values()) {
                         if(season == s) {
@@ -58,7 +69,7 @@ public class ItemMixin {
                         }
                     }
                 }else {
-                    tooltip.add(Text.translatable("tooltip.seasons.show_more", Text.translatable(MinecraftClient.getInstance().options.sneakKey.getBoundKeyTranslationKey()).formatted(Formatting.BLUE)).formatted(Formatting.GRAY));
+                    tooltip.add(Text.translatable("tooltip.seasons.show_more", sneakKey.getBoundKeyLocalizedText().copy().formatted(Formatting.BLUE)).formatted(Formatting.GRAY));
                 }
             }
         }

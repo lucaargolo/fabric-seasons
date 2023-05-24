@@ -33,6 +33,8 @@ public class ModConfig {
     
     private boolean doTemperatureChanges = true;
 
+    private boolean shouldSnowyBiomesMeltInSummer = true;
+
     private List<String> biomeDenylist = List.of(
             "terralith:glacial_chasm"
     );
@@ -48,6 +50,8 @@ public class ModConfig {
     private boolean doAnimalsBreedInWinter = true;
 
     private boolean notifyCompat = true;
+
+    private boolean debugCommandEnabled = false;
 
     public boolean shouldNotifyCompat() {
         return notifyCompat;
@@ -71,6 +75,10 @@ public class ModConfig {
 
     public boolean doTemperatureChanges(Identifier biomeId) {
         return doTemperatureChanges && !biomeDenylist.contains(biomeId.toString());
+    }
+
+    public boolean shouldSnowyBiomesMeltInSummer() {
+        return shouldSnowyBiomesMeltInSummer;
     }
 
     public int getSpringLength() {
@@ -117,5 +125,7 @@ public class ModConfig {
     public boolean isInNorthHemisphere() {
         return isInNorthHemisphere;
     }
+
+    public boolean isDebugCommandEnabled() { return debugCommandEnabled; }
 
 }
