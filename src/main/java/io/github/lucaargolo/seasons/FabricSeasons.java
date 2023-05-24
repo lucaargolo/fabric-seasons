@@ -366,7 +366,9 @@ public class FabricSeasons implements ModInitializer {
             //Frozen Biomes
             switch (season) {
                 case SUMMER -> {
-                    return new Pair<>(Biome.Precipitation.RAIN, temp + 0.3f);
+                    if (CONFIG.shouldSnowyBiomesMeltInSummer())
+                        return new Pair<>(Biome.Precipitation.RAIN, temp + 0.3f);
+                    else return new Pair<>(precipitation, temp);
                 }
                 case WINTER -> {
                     return new Pair<>(Biome.Precipitation.SNOW, temp - 0.2f);
