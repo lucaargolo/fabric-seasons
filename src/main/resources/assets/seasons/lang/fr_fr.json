@@ -1,0 +1,21 @@
+{
+  "tooltip.seasons.spring": "Printemps",
+  "tooltip.seasons.summer": "Été",
+  "tooltip.seasons.fall": "Automne",
+  "tooltip.seasons.winter": "Hiver",
+  "tooltip.seasons.faster_grow": "Croît plus rapidement cette saison",
+  "tooltip.seasons.normal_grow": "Croît normalement cette saison",
+  "tooltip.seasons.slowed_grow": "Croît plus lentement cette saison",
+  "tooltip.seasons.not_grow": "Ne poussera pas cette saison",
+  "tooltip.seasons.show_more": "Appuyer sur %s pour en savoir plus",
+
+  "chat.seasons.mod_installed": "On dirait que vous avez installé %s !",
+  "chat.seasons.compatibility": "Obtenir la pleine compatibilité de Fabric Seasons en installant le mod.",
+  "chat.seasons.mod_not_installed": "On dirait que %s n'est pas installé !",
+  "chat.seasons.extras": "Obtenez des items et des blocs personnalisés pour vous aider dans votre aventure en installant le mod.",
+  "chat.seasons.available_at": "Disponible sur :",
+  "chat.seasons.show_once": "Ce message ne s'affichera qu'une seule fois.",
+
+  "commands.seasons.query_1": "La saison en cours est %s.",
+  "commands.seasons.query_2": "Il reste %s jours (%s ticks) avant %s."
+}
