@@ -167,7 +167,7 @@ public class FabricSeasons implements ModInitializer {
                 case FALL -> fallTime;
                 case WINTER -> winterTime;
             };
-            return getCurrentSeason().getSeasonLength() - seasonTime;
+            return getCurrentSeason(world).getSeasonLength() - seasonTime;
         }
         return Long.MAX_VALUE;
     }
