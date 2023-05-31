@@ -1,11 +1,21 @@
 {
-	"tooltip.seasons.spring": "§aВесна",
-	"tooltip.seasons.summer": "§6Лето",
-	"tooltip.seasons.fall": "§4Осень",
-	"tooltip.seasons.winter": "§bЗима",
-	"tooltip.seasons.faster_grow": "§aВ этом сезоне рост этой культуры будет ускорен",
-	"tooltip.seasons.normal_grow": "§9В этом сезоне эта культура будет расти с нормальной скоростью",
-	"tooltip.seasons.slowed_grow": "§6В этом сезоне рост этой культуры будет немного дольше",
-	"tooltip.seasons.not_grow": "§cВ этом сезоне эта культура не будет расти",
-	"tooltip.seasons.show_more": "§7Нажмите §9{KEY} §7чтобы показать больше",
+  "tooltip.seasons.spring": "Весна",
+  "tooltip.seasons.summer": "Лето",
+  "tooltip.seasons.fall": "Осень",
+  "tooltip.seasons.winter": "Зима",
+  "tooltip.seasons.faster_grow": "Растет быстрее в этом сезоне",
+  "tooltip.seasons.normal_grow": "Нормально растет в этом сезоне",
+  "tooltip.seasons.slowed_grow": "Растет медленнее в этом сезоне",
+  "tooltip.seasons.not_grow": "Не растет в этом сезоне",
+  "tooltip.seasons.show_more": "Нажмите %s для деталей",
+
+  "chat.seasons.mod_installed": "Похоже вы установили %s!",
+  "chat.seasons.compatibility": "Получите полную совместимость Fabric Seasons после установки аддона.",
+  "chat.seasons.mod_not_installed": "Похоже у вас не установлен %s!",
+  "chat.seasons.extras": "Получите блоки и предметы с аддоном для лучшей игры.",
+  "chat.seasons.available_at": "Доступен как: ",
+  "chat.seasons.show_once": "Это сообщение больше не будет показыватся.",
+
+  "commands.seasons.query_1": "Текущий сезон: %s.",
+  "commands.seasons.query_2": "Осталось %s дней (%s тиков) до %s."
 }
