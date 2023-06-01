@@ -246,8 +246,8 @@ public class FabricSeasons implements ModInitializer {
     public static Season getCurrentSeason() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if(player != null && player.world != null) {
-            return getCurrentSeason(player.world);
+        if(player != null && player.getWorld() != null) {
+            return getCurrentSeason(player.getWorld());
         }
         return Season.SPRING;
     }
@@ -327,7 +327,6 @@ public class FabricSeasons implements ModInitializer {
     private static final TagKey<Biome> IGNORED_CATEGORIES_TAG = TagKey.of(RegistryKeys.BIOME, new Identifier(FabricSeasons.MOD_ID, "ignored"));
     private static final TagKey<Biome> JUNGLE_LIKE_TAG = TagKey.of(RegistryKeys.BIOME, new Identifier(FabricSeasons.MOD_ID, "jungle_like"));
 
-    @SuppressWarnings("ConstantValue")
     public static void injectBiomeTemperature(RegistryEntry<Biome> entry, World world) {
         if(entry.isIn(IGNORED_CATEGORIES_TAG))
             return;

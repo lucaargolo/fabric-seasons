@@ -34,10 +34,10 @@ public class SeasonCommand {
                     Season currentSeason = FabricSeasons.getCurrentSeason(world);
                     Season nextSeason = FabricSeasons.getNextSeason(world);
                     long ticksLeft = FabricSeasons.getTimeToNextSeason(world);
-                    context.getSource().sendFeedback(Text.translatable("commands.seasons.query_1",
+                    context.getSource().sendFeedback(() -> Text.translatable("commands.seasons.query_1",
                             Text.translatable(currentSeason.getTranslationKey()).formatted(currentSeason.getFormatting())
                     ), false);
-                    context.getSource().sendFeedback(Text.translatable("commands.seasons.query_2",
+                    context.getSource().sendFeedback(() -> Text.translatable("commands.seasons.query_2",
                             Long.toString(ticksLeft/24000L),
                             Long.toString(ticksLeft),
                             Text.translatable(nextSeason.getTranslationKey()).formatted(nextSeason.getFormatting())
@@ -106,7 +106,7 @@ public class SeasonCommand {
         }
 
         int i = (int) (source.getWorld().getTimeOfDay() % 24000L);
-        source.sendFeedback(Text.translatable("commands.time.set", i), true);
+        source.sendFeedback(() -> Text.translatable("commands.time.set", i), true);
         return i;
     }
 
