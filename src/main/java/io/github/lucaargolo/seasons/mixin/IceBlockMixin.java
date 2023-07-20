@@ -28,7 +28,7 @@ public abstract class IceBlockMixin extends Block implements Meltable {
 
     @Inject(at = @At("HEAD"), method = "randomTick")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (this == Blocks.ICE && world.getLightLevel(LightType.SKY, pos) > 0 && world.getBiome(pos).value().getTemperature(pos) >= 0.15F && !FabricSeasons.getPlacedMeltablesState(world).isManuallyPlaced(pos)) {
+        if (this == Blocks.ICE && world.getLightLevel(LightType.SKY, pos) > 0 && world.getBiome(pos).value().getTemperature(pos) >= 0.15F) {
             this.melt(state, world, pos);
         }
     }
