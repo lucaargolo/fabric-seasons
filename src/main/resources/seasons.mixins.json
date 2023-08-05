@@ -7,6 +7,7 @@
     "AbstractBlockMixin",
     "AnimalEntityMixin",
     "BiomeMixin",
+    "BlockMixin",
     "FreezeTopLayerFeatureMixin",
     "IceBlockMixin",
     "LakeFeatureMixin",
