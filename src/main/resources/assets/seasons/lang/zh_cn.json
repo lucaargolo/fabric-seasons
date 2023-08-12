@@ -1,0 +1,21 @@
+{
+  "tooltip.seasons.spring": "春季",
+  "tooltip.seasons.summer": "夏季",
+  "tooltip.seasons.fall": "秋季",
+  "tooltip.seasons.winter": "冬季",
+  "tooltip.seasons.faster_grow": "该植物于此季节生长更快",
+  "tooltip.seasons.normal_grow": "该植物于此季节生长正常",
+  "tooltip.seasons.slowed_grow": "该植物于此季节生长缓慢",
+  "tooltip.seasons.not_grow": "该植物于此季节停止生长",
+  "tooltip.seasons.show_more": "按下[%s]以展开详细信息",
+
+  "chat.seasons.mod_installed": "似乎你安装了%s！",
+  "chat.seasons.compatibility": "你可以通过安装下面的额外模组来拓展本模组的兼容性。",
+  "chat.seasons.mod_not_installed": "似乎你没有安装%s！",
+  "chat.seasons.extras": "安装下面的额外模组，为你的冒险之旅添加新的物品与方块。",
+  "chat.seasons.available_at": "获取网址：",
+  "chat.seasons.show_once": "此信息只会发送一次。",
+
+  "commands.seasons.query_1": "当前季节：%s",
+  "commands.seasons.query_2": "还有%s天（%s刻）到%s。"
+}
