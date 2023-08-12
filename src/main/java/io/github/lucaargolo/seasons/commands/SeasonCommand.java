@@ -13,8 +13,8 @@ import net.minecraft.world.World;
 public class SeasonCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("season").requires((source) -> source.hasPermissionLevel(2))
-            .then(CommandManager.literal("set")
+        dispatcher.register(CommandManager.literal("season")
+            .then(CommandManager.literal("set").requires((source) -> source.hasPermissionLevel(2))
                 .then(CommandManager.literal("spring")
                     .executes(context -> TimeCommand.executeSet(context.getSource(), 0))
                 )
@@ -45,7 +45,7 @@ public class SeasonCommand {
                     return currentSeason.ordinal();
                 })
             )
-            .then(CommandManager.literal("skip")
+            .then(CommandManager.literal("skip").requires((source) -> source.hasPermissionLevel(2))
                 .executes(context -> executeLongAdd(context.getSource(), FabricSeasons.getTimeToNextSeason(context.getSource().getWorld())))
                 .then(CommandManager.literal("spring")
                     .executes(context -> {
