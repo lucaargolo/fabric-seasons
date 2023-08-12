@@ -35,6 +35,8 @@ public class ModConfig {
 
     private boolean shouldSnowyBiomesMeltInSummer = true;
 
+    private boolean shouldIceNearWaterMelt = false;
+
     private List<String> biomeDenylist = List.of(
             "terralith:glacial_chasm"
     );
@@ -79,6 +81,10 @@ public class ModConfig {
 
     public boolean shouldSnowyBiomesMeltInSummer() {
         return shouldSnowyBiomesMeltInSummer;
+    }
+
+    public boolean shouldIceNearWaterMelt() {
+        return shouldIceNearWaterMelt;
     }
 
     public int getSpringLength() {
