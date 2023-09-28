@@ -60,7 +60,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
         ClientTickEvents.END_WORLD_TICK.register((clientWorld) -> {
             if(FabricSeasons.getCurrentSeason(clientWorld) != lastRenderedSeasonMap.get(clientWorld.getRegistryKey())) {
                 lastRenderedSeasonMap.put(clientWorld.getRegistryKey(), FabricSeasons.getCurrentSeason(clientWorld));
-                MinecraftClient.getInstance().worldRenderer.reload();
+                ((WorldRendererInterface)(MinecraftClient.getInstance().worldRenderer)).reloadOnlyColors();
             }
         });
 
