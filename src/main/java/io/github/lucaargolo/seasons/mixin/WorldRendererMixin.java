@@ -33,13 +33,11 @@ public abstract class WorldRendererMixin implements WorldRendererMixed {
         if (this.world == null || this.chunkBuilder == null) {
             return;
         }
-        ChunkRendererRegionBuilder chunkRendererRegionBuilder = new ChunkRendererRegionBuilder();
         this.world.reloadColor();
 
         for (WorldRenderer.ChunkInfo chunkInfo : this.chunkInfos) {
             ChunkBuilder.BuiltChunk builtChunk = chunkInfo.chunk;
-            this.chunkBuilder.rebuild(builtChunk, chunkRendererRegionBuilder);
-            builtChunk.cancelRebuild();
+            builtChunk.scheduleRebuild(true);
         }
     }
 }
