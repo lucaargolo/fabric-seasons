@@ -63,4 +63,10 @@ public class PlacedMeltablesState extends PersistentState {
         });
         return state;
     }
+
+    public static Type<PlacedMeltablesState> type = new Type<>(
+        PlacedMeltablesState::new,
+        PlacedMeltablesState::createFromNbt,
+        null
+            );
 }
