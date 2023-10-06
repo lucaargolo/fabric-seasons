@@ -33,6 +33,8 @@ public class ModConfig {
     
     private boolean doTemperatureChanges = true;
 
+    private boolean shouldSnowReplaceVegetation = true;
+
     private boolean shouldSnowyBiomesMeltInSummer = true;
 
     private boolean shouldIceNearWaterMelt = false;
@@ -77,6 +79,10 @@ public class ModConfig {
 
     public boolean doTemperatureChanges(Identifier biomeId) {
         return doTemperatureChanges && !biomeDenylist.contains(biomeId.toString());
+    }
+
+    public boolean shouldSnowReplaceVegetation() {
+        return shouldSnowReplaceVegetation;
     }
 
     public boolean shouldSnowyBiomesMeltInSummer() {
