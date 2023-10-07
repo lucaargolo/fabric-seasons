@@ -12,6 +12,7 @@
     "LakeFeatureMixin",
     "ServerWorldMixin",
     "SnowBlockMixin",
+    "SugarCaneBlockMixin",
     "VanillaFertilizablesMixin",
     "WorldViewMixin"
   ],
