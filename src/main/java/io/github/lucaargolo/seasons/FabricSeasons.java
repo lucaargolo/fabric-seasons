@@ -144,11 +144,11 @@ public class FabricSeasons implements ModInitializer {
     }
 
     public static PlacedMeltablesState getPlacedMeltablesState(ServerWorld world) {
-        return world.getPersistentStateManager().getOrCreate(PlacedMeltablesState::createFromNbt, PlacedMeltablesState::new, "seasons_placed_meltables");
+        return world.getPersistentStateManager().getOrCreate(PlacedMeltablesState.type, "seasons_placed_meltables");
     }
 
     public static ReplacedMeltablesState getReplacedMeltablesState(ServerWorld world) {
-        return world.getPersistentStateManager().getOrCreate(ReplacedMeltablesState::createFromNbt, ReplacedMeltablesState::new, "seasons_replaced_meltables");
+        return world.getPersistentStateManager().getOrCreate(ReplacedMeltablesState.type, "seasons_replaced_meltables");
     }
 
     public static long getTimeToNextSeason(World world) {
