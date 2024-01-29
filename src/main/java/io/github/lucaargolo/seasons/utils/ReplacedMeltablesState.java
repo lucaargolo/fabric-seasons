@@ -81,4 +81,10 @@ public class ReplacedMeltablesState extends PersistentState {
         });
         return state;
     }
+
+    public static Type<ReplacedMeltablesState> type = new Type<>(
+            ReplacedMeltablesState::new,
+            ReplacedMeltablesState::createFromNbt,
+            null
+    );
 }

@@ -85,7 +85,7 @@ public class CompatWarnState {
         try {
             Boolean ignored = compatWarnFile.getParentFile().mkdirs();
             Boolean ignored2 = compatWarnFile.createNewFile();
-            NbtIo.writeCompressed(nbt, compatWarnFile);
+            NbtIo.writeCompressed(nbt, compatWarnFile.toPath());
         } catch (IOException e) {
             FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to save season compat warn state.", e);
         }
@@ -96,7 +96,7 @@ public class CompatWarnState {
         HashSet<String> alreadyWarned = new HashSet<>();
         NbtCompound nbt;
         try {
-            nbt = NbtIo.readCompressed(compatWarnFile);
+            nbt = NbtIo.readCompressed(compatWarnFile.toPath(), NbtSizeTracker.ofUnlimitedBytes());
         } catch (Exception e) {
             nbt = new NbtCompound();
         }
