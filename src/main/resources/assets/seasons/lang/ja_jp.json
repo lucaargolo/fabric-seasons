@@ -1,0 +1,21 @@
+{
+  "tooltip.seasons.spring": "春",
+  "tooltip.seasons.summer": "夏",
+  "tooltip.seasons.fall": "秋",
+  "tooltip.seasons.winter": "冬",
+  "tooltip.seasons.faster_grow": "今の季節で成長が早い",
+  "tooltip.seasons.normal_grow": "今の季節で通常通り成長",
+  "tooltip.seasons.slowed_grow": "今の季節で成長が遅い",
+  "tooltip.seasons.not_grow": "今の季節で成長しない",
+  "tooltip.seasons.show_more": "§e%s§rを押して詳細",
+
+  "chat.seasons.mod_installed": "%sを導入済みなようです。",
+  "chat.seasons.mod_not_installed": "%sを導入していないようです。",
+  "chat.seasons.compatibility": "Fabric Seasonsとの完全な互換性を得るためには，次のアドオンを導入してください:",
+  "chat.seasons.extras": "冒険に役立つ追加アイテムやブロックが欲しい場合は，次のアドオンを導入してください:",
+  "chat.seasons.available_at": "入手先: ",
+  "chat.seasons.show_once": "この通知はただ一度だけ表示されます。",
+
+  "commands.seasons.query_1": "今の季節は%sです。",
+  "commands.seasons.query_2": "あと%s日 (%sティック) で%sになります。"
+}
