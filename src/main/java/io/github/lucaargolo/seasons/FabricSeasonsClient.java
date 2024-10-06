@@ -1,6 +1,7 @@
 package io.github.lucaargolo.seasons;
 
 import io.github.lucaargolo.seasons.commands.SeasonDebugCommand;
+import io.github.lucaargolo.seasons.mixed.WorldRendererMixed;
 import io.github.lucaargolo.seasons.resources.CropConfigs;
 import io.github.lucaargolo.seasons.resources.FoliageSeasonColors;
 import io.github.lucaargolo.seasons.resources.GrassSeasonColors;
@@ -60,7 +61,7 @@ public class FabricSeasonsClient implements ClientModInitializer {
         ClientTickEvents.END_WORLD_TICK.register((clientWorld) -> {
             if(FabricSeasons.getCurrentSeason(clientWorld) != lastRenderedSeasonMap.get(clientWorld.getRegistryKey())) {
                 lastRenderedSeasonMap.put(clientWorld.getRegistryKey(), FabricSeasons.getCurrentSeason(clientWorld));
-                MinecraftClient.getInstance().worldRenderer.reload();
+                ((WorldRendererMixed)(MinecraftClient.getInstance().worldRenderer)).reloadOnlyColors();
             }
         });
 
