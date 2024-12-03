@@ -272,17 +272,17 @@ public class FabricSeasons implements ModInitializer {
         Season currentSeason = getCurrentSystemSeason();
         if(CONFIG.isInNorthHemisphere()) {
             nextSeasonStart = switch (currentSeason) {
-                case WINTER -> LocalDateTime.of(now.getYear(), 3, 20, 0, 0);
-                case SPRING -> LocalDateTime.of(now.getYear(), 6, 21, 0, 0);
-                case SUMMER -> LocalDateTime.of(now.getYear(), 9, 22, 0, 0);
-                case FALL -> LocalDateTime.of(now.getYear(), 12, 21, 0, 0);
+                case WINTER -> LocalDateTime.of(now.getYear(), 2, 25, 0, 0);
+                case SPRING -> LocalDateTime.of(now.getYear(), 6, 1, 0, 0);
+                case SUMMER -> LocalDateTime.of(now.getYear(), 9, 1, 0, 0);
+                case FALL -> LocalDateTime.of(now.getYear(), 11, 26, 0, 0);
             };
         }else{
             nextSeasonStart = switch (currentSeason) {
-                case SUMMER -> LocalDateTime.of(now.getYear(), 3, 20, 0, 0);
-                case FALL -> LocalDateTime.of(now.getYear(), 6, 21, 0, 0);
-                case WINTER -> LocalDateTime.of(now.getYear(), 9, 22, 0, 0);
-                case SPRING -> LocalDateTime.of(now.getYear(), 12, 21, 0, 0);
+                case WINTER -> LocalDateTime.of(now.getYear(), 8, 25, 0, 0);
+                case SPRING -> LocalDateTime.of(now.getYear(), 12, 1, 0, 0);
+                case SUMMER -> LocalDateTime.of(now.getYear(), 3, 1, 0, 0);
+                case FALL -> LocalDateTime.of(now.getYear(), 5, 26, 0, 0);
             };
         }
 
@@ -297,43 +297,50 @@ public class FabricSeasons implements ModInitializer {
         Season season;
 
         if (CONFIG.isInNorthHemisphere()) {
-            if (m == 1 || m == 2 || m == 3)
-                season = Season.WINTER;
-            else if (m == 4 || m == 5 || m == 6)
+            if(m == 3 || m == 4 || m == 5) {
                 season = Season.SPRING;
-            else if (m == 7 || m == 8 || m == 9)
+            }else if(m == 6 || m == 7 || m == 8) {
                 season = Season.SUMMER;
-            else
+            }else if(m == 9 || m == 10) {
                 season = Season.FALL;
-
-            if (m == 3 && d > 19)
-                season = Season.SPRING;
-            else if (m == 6 && d > 20)
-                season = Season.SUMMER;
-            else if (m == 9 && d > 21)
-                season = Season.FALL;
-            else if (m == 12 && d > 20)
+            }else if(m == 11) {
+                if(d < 26)
+                    season = Season.FALL;
+                else
+                    season = Season.WINTER;
+            }else if(m == 12 || m == 1) {
                 season = Season.WINTER;
-        } else {
-            if (m == 1 || m == 2 || m == 3)
-                season = Season.SUMMER;
-            else if (m == 4 || m == 5 || m == 6)
-                season = Season.FALL;
-            else if (m == 7 || m == 8 || m == 9)
-                season = Season.WINTER;
-            else
+            }else if(m == 2) {
+                if(d < 25)
+                    season = Season.WINTER;
+                else
+                    season = Season.SPRING;
+            }else{
+                throw new IllegalArgumentException("Invalid Month number: " + m);
+            }
+        }else{
+            if(m == 9 || m == 10 || m == 11) {
                 season = Season.SPRING;
-
-            if (m == 3 && d > 19)
-                season = Season.FALL;
-            else if (m == 6 && d > 20)
-                season = Season.WINTER;
-            else if (m == 9 && d > 21)
-                season = Season.SPRING;
-            else if (m == 12 && d > 20)
+            }else if(m == 12 || m == 1 || m == 2) {
                 season = Season.SUMMER;
+            }else if(m == 3 || m == 4) {
+                season = Season.FALL;
+            }else if(m == 5) {
+                if(d < 26)
+                    season = Season.FALL;
+                else
+                    season = Season.WINTER;
+            }else if(m == 6 || m == 7) {
+                season = Season.WINTER;
+            }else if(m == 8) {
+                if(d < 25)
+                    season = Season.WINTER;
+                else
+                    season = Season.SPRING;
+            }else{
+                throw new IllegalArgumentException("Invalid Month number: " + m);
+            }
         }
-
         return season;
     }
 
