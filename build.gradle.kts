@@ -67,17 +67,14 @@ repositories {
     mavenLocal()
 }
 
-// Use afterEvaluate to ensure Loom has created the configurations
-afterEvaluate {
-    dependencies {
-        "minecraft"("com.mojang:minecraft:${project["minecraft_version"]}")
+dependencies {
+    "minecraft"("com.mojang:minecraft:${project["minecraft_version"]}")
 
-        "modImplementation"("net.fabricmc:fabric-loader:${project["loader_version"]}")
-        "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
+    "modImplementation"("net.fabricmc:fabric-loader:${project["loader_version"]}")
+    "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
 
-        "modRuntimeOnly"("com.terraformersmc:modmenu:${project["modmenu_version"]}")
-        "modRuntimeOnly"("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
-    }
+    "modRuntimeOnly"("com.terraformersmc:modmenu:${project["modmenu_version"]}")
+    "modRuntimeOnly"("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
 }
 
 configurations.all {
