@@ -13,4 +13,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Fabric-Seasons"
+rootProject.name = "ServerSeasons"
