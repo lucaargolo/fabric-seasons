@@ -20,10 +20,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.lucaargolo.seasons.FabricSeasons"
+      "me.ngcsonsplash.serverseasons.FabricSeasons"
     ],
     "client": [
-      "io.github.lucaargolo.seasons.FabricSeasonsClient"
+      "me.ngcsonsplash.serverseasons.FabricSeasonsClient"
     ]
   },
   "accessWidener": "seasons.accesswidener",
@@ -31,9 +31,9 @@
     "seasons.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.8",
-    "fabric": ">=0.83.0",
-    "minecraft": ">=1.21"
+    "fabricloader": ">=0.19.3",
+    "fabric": ">=0.151.0",
+    "minecraft": ">=26.1.2"
   },
   "custom": {
     "modmenu": {

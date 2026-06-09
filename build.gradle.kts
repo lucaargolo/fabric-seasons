@@ -25,8 +25,8 @@ operator fun Project.get(property: String): String {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 version = project["mod_version"]
@@ -72,18 +72,22 @@ repositories {
         name = "Shedaniel"
         url = uri("https://maven.shedaniel.me/")
     }
+    maven {
+        name = "Mezz"
+        url = uri("https://maven.blamejared.com/")
+    }
     mavenLocal()
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
-    mappings("net.fabricmc:yarn:${project["yarn_mappings"]}:v2")
+    mappings(loom.officialMojangMappings())
 
     modImplementation("net.fabricmc:fabric-loader:${project["loader_version"]}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
 
     modRuntimeOnly("com.terraformersmc:modmenu:${project["modmenu_version"]}")
-    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project["rei_version"]}")
+    modRuntimeOnly("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
 }
 
 configurations.all {
@@ -109,7 +113,7 @@ tasks.processResources {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    options.release.set(17)
+    options.release.set(25)
 }
 
 java {

@@ -1,8 +1,8 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "io.github.lucaargolo.seasons.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "package": "me.ngcsonsplash.serverseasons.mixin",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AbstractBlockMixin",
     "AnimalEntityMixin",
