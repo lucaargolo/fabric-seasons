@@ -1,7 +1,10 @@
-import com.matthewprenger.cursegradle.CurseArtifact
-import com.matthewprenger.cursegradle.CurseProject
-import com.matthewprenger.cursegradle.CurseRelation
-import com.matthewprenger.cursegradle.Options
+plugins {
+    id("maven-publish")
+    id("net.fabricmc.fabric-loom") version "1.17.5"
+    id("org.ajoberstar.grgit") version "5.0.0"
+    id("idea")
+}
+
 import org.ajoberstar.grgit.Grgit
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
@@ -10,13 +13,6 @@ buildscript {
     dependencies {
         classpath("org.kohsuke:github-api:${project.property("github_api_version") as String}")
     }
-}
-
-plugins {
-    id("maven-publish")
-    id("net.fabricmc.fabric-loom") version "1.17.5"
-    id("org.ajoberstar.grgit") version "5.0.0"
-    id("idea")
 }
 
 operator fun Project.get(property: String): String {
@@ -83,11 +79,11 @@ dependencies {
     minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
     mappings(loom.officialMojangMappings())
 
-    modImplementation("net.fabricmc:fabric-loader:${project["loader_version"]}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
+    "modImplementation"("net.fabricmc:fabric-loader:${project["loader_version"]}")
+    "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
 
-    modRuntimeOnly("com.terraformersmc:modmenu:${project["modmenu_version"]}")
-    modRuntimeOnly("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
+    "modRuntimeOnly"("com.terraformersmc:modmenu:${project["modmenu_version"]}")
+    "modRuntimeOnly"("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
 }
 
 configurations.all {
@@ -126,7 +122,7 @@ tasks.jar {
 
 //Github publishing
 tasks.register("github") {
-    dependsOn(tasks.remapJar)
+    dependsOn(tasks.named("remapJar"))
     group = "upload"
 
     onlyIf { environment.containsKey("GITHUB_TOKEN") }
