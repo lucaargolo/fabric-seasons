@@ -14,7 +14,7 @@ buildscript {
 
 plugins {
     id("maven-publish")
-    id("net.fabricmc.loom") version "1.17"
+    id("net.fabricmc.fabric-loom") version "1.17"
     id("org.ajoberstar.grgit") version "5.0.0"
     id("idea")
 }
