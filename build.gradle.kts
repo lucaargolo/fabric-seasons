@@ -6,14 +6,6 @@ plugins {
 }
 
 import org.ajoberstar.grgit.Grgit
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
-
-buildscript {
-    dependencies {
-        classpath("org.kohsuke:github-api:${project.property("github_api_version") as String}")
-    }
-}
 
 operator fun Project.get(property: String): String {
     return property(property) as String
@@ -75,14 +67,17 @@ repositories {
     mavenLocal()
 }
 
-dependencies {
-    minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
+// Use afterEvaluate to ensure Loom has created the configurations
+afterEvaluate {
+    dependencies {
+        "minecraft"("com.mojang:minecraft:${project["minecraft_version"]}")
 
-    "modImplementation"("net.fabricmc:fabric-loader:${project["loader_version"]}")
-    "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
+        "modImplementation"("net.fabricmc:fabric-loader:${project["loader_version"]}")
+        "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
 
-    "modRuntimeOnly"("com.terraformersmc:modmenu:${project["modmenu_version"]}")
-    "modRuntimeOnly"("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
+        "modRuntimeOnly"("com.terraformersmc:modmenu:${project["modmenu_version"]}")
+        "modRuntimeOnly"("mezz.jei:jei-26.1.2-fabric:${project["jei_version"]}")
+    }
 }
 
 configurations.all {
@@ -119,27 +114,6 @@ tasks.jar {
     from("LICENSE")
 }
 
-//Github publishing
-tasks.register("github") {
-    dependsOn(tasks.named("remapJar"))
-    group = "upload"
-
-    onlyIf { environment.containsKey("GITHUB_TOKEN") }
-
-    doLast {
-        val github = GitHub.connectUsingOAuth(environment["GITHUB_TOKEN"])
-        val repository = github.getRepository(environment["GITHUB_REPOSITORY"])
-
-        val releaseBuilder = GHReleaseBuilder(repository, version as String)
-        releaseBuilder.name(releaseName)
-        releaseBuilder.body(getChangeLog())
-        releaseBuilder.commitish(getBranch())
-
-        val ghRelease = releaseBuilder.create()
-        ghRelease.uploadAsset(file(releaseFile), "application/java-archive")
-    }
-}
-
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -155,8 +129,6 @@ publishing {
                 password = environment["MAVEN_PASSWORD"]
             }
         }
-
-
     }
 }
 
