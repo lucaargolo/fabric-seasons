@@ -16,8 +16,6 @@ plugins {
     id("maven-publish")
     id("fabric-loom")
     id("org.ajoberstar.grgit")
-    id("com.matthewprenger.cursegradle")
-    id("com.modrinth.minotaur")
     id("idea")
 }
 
@@ -36,6 +34,7 @@ group = project["maven_group"]
 val environment: Map<String, String> = System.getenv()
 val releaseName = "${name.split("-").joinToString(" ") { it.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() } }} ${(version as String).split("+")[0]}"
 val releaseType = (version as String).split("+")[0].split("-").let { if(it.size > 1) if(it[1] == "BETA" || it[1] == "ALPHA") it[1] else "ALPHA" else "RELEASE" }
+val projectReleaseType = releaseType
 val releaseFile = "${layout.buildDirectory.get().asFile}/libs/${base.archivesName.get()}-${version}.jar"
 val cfGameVersion = (version as String).split("+")[1].let{ if(!project["minecraft_version"].contains("-") && project["minecraft_version"].startsWith(it)) project["minecraft_version"] else "$it-Snapshot"}
 
@@ -144,59 +143,6 @@ tasks.register("github") {
         val ghRelease = releaseBuilder.create()
         ghRelease.uploadAsset(file(releaseFile), "application/java-archive")
     }
-}
-
-//Curseforge publishing
-curseforge {
-    environment["CURSEFORGE_API_KEY"]?.let { apiKey = it }
-
-    project(closureOf<CurseProject> {
-        id = project["curseforge_id"]
-        changelog = getChangeLog()
-        releaseType = project.extra["releaseType"].toString().lowercase()
-        addGameVersion(cfGameVersion)
-        addGameVersion("Fabric")
-
-        mainArtifact(file(releaseFile), closureOf<CurseArtifact> {
-            displayName = releaseName
-            relations(closureOf<CurseRelation> {
-                requiredDependency("fabric-api")
-            })
-        })
-
-        afterEvaluate {
-            uploadTask.dependsOn("remapJar")
-        }
-
-    })
-
-    options(closureOf<Options> {
-        forgeGradleIntegration = false
-    })
-}
-
-//Modrinth publishing
-modrinth {
-    environment["MODRINTH_TOKEN"]?.let { token.set(it) }
-
-    projectId.set(project["modrinth_id"])
-    changelog.set(getChangeLog())
-
-    versionNumber.set(version as String)
-    versionName.set(releaseName)
-    versionType.set(releaseType.lowercase())
-
-    uploadFile.set(tasks.remapJar.get())
-
-    gameVersions.add(project["minecraft_version"])
-    loaders.add("fabric")
-
-    dependencies {
-        required.project("fabric-api")
-    }
-}
-tasks.modrinth.configure {
-    group = "upload"
 }
 
 publishing {
