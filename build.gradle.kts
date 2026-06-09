@@ -77,7 +77,7 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${project["minecraft_version"]}")
-    mappings(loom.officialMojangMappings())
+    "mappings"(loom.officialMojangMappings())
 
     "modImplementation"("net.fabricmc:fabric-loader:${project["loader_version"]}")
     "modImplementation"("net.fabricmc.fabric-api:fabric-api:${project["fabric_version"]}")
