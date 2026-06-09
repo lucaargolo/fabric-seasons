@@ -18,6 +18,7 @@ plugins {
     id("org.ajoberstar.grgit")
     id("com.matthewprenger.cursegradle")
     id("com.modrinth.minotaur")
+    id("idea")
 }
 
 operator fun Project.get(property: String): String {
@@ -33,9 +34,9 @@ version = project["mod_version"]
 group = project["maven_group"]
 
 val environment: Map<String, String> = System.getenv()
-val releaseName = "${name.split("-").joinToString(" ") { it.capitalize() }} ${(version as String).split("+")[0]}"
+val releaseName = "${name.split("-").joinToString(" ") { it.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() } }} ${(version as String).split("+")[0]}"
 val releaseType = (version as String).split("+")[0].split("-").let { if(it.size > 1) if(it[1] == "BETA" || it[1] == "ALPHA") it[1] else "ALPHA" else "RELEASE" }
-val releaseFile = "${buildDir}/libs/${base.archivesName.get()}-${version}.jar"
+val releaseFile = "${layout.buildDirectory.get().asFile}/libs/${base.archivesName.get()}-${version}.jar"
 val cfGameVersion = (version as String).split("+")[1].let{ if(!project["minecraft_version"].contains("-") && project["minecraft_version"].startsWith(it)) project["minecraft_version"] else "$it-Snapshot"}
 
 fun getChangeLog(): String {
@@ -125,7 +126,7 @@ tasks.jar {
 }
 
 //Github publishing
-task("github") {
+tasks.register("github") {
     dependsOn(tasks.remapJar)
     group = "upload"
 
@@ -152,7 +153,7 @@ curseforge {
     project(closureOf<CurseProject> {
         id = project["curseforge_id"]
         changelog = getChangeLog()
-        releaseType = this@Build_gradle.releaseType.toLowerCase()
+        releaseType = project.extra["releaseType"].toString().lowercase()
         addGameVersion(cfGameVersion)
         addGameVersion("Fabric")
 
@@ -183,7 +184,7 @@ modrinth {
 
     versionNumber.set(version as String)
     versionName.set(releaseName)
-    versionType.set(releaseType.toLowerCase())
+    versionType.set(releaseType.lowercase())
 
     uploadFile.set(tasks.remapJar.get())
 
