@@ -35,6 +35,9 @@ jobs:
         with:
           gradle-version: wrapper
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Build
         run: ./gradlew build --stacktrace --parallel
 
