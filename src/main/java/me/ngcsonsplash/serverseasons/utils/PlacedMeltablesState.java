@@ -8,9 +8,9 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 
-import static me.ngcsonsplash.serverseasons.FabricSeasons.MOD_NAME;
+import static me.ngcsonsplash.serverseasons.ServerSeasons.MOD_NAME;
 
 public class PlacedMeltablesState extends PersistentState {
 
@@ -60,7 +60,7 @@ public class PlacedMeltablesState extends PersistentState {
                 long[] longArray = nbt.getLongArray(key);
                 state.chunkToPlaced.put(longKey, new LongArraySet(longArray));
             }catch (NumberFormatException exception) {
-                FabricSeasons.LOGGER.error("["+MOD_NAME+"] Error reading manually placed meltable blocks at "+key, exception);
+                ServerSeasons.LOGGER.error("["+MOD_NAME+"] Error reading manually placed meltable blocks at "+key, exception);
             }
         });
         return state;

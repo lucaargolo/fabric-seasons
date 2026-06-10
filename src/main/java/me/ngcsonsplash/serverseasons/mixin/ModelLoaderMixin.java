@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Either;
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.mixed.JsonUnbakedModelMixed;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.minecraft.client.MinecraftClient;
@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import static me.ngcsonsplash.serverseasons.FabricSeasons.MOD_NAME;
+import static me.ngcsonsplash.serverseasons.ServerSeasons.MOD_NAME;
 
 @Mixin(ModelLoader.class)
 public class ModelLoaderMixin {
@@ -58,7 +58,7 @@ public class ModelLoaderMixin {
                     }
                 }
             }catch (Exception e) {
-                FabricSeasons.LOGGER.error("["+ MOD_NAME +"] Failed loading season texture variants for "+id, e);
+                ServerSeasons.LOGGER.error("["+ MOD_NAME +"] Failed loading season texture variants for "+id, e);
             }
         }
     }

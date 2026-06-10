@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public interface WorldViewMixin {
     default RegistryEntry<Biome> getBiome(BlockPos pos) {
         RegistryEntry<Biome> biomeEntry = this.getBiomeAccess().getBiome(pos);
         if (this instanceof World) {
-            FabricSeasons.injectBiomeTemperature(biomeEntry, (World) this);
+            ServerSeasons.injectBiomeTemperature(biomeEntry, (World) this);
         }
         return biomeEntry;
     }

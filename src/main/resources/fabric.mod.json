@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "seasons",
   "version": "${version}",
-  "name": "Fabric Seasons",
+  "name": "ServerSeasons",
   "description": "A simple mod that adds seasons to the game, dynamically changing biomes as you play.",
   "authors": [
     "D4rkness_King"
@@ -20,10 +20,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.ngcsonsplash.serverseasons.FabricSeasons"
+      "me.ngcsonsplash.serverseasons.ServerSeasons"
     ],
     "client": [
-      "me.ngcsonsplash.serverseasons.FabricSeasonsClient"
+      "me.ngcsonsplash.serverseasons.ServerSeasonsClient"
     ]
   },
   "accessWidener": "seasons.accesswidener",

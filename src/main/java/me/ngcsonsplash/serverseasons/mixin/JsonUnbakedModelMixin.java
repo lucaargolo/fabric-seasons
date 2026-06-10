@@ -2,7 +2,7 @@ package me.ngcsonsplash.serverseasons.mixin;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Either;
-import me.ngcsonsplash.serverseasons.FabricSeasonsClient;
+import me.ngcsonsplash.serverseasons.ServerSeasonsClient;
 import me.ngcsonsplash.serverseasons.mixed.JsonUnbakedModelMixed;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.minecraft.client.render.model.BakedModel;
@@ -59,10 +59,10 @@ public abstract class JsonUnbakedModelMixin implements JsonUnbakedModelMixed {
         if(seasonalTextureMap != null && this.textureMap == this.originalTextureMap) {
             seasonalTextureMap.forEach((season, textureMap) -> {
                 this.textureMap = textureMap;
-                if(!FabricSeasonsClient.originalToSeasonModelMap.containsKey(originalModel)) {
-                    FabricSeasonsClient.originalToSeasonModelMap.put(originalModel, Maps.newHashMap());
+                if(!ServerSeasonsClient.originalToSeasonModelMap.containsKey(originalModel)) {
+                    ServerSeasonsClient.originalToSeasonModelMap.put(originalModel, Maps.newHashMap());
                 }
-                FabricSeasonsClient.originalToSeasonModelMap.get(originalModel).put(season, bake(baker, parent, textureGetter, settings, hasDepth));
+                ServerSeasonsClient.originalToSeasonModelMap.get(originalModel).put(season, bake(baker, parent, textureGetter, settings, hasDepth));
             });
             this.textureMap = originalTextureMap;
         }

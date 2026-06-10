@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.mixed.BiomeMixed;
 import me.ngcsonsplash.serverseasons.resources.FoliageSeasonColors;
 import me.ngcsonsplash.serverseasons.utils.Season;
@@ -18,7 +18,7 @@ public class BiomeColorsMixin {
     @SuppressWarnings({"ConstantValue", "removal"})
     @Inject(at = @At("RETURN"), method = "method_23791", cancellable = true)
     private static void enhanceFallColors(Biome biome, double x, double z, CallbackInfoReturnable<Integer> cir) {
-        Season season = FabricSeasons.getCurrentSeason();
+        Season season = ServerSeasons.getCurrentSeason();
         if(season == Season.FALL && ((Object) biome) instanceof BiomeMixed mixed && mixed.getOriginalWeather() != null) {
             double d = MathHelper.clamp(mixed.getOriginalWeather().temperature(), 0.0F, 1.0F);
             double e = MathHelper.clamp(mixed.getOriginalWeather().downfall(), 0.0F, 1.0F);

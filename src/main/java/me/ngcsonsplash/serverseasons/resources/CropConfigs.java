@@ -3,7 +3,7 @@ package me.ngcsonsplash.serverseasons.resources;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.utils.CropConfig;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import static me.ngcsonsplash.serverseasons.FabricSeasons.MOD_NAME;
+import static me.ngcsonsplash.serverseasons.ServerSeasons.MOD_NAME;
 
 public class CropConfigs implements SimpleSynchronousResourceReloadListener {
 
@@ -66,17 +66,17 @@ public class CropConfigs implements SimpleSynchronousResourceReloadListener {
     
     @Override
     public Identifier getFabricId() {
-        return FabricSeasons.identifier("crop_configs");
+        return ServerSeasons.identifier("crop_configs");
     }
 
     @Override
     public void reload(ResourceManager manager) {
         try {
-            Resource resource = manager.getResource(FabricSeasons.identifier("hardcoded/crop/default.json")).orElseThrow();
+            Resource resource = manager.getResource(ServerSeasons.identifier("hardcoded/crop/default.json")).orElseThrow();
             JsonElement input = JsonParser.parseReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
             defaultCropConfig = CropConfig.CODEC.parse(JsonOps.INSTANCE, input.getAsJsonObject()).getOrThrow();
         } catch (Exception e) {
-            FabricSeasons.LOGGER.error("[" + MOD_NAME + "] Failed to load hardcoded grass colors", e);
+            ServerSeasons.LOGGER.error("[" + MOD_NAME + "] Failed to load hardcoded grass colors", e);
         }
         
         cropConfigMap.clear();
@@ -88,12 +88,12 @@ public class CropConfigs implements SimpleSynchronousResourceReloadListener {
                 CropConfig config = CropConfig.CODEC.parse(JsonOps.INSTANCE, input.getAsJsonObject()).getOrThrow();
                 cropConfigMap.put(cropIdentifier, config);
             } catch (Exception e) {
-                FabricSeasons.LOGGER.error("[" + MOD_NAME + "] Failed to load crop config for: " + cropIdentifier, e);
+                ServerSeasons.LOGGER.error("[" + MOD_NAME + "] Failed to load crop config for: " + cropIdentifier, e);
             }
         });
         
         if (!cropConfigMap.isEmpty()) {
-            FabricSeasons.LOGGER.info("[" + MOD_NAME + "] Successfully loaded {} custom crop configs.", cropConfigMap.size());
+            ServerSeasons.LOGGER.info("[" + MOD_NAME + "] Successfully loaded {} custom crop configs.", cropConfigMap.size());
         }
     }
 }

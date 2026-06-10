@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.resources.CropConfigs;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.minecraft.block.Block;
@@ -27,10 +27,10 @@ public class ItemMixin {
 
     @Inject(at = @At("HEAD"), method = "appendTooltip")
     public void appendTooltipInject(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci) {
-        if(FabricSeasons.CONFIG.isSeasonMessingCrops()) {
-            Season season = FabricSeasons.getCurrentSeason();
+        if(ServerSeasons.CONFIG.isSeasonMessingCrops()) {
+            Season season = ServerSeasons.getCurrentSeason();
             Item item = stack.getItem();
-            Block block = FabricSeasons.SEEDS_MAP.getOrDefault(item, null);
+            Block block = ServerSeasons.SEEDS_MAP.getOrDefault(item, null);
             if (block != null) {
 
 

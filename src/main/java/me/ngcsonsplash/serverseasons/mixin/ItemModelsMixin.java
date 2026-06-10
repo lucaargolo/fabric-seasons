@@ -1,7 +1,7 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
-import me.ngcsonsplash.serverseasons.FabricSeasonsClient;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasonsClient;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.model.BakedModel;
@@ -17,9 +17,9 @@ public class ItemModelsMixin {
     @Inject(at = @At("RETURN"), method = "getModel(Lnet/minecraft/item/Item;)Lnet/minecraft/client/render/model/BakedModel;", cancellable = true)
     public void injectSeasonalModel(Item item, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel originalModel = cir.getReturnValue();
-        Season season = FabricSeasons.getCurrentSeason();
-        if(FabricSeasonsClient.originalToSeasonModelMap.containsKey(originalModel) && FabricSeasonsClient.originalToSeasonModelMap.get(originalModel).containsKey(season)) {
-            cir.setReturnValue(FabricSeasonsClient.originalToSeasonModelMap.get(originalModel).get(season));
+        Season season = ServerSeasons.getCurrentSeason();
+        if(ServerSeasonsClient.originalToSeasonModelMap.containsKey(originalModel) && ServerSeasonsClient.originalToSeasonModelMap.get(originalModel).containsKey(season)) {
+            cir.setReturnValue(ServerSeasonsClient.originalToSeasonModelMap.get(originalModel).get(season));
         }
     }
 

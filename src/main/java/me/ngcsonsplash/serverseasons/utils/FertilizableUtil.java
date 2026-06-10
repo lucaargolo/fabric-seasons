@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.utils;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.resources.CropConfigs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ public class FertilizableUtil {
 
     @SuppressWarnings("deprecation")
     public static <F extends Block & Fertilizable> void randomTickInject(F fertilizable, BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if(FabricSeasons.CONFIG.isSeasonMessingCrops() && seasons$shouldInject) {
+        if(ServerSeasons.CONFIG.isSeasonMessingCrops() && seasons$shouldInject) {
             float multiplier = 1f + getMultiplier(world, pos, state);
             while(multiplier > 0f) {
                 multiplier -= 1f;
@@ -36,7 +36,7 @@ public class FertilizableUtil {
     }
 
     public static <F extends Block & Fertilizable> void growInject(F fertilizable, ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
-        if(FabricSeasons.CONFIG.isSeasonMessingBonemeal() && seasons$shouldInject) {
+        if(ServerSeasons.CONFIG.isSeasonMessingBonemeal() && seasons$shouldInject) {
             float multiplier = 1f + getMultiplier(world, pos, state);
             while(multiplier > 0f) {
                 multiplier -= 1f;
@@ -52,7 +52,7 @@ public class FertilizableUtil {
     }
     public static float getMultiplier(ServerWorld world, BlockPos pos, BlockState state) {
         float multiplier;
-        if(FabricSeasons.CONFIG.doCropsGrowsNormallyUnderground() && world.getLightLevel(LightType.SKY, pos) == 0) {
+        if(ServerSeasons.CONFIG.doCropsGrowsNormallyUnderground() && world.getLightLevel(LightType.SKY, pos) == 0) {
             //Plant is not being affected by seasons
             multiplier = 1f;
         }else{

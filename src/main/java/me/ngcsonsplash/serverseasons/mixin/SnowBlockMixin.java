@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.utils.Meltable;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -23,9 +23,9 @@ public abstract class SnowBlockMixin extends Block implements Meltable {
 
     @Inject(at = @At("HEAD"), method = "randomTick")
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (world.getLightLevel(LightType.SKY, pos) > 0 && world.getBiome(pos).value().getTemperature(pos) >= 0.15F && !FabricSeasons.getPlacedMeltablesState(world).isManuallyPlaced(pos)) {
+        if (world.getLightLevel(LightType.SKY, pos) > 0 && world.getBiome(pos).value().getTemperature(pos) >= 0.15F && !ServerSeasons.getPlacedMeltablesState(world).isManuallyPlaced(pos)) {
             Block.dropStacks(state, world, pos);
-            BlockState replacedState = FabricSeasons.getReplacedMeltablesState(world).getReplaced(pos);
+            BlockState replacedState = ServerSeasons.getReplacedMeltablesState(world).getReplaced(pos);
             if(replacedState != null) {
                 if(replacedState.getProperties().contains(TallPlantBlock.HALF) && replacedState.get(TallPlantBlock.HALF) == DoubleBlockHalf.LOWER) {
                     BlockState replacedUpperState = replacedState.with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER);

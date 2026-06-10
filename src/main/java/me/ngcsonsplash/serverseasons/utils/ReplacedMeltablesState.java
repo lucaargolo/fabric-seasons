@@ -8,9 +8,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.PersistentState;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 
-import static me.ngcsonsplash.serverseasons.FabricSeasons.MOD_NAME;
+import static me.ngcsonsplash.serverseasons.ServerSeasons.MOD_NAME;
 
 public class ReplacedMeltablesState extends PersistentState {
 
@@ -78,7 +78,7 @@ public class ReplacedMeltablesState extends PersistentState {
                 });
                 state.chunkToReplaced.put(longKey, posToReplaced);
             }catch (NumberFormatException exception) {
-                FabricSeasons.LOGGER.error("["+MOD_NAME+"] Error reading replaced meltable blocks at "+key, exception);
+                ServerSeasons.LOGGER.error("["+MOD_NAME+"] Error reading replaced meltable blocks at "+key, exception);
             }
         });
         return state;

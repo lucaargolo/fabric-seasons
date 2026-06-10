@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.utils;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 
@@ -54,10 +54,10 @@ public enum Season implements StringIdentifiable {
 
     public int getSeasonLength() {
         return switch (this) {
-            case SUMMER -> FabricSeasons.CONFIG.getSummerLength();
-            case FALL -> FabricSeasons.CONFIG.getFallLength();
-            case WINTER -> FabricSeasons.CONFIG.getWinterLength();
-            default -> FabricSeasons.CONFIG.getSpringLength();
+            case SUMMER -> ServerSeasons.CONFIG.getSummerLength();
+            case FALL -> ServerSeasons.CONFIG.getFallLength();
+            case WINTER -> ServerSeasons.CONFIG.getWinterLength();
+            default -> ServerSeasons.CONFIG.getSpringLength();
         };
     }
 }

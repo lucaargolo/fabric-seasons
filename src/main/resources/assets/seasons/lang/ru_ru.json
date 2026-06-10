@@ -13,7 +13,7 @@
   "tooltip.seasons.combined_grow": "%s (%s%%)",
 
   "chat.seasons.mod_installed": "Похоже, у вас установлен %s!",
-  "chat.seasons.compatibility": "Установите этот аддон и получите полную совместимость с Fabric Seasons.",
+  "chat.seasons.compatibility": "Установите этот аддон и получите полную совместимость с ServerSeasons.",
   "chat.seasons.mod_not_installed": "Похоже, у вас не установлен %s!",
   "chat.seasons.extras": "Установите аддон, чтобы улучшить игровой опыт новыми блоками и предметами.",
   "chat.seasons.available_at": "Доступен на: ",

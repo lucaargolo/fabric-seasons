@@ -2,7 +2,7 @@ package me.ngcsonsplash.serverseasons.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
-import static me.ngcsonsplash.serverseasons.FabricSeasons.MOD_NAME;
+import static me.ngcsonsplash.serverseasons.ServerSeasons.MOD_NAME;
 
 public class CompatWarnState {
 
@@ -52,12 +52,12 @@ public class CompatWarnState {
                 try (CloseableHttpResponse response = http.execute(request)) {
                     JsonElement element = JsonParser.parseString(EntityUtils.toString(response.getEntity()));
                     for (JsonElement modInfoElement : element.getAsJsonArray()) {
-                        availableCompatPacks.add(FabricSeasons.GSON.fromJson(modInfoElement, ModInfo.class));
+                        availableCompatPacks.add(ServerSeasons.GSON.fromJson(modInfoElement, ModInfo.class));
                     }
                 }
             }
         }catch (Exception e) {
-            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to request compatibility mods list.", e);
+            ServerSeasons.LOGGER.error("["+MOD_NAME+"] Failed to request compatibility mods list.", e);
         }
         this.alreadyWarned = alreadyWarned;
         this.toWarn = new HashSet<>();
@@ -67,7 +67,7 @@ public class CompatWarnState {
             handler.getRegistryManager().get(RegistryKeys.BIOME).getIndexedEntries().forEach(entry -> {
                 entry.getKey().ifPresent(key -> availableNamespaces.add(key.getValue().getNamespace()));
             });
-            FabricSeasons.SEEDS_MAP.forEach((item, block) -> {
+            ServerSeasons.SEEDS_MAP.forEach((item, block) -> {
                 availableNamespaces.add(Registries.BLOCK.getId(block).getNamespace());
             });
         }
@@ -87,7 +87,7 @@ public class CompatWarnState {
             Boolean ignored2 = compatWarnFile.createNewFile();
             NbtIo.writeCompressed(nbt, compatWarnFile.toPath());
         } catch (IOException e) {
-            FabricSeasons.LOGGER.error("["+MOD_NAME+"] Failed to save season compat warn state.", e);
+            ServerSeasons.LOGGER.error("["+MOD_NAME+"] Failed to save season compat warn state.", e);
         }
     }
 
@@ -130,7 +130,7 @@ public class CompatWarnState {
                     MutableText first, second;
                     if(!info.mods.contains("minecraft")) {
                         first = Text.literal("\n").append(Text.translatable("chat.seasons.mod_installed", Text.literal(info.name).formatted(Formatting.GREEN)).formatted(Formatting.YELLOW));
-                        second = Text.literal(("\n§e"+Text.translatable("chat.seasons.compatibility").getString()).replace("Fabric Seasons", "§aFabric Seasons§e")+"\n");
+                        second = Text.literal(("\n§e"+Text.translatable("chat.seasons.compatibility").getString()).replace("ServerSeasons", "§aServerSeasons§e")+"\n");
                     }else{
                         first = Text.literal("\n").append(Text.translatable("chat.seasons.mod_not_installed", Text.literal(info.name).formatted(Formatting.RED)).formatted(Formatting.YELLOW));
                         second = Text.literal(("\n§e"+Text.translatable("chat.seasons.extras").getString())+"\n");

@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -14,7 +14,7 @@ public class AnimalEntityMixin {
 
     @Inject(at = @At("HEAD"), method = "breed", cancellable = true)
     public void breedInject(ServerWorld serverWorld, AnimalEntity animalEntity, CallbackInfo info) {
-        if(FabricSeasons.getCurrentSeason(serverWorld) == Season.WINTER && !FabricSeasons.CONFIG.doAnimalsBreedInWinter()) {
+        if(ServerSeasons.getCurrentSeason(serverWorld) == Season.WINTER && !ServerSeasons.CONFIG.doAnimalsBreedInWinter()) {
             info.cancel();
         }
     }

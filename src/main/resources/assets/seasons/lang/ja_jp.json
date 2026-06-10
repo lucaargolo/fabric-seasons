@@ -11,7 +11,7 @@
 
   "chat.seasons.mod_installed": "%sを導入済みなようです。",
   "chat.seasons.mod_not_installed": "%sを導入していないようです。",
-  "chat.seasons.compatibility": "Fabric Seasonsとの完全な互換性を得るためには，次のアドオンを導入してください:",
+  "chat.seasons.compatibility": "ServerSeasonsとの完全な互換性を得るためには，次のアドオンを導入してください:",
   "chat.seasons.extras": "冒険に役立つ追加アイテムやブロックが欲しい場合は，次のアドオンを導入してください:",
   "chat.seasons.available_at": "入手先: ",
   "chat.seasons.show_once": "この通知はただ一度だけ表示されます。",

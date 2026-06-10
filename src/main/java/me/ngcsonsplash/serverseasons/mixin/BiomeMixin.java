@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.mixed.BiomeMixed;
 import me.ngcsonsplash.serverseasons.resources.FoliageSeasonColors;
 import me.ngcsonsplash.serverseasons.resources.GrassSeasonColors;
@@ -48,20 +48,20 @@ public abstract class BiomeMixin implements BiomeMixed {
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(RegistryKeys.BIOME).getId(biome);
-                Optional<Integer> seasonGrassColor = GrassSeasonColors.getSeasonGrassColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
+                Optional<Integer> seasonGrassColor = GrassSeasonColors.getSeasonGrassColor(biome, biomeIdentifier, ServerSeasons.getCurrentSeason());
                 if(seasonGrassColor.isPresent()) {
                     overridedColor = seasonGrassColor;
                 }
             }
             ColorsCache.createGrassCache(biome, overridedColor);
         }
-        if(effects.getGrassColorModifier() == BiomeEffects.GrassColorModifier.SWAMP) {
-            int swampColor1 = GrassSeasonColors.getSwampColor1(FabricSeasons.getCurrentSeason());
-            int swampColor2 = GrassSeasonColors.getSwampColor2(FabricSeasons.getCurrentSeason());
+        if(effects != null && effects.getGrassColorModifier() == BiomeEffects.GrassColorModifier.SWAMP) {
+            int swampColor1 = GrassSeasonColors.getSwampColor1(ServerSeasons.getCurrentSeason());
+            int swampColor2 = GrassSeasonColors.getSwampColor2(ServerSeasons.getCurrentSeason());
 
             double d = Biome.FOLIAGE_NOISE.sample(x * 0.0225D, z * 0.0225D, false);
             cir.setReturnValue(d < -0.1D ? swampColor1 : swampColor2);
-        }else if(overridedColor != null){
+        }else if(overridedColor != null && effects != null){
             Integer integer = overridedColor.orElseGet(this::getDefaultGrassColor);
             cir.setReturnValue(effects.getGrassColorModifier().getModifiedGrassColor(x, z, integer));
         }
@@ -80,7 +80,7 @@ public abstract class BiomeMixin implements BiomeMixed {
             World world = MinecraftClient.getInstance().world;
             if(world != null) {
                 Identifier biomeIdentifier = world.getRegistryManager().get(RegistryKeys.BIOME).getId(biome);
-                Optional<Integer> seasonFoliageColor = FoliageSeasonColors.getSeasonFoliageColor(biome, biomeIdentifier, FabricSeasons.getCurrentSeason());
+                Optional<Integer> seasonFoliageColor = FoliageSeasonColors.getSeasonFoliageColor(biome, biomeIdentifier, ServerSeasons.getCurrentSeason());
                 if(seasonFoliageColor.isPresent()) {
                     overridedColor = seasonFoliageColor;
                 }
@@ -99,11 +99,11 @@ public abstract class BiomeMixin implements BiomeMixed {
         if(this.originalWeather != null) {
             double originalTemperature = MathHelper.clamp(this.originalWeather.temperature(), 0.0F, 1.0F);
             double originalDownfall = MathHelper.clamp(this.originalWeather.downfall(), 0.0F, 1.0F);
-            cir.setReturnValue(FoliageSeasonColors.getColor(FabricSeasons.getCurrentSeason(), originalTemperature, originalDownfall));
+            cir.setReturnValue(FoliageSeasonColors.getColor(ServerSeasons.getCurrentSeason(), originalTemperature, originalDownfall));
         }else{
             double temperature = MathHelper.clamp(this.weather.temperature(), 0.0F, 1.0F);
             double downfall = MathHelper.clamp(this.weather.downfall(), 0.0F, 1.0F);
-            cir.setReturnValue(FoliageSeasonColors.getColor(FabricSeasons.getCurrentSeason(), temperature, downfall));
+            cir.setReturnValue(FoliageSeasonColors.getColor(ServerSeasons.getCurrentSeason(), temperature, downfall));
         }
     }
 
@@ -113,11 +113,11 @@ public abstract class BiomeMixin implements BiomeMixed {
         if(this.originalWeather != null) {
             double d = MathHelper.clamp(this.originalWeather.temperature(), 0.0F, 1.0F);
             double e = MathHelper.clamp(this.originalWeather.downfall(), 0.0F, 1.0F);
-            cir.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
+            cir.setReturnValue(GrassSeasonColors.getColor(ServerSeasons.getCurrentSeason(), d, e));
         }else{
             double d = MathHelper.clamp(this.weather.temperature(), 0.0F, 1.0F);
             double e = MathHelper.clamp(this.weather.downfall(), 0.0F, 1.0F);
-            cir.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), d, e));
+            cir.setReturnValue(GrassSeasonColors.getColor(ServerSeasons.getCurrentSeason(), d, e));
         }
     }
 

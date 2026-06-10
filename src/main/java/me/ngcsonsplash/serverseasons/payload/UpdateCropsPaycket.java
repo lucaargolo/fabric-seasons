@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.payload;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.utils.CropConfig;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import java.util.HashMap;
 
 public record UpdateCropsPaycket(CropConfig cropConfig, HashMap<Identifier, CropConfig> cropConfigMap) implements CustomPayload {
-    public static final CustomPayload.Id<UpdateCropsPaycket> ID = new CustomPayload.Id<>(FabricSeasons.identifier("update_crops"));
+    public static final CustomPayload.Id<UpdateCropsPaycket> ID = new CustomPayload.Id<>(ServerSeasons.identifier("update_crops"));
     
     public static final PacketCodec<RegistryByteBuf, UpdateCropsPaycket> CODEC = PacketCodec.tuple(
         CropConfig.PACKET_CODEC, UpdateCropsPaycket::cropConfig,

@@ -1,7 +1,7 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
 import com.google.common.collect.Lists;
-import me.ngcsonsplash.serverseasons.FabricSeasonsClient;
+import me.ngcsonsplash.serverseasons.ServerSeasonsClient;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -37,7 +37,7 @@ public class MultipartBakedModelBuilderMixin {
 
     @Inject(at = @At("HEAD"), method = "addComponent")
     public void addSeasonalComponent(Predicate<BlockState> predicate, BakedModel model, CallbackInfo ci) {
-        Map<Season, BakedModel> seasonModelMap = FabricSeasonsClient.originalToSeasonModelMap.get(model);
+        Map<Season, BakedModel> seasonModelMap = ServerSeasonsClient.originalToSeasonModelMap.get(model);
         if(seasonModelMap != null) {
             seasonModelMap.forEach((season, seasonalModel) -> {
                 validSeasonalComponents.add(season);
@@ -60,7 +60,7 @@ public class MultipartBakedModelBuilderMixin {
             }
         });
         if(!seasonModelMap.isEmpty()) {
-            FabricSeasonsClient.originalToSeasonModelMap.put(bakedModel, seasonModelMap);
+            ServerSeasonsClient.originalToSeasonModelMap.put(bakedModel, seasonModelMap);
         }
     }
 

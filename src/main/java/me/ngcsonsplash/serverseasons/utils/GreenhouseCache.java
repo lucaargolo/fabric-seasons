@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.utils;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockBox;
@@ -24,7 +24,7 @@ public class GreenhouseCache {
     }
 
     public static Season test(World world, BlockPos pos) {
-        Season currentSeason = FabricSeasons.getCurrentSeason(world);
+        Season currentSeason = ServerSeasons.getCurrentSeason(world);
         HashSet<Season> seasons = new HashSet<>();
         RegistryKey<World> worldKey = world.getRegistryKey();
         HashMap<ChunkPos, ArrayList<GreenHouseTicket>> chunkTickets = CACHE.get(worldKey);

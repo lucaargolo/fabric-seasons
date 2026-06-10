@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.resources.CropConfigs;
 import me.ngcsonsplash.serverseasons.utils.Season;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -49,7 +49,7 @@ public class SeasonDebugCommand {
         dispatcher.register(ClientCommandManager.literal("season_debug")
             .then(ClientCommandManager.literal("create_all_crops").executes(context -> {
                 AtomicInteger index = new AtomicInteger();
-                FabricSeasons.SEEDS_MAP.values().forEach(block -> {
+                ServerSeasons.SEEDS_MAP.values().forEach(block -> {
                     Identifier cropId = Registries.BLOCK.getId(block);
                     index.getAndIncrement();
                     createCrop(cropId);
@@ -162,7 +162,7 @@ public class SeasonDebugCommand {
                 .then(ClientCommandManager.argument("color", IntegerArgumentType.integer()).executes(context -> {
                     int color = IntegerArgumentType.getInteger(context, "color");
                     ClientPlayerEntity player = context.getSource().getPlayer();;
-                    Season season = FabricSeasons.getCurrentSeason(player.getWorld());
+                    Season season = ServerSeasons.getCurrentSeason(player.getWorld());
                     RegistryEntry<Biome> entry = player.getWorld().getBiome(player.getBlockPos());
                     Identifier id = entry.getKey().orElseThrow().getValue();
                     context.getSource().sendFeedback(setBiomeColor(id, season, color, "foliage"));
@@ -172,7 +172,7 @@ public class SeasonDebugCommand {
                     String hexColor = StringArgumentType.getString(context, "hex_color");
                     int color = Integer.parseInt(hexColor, 16);
                     ClientPlayerEntity player = context.getSource().getPlayer();
-                    Season season = FabricSeasons.getCurrentSeason(player.getWorld());
+                    Season season = ServerSeasons.getCurrentSeason(player.getWorld());
                     RegistryEntry<Biome> entry = player.getWorld().getBiome(player.getBlockPos());
                     Identifier id = entry.getKey().orElseThrow().getValue();
                     context.getSource().sendFeedback(setBiomeColor(id, season, color, "foliage"));
@@ -180,7 +180,7 @@ public class SeasonDebugCommand {
                 }))
                 .executes(context -> {
                     ClientPlayerEntity player = context.getSource().getPlayer();
-                    Season season = FabricSeasons.getCurrentSeason(player.getWorld());
+                    Season season = ServerSeasons.getCurrentSeason(player.getWorld());
                     RegistryEntry<Biome> entry = player.getWorld().getBiome(player.getBlockPos());
                     Identifier id = entry.getKey().orElseThrow().getValue();
                     Biome biome = entry.value();
@@ -192,7 +192,7 @@ public class SeasonDebugCommand {
                 .then(ClientCommandManager.argument("color", IntegerArgumentType.integer()).executes(context -> {
                     int color = IntegerArgumentType.getInteger(context, "color");
                     ClientPlayerEntity player = context.getSource().getPlayer();
-                    Season season = FabricSeasons.getCurrentSeason(player.getWorld());
+                    Season season = ServerSeasons.getCurrentSeason(player.getWorld());
                     RegistryEntry<Biome> entry = player.getWorld().getBiome(player.getBlockPos());
                     Identifier id = entry.getKey().orElseThrow().getValue();
                     context.getSource().sendFeedback(setBiomeColor(id, season, color, "grass"));
@@ -202,7 +202,7 @@ public class SeasonDebugCommand {
                     String hexColor = StringArgumentType.getString(context, "hex_color");
                     int color = Integer.parseInt(hexColor, 16);
                     ClientPlayerEntity player = context.getSource().getPlayer();
-                    Season season = FabricSeasons.getCurrentSeason(player.getWorld());
+                    Season season = ServerSeasons.getCurrentSeason(player.getWorld());
                     RegistryEntry<Biome> entry = player.getWorld().getBiome(player.getBlockPos());
                     Identifier id = entry.getKey().orElseThrow().getValue();
                     context.getSource().sendFeedback(setBiomeColor(id, season, color, "grass"));
@@ -210,7 +210,7 @@ public class SeasonDebugCommand {
                 }))
                 .executes(context -> {
                     ClientPlayerEntity player = context.getSource().getPlayer();
-                    Season season = FabricSeasons.getCurrentSeason(player.getWorld());
+                    Season season = ServerSeasons.getCurrentSeason(player.getWorld());
                     RegistryEntry<Biome> entry = player.getWorld().getBiome(player.getBlockPos());
                     Identifier id = entry.getKey().orElseThrow().getValue();
                     Biome biome = entry.value();
@@ -292,7 +292,7 @@ public class SeasonDebugCommand {
             }
             JsonObject f = new JsonObject();
             f.add("textures", textureJson);
-            String json = FabricSeasons.GSON.toJson(f);
+            String json = ServerSeasons.GSON.toJson(f);
             try (PrintWriter out = new PrintWriter(textureFile)) {
                 out.println(json);
             }
@@ -358,7 +358,7 @@ public class SeasonDebugCommand {
                 biomeJson = JsonParser.parseString(new String(Files.readAllBytes(biomeFile.toPath()))).getAsJsonObject();
             }
             biomeJson.add(season.name().toLowerCase(Locale.ROOT), new JsonPrimitive(color));
-            String json = FabricSeasons.GSON.toJson(biomeJson);
+            String json = ServerSeasons.GSON.toJson(biomeJson);
             try (PrintWriter out = new PrintWriter(biomeFile)) {
                 out.println(json);
             }
@@ -384,7 +384,7 @@ public class SeasonDebugCommand {
             } else {
                 cropJson = JsonParser.parseString(new String(Files.readAllBytes(cropFile.toPath()))).getAsJsonObject();
             }
-            String json = FabricSeasons.GSON.toJson(cropJson);
+            String json = ServerSeasons.GSON.toJson(cropJson);
             try (PrintWriter out = new PrintWriter(cropFile)) {
                 out.println(json);
             }
@@ -421,7 +421,7 @@ public class SeasonDebugCommand {
             }
             if(!langJson.has(translationKey)) {
                 langJson.add(translationKey, new JsonPrimitive(translation));
-                String json = FabricSeasons.GSON.toJson(langJson);
+                String json = ServerSeasons.GSON.toJson(langJson);
                 try (PrintWriter out = new PrintWriter(langFile)) {
                     out.println(json);
                 }

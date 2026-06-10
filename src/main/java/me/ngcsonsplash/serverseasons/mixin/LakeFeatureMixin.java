@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -21,7 +21,7 @@ public class LakeFeatureMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/StructureWorldAccess;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 2), method = "generate", locals = LocalCapture.CAPTURE_FAILSOFT)
     public void setMeltableIce(FeatureContext<DefaultFeatureConfig> context, CallbackInfoReturnable<Boolean> cir, BlockPos blockPos, StructureWorldAccess structureWorldAccess, Random random, LakeFeature.Config config, boolean[] bls, int i, BlockState blockState, BlockState blockState2, int t, int u, int v, BlockPos blockPos4) {
-        FabricSeasons.setMeltable(blockPos4);
+        ServerSeasons.setMeltable(blockPos4);
     }
 
 }

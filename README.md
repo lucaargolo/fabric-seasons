@@ -17,7 +17,7 @@
 
 ## Description
 
-Fabric Seasons adds four seasons to Minecraft, each lasting 28 in-game days (configurable). The current season is defined by the world time (using `/time set 0` will reset to day 1 of Spring). Each season has its own changes. Spring will match the original biome colors and biome behaviors.
+ServerSeasons adds four seasons to Minecraft, each lasting 28 in-game days (configurable). The current season is defined by the world time (using `/time set 0` will reset to day 1 of Spring). Each season has its own changes. Spring will match the original biome colors and biome behaviors.
 
 The mod has 2 components:
 
@@ -46,7 +46,7 @@ Only overworld biomes can have this seasonality, which can be configured in `con
 
 ## Configurations
 
-Fabric Seasons can be configured in your instance's `config` folder. The file is called `seasons.json`. To apply your own changes to the configuration, please restart your client.
+ServerSeasons can be configured in your instance's `config` folder. The file is called `seasons.json`. To apply your own changes to the configuration, please restart your client.
 | Config Variable    | Description | Default
 | -------- | ------- | -------
 | springLength / summerLength / fallLength / winterLength | The integer for the length of a season in "game ticks" (672000 game ticks == 33600 in-game seconds == 28 in-game days) | 672000
@@ -87,7 +87,7 @@ Please refer to online tutorials on **how to make a datapack**. Make sure that y
 
 ## Description
 
-Fabric Seasons adds four seasons to Minecraft, each lasting 28 in-game days (configurable). The current season is defined by the world time (using `/time set 0` will reset to day 1 of Spring). Each season has its own changes. Spring will match the original biome colors and biome behaviors.
+ServerSeasons adds four seasons to Minecraft, each lasting 28 in-game days (configurable). The current season is defined by the world time (using `/time set 0` will reset to day 1 of Spring). Each season has its own changes. Spring will match the original biome colors and biome behaviors.
 
 The mod has 2 components:
 
@@ -116,7 +116,7 @@ Only overworld biomes can have this seasonality, which can be configured in `con
 
 ## Configurations
 
-Fabric Seasons can be configured in your instance's `config` folder. The file is called `seasons.json`. To apply your own changes to the configuration, please restart your client.
+ServerSeasons can be configured in your instance's `config` folder. The file is called `seasons.json`. To apply your own changes to the configuration, please restart your client.
 | Config Variable    | Description | Default
 | -------- | ------- | -------
 | springLength / summerLength / fallLength / winterLength | The integer for the length of a season in "game ticks" (672000 game ticks == 33600 in-game seconds == 28 in-game days) | 672000

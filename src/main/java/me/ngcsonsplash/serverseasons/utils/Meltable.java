@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.utils;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,15 +15,15 @@ import net.minecraft.world.biome.Biome;
 
 public interface Meltable {
 
-    TagKey<Block> REPLACEABLE_BY_SNOW = TagKey.of(RegistryKeys.BLOCK, FabricSeasons.identifier("replaceable_by_snow"));
+    TagKey<Block> REPLACEABLE_BY_SNOW = TagKey.of(RegistryKeys.BLOCK, ServerSeasons.identifier("replaceable_by_snow"));
 
     default void onMeltableReplaced(ServerWorld world, BlockPos pos) {
-        FabricSeasons.getPlacedMeltablesState(world).setManuallyPlaced(pos, false);
-        FabricSeasons.getReplacedMeltablesState(world).setReplaced(pos, null);
+        ServerSeasons.getPlacedMeltablesState(world).setManuallyPlaced(pos, false);
+        ServerSeasons.getReplacedMeltablesState(world).setReplaced(pos, null);
     }
 
     default void onMeltableManuallyPlaced(ServerWorld world, BlockPos pos) {
-        FabricSeasons.getPlacedMeltablesState(world).setManuallyPlaced(pos, true);
+        ServerSeasons.getPlacedMeltablesState(world).setManuallyPlaced(pos, true);
     }
 
     static void replaceBlockOnSnow(ServerWorld world, BlockPos blockPos, Biome biome) {
@@ -33,16 +33,16 @@ public interface Meltable {
                 BlockState upperState = world.getBlockState(blockPos.up());
                 if(plantState.getProperties().contains(TallPlantBlock.HALF) && upperState.getProperties().contains(TallPlantBlock.HALF)) {
                     if(upperState.get(TallPlantBlock.HALF) == DoubleBlockHalf.UPPER) {
-                        FabricSeasons.setMeltable(blockPos);
-                        FabricSeasons.getReplacedMeltablesState(world).setReplaced(blockPos, plantState);
+                        ServerSeasons.setMeltable(blockPos);
+                        ServerSeasons.getReplacedMeltablesState(world).setReplaced(blockPos, plantState);
                         world.setBlockState(blockPos, Blocks.SNOW.getDefaultState(), Block.FORCE_STATE);
                         world.setBlockState(blockPos.up(), Blocks.AIR.getDefaultState());
                         Blocks.SNOW.getDefaultState().updateNeighbors(world, blockPos, Block.NOTIFY_ALL);
                         world.updateListeners(blockPos, plantState, Blocks.SNOW.getDefaultState(), Block.NOTIFY_ALL);
                     }
                 }else if(upperState.isAir()) {
-                    FabricSeasons.setMeltable(blockPos);
-                    FabricSeasons.getReplacedMeltablesState(world).setReplaced(blockPos, plantState);
+                    ServerSeasons.setMeltable(blockPos);
+                    ServerSeasons.getReplacedMeltablesState(world).setReplaced(blockPos, plantState);
                     world.setBlockState(blockPos, Blocks.SNOW.getDefaultState());
                 }
             }

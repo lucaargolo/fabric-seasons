@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.utils.Meltable;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -32,22 +32,22 @@ public abstract class ServerWorldMixin extends World implements StructureWorldAc
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z", ordinal = 0), method = "tickIceAndSnow(Lnet/minecraft/util/math/BlockPos;)V", locals = LocalCapture.CAPTURE_FAILSOFT)
     public void setMeltableIce(BlockPos pos, CallbackInfo ci, BlockPos blockPos, BlockPos blockPos2, Biome biome) {
-        FabricSeasons.setMeltable(blockPos2);
+        ServerSeasons.setMeltable(blockPos2);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z", ordinal = 1), method = "tickIceAndSnow(Lnet/minecraft/util/math/BlockPos;)V", locals = LocalCapture.CAPTURE_FAILSOFT)
     public void setMeltableLayeredSnow(BlockPos pos, CallbackInfo ci, BlockPos blockPos, BlockPos blockPos2, Biome biome, int i, BlockState blockState, int j, BlockState blockState2) {
-        FabricSeasons.setMeltable(blockPos);
+        ServerSeasons.setMeltable(blockPos);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z", ordinal = 2), method = "tickIceAndSnow(Lnet/minecraft/util/math/BlockPos;)V", locals = LocalCapture.CAPTURE_FAILSOFT)
     public void setMeltableSnow(BlockPos pos, CallbackInfo ci, BlockPos blockPos, BlockPos blockPos2, Biome biome) {
-        FabricSeasons.setMeltable(blockPos);
+        ServerSeasons.setMeltable(blockPos);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;precipitationTick(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/biome/Biome$Precipitation;)V"), method = "tickIceAndSnow(Lnet/minecraft/util/math/BlockPos;)V", locals = LocalCapture.CAPTURE_FAILSOFT)
     public void setReplacedMeltable(BlockPos pos, CallbackInfo ci, BlockPos blockPos, BlockPos blockPos2, Biome biome, int i, Biome.Precipitation precipitation, BlockState blockState3) {
-        if (FabricSeasons.CONFIG.shouldSnowReplaceVegetation())
+        if (ServerSeasons.CONFIG.shouldSnowReplaceVegetation())
             Meltable.replaceBlockOnSnow((ServerWorld) (Object) this, blockPos, biome);
     }
 

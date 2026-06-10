@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.utils.Meltable;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -24,7 +24,7 @@ public abstract class AbstractBlockMixin {
 
     @Inject(at = @At("HEAD"), method = "onBlockAdded")
     public void checkIfMeltableAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
-        if(!FabricSeasons.isMeltable(pos) && world instanceof ServerWorld serverWorld && state.getBlock() instanceof Meltable meltableBlock) {
+        if(!ServerSeasons.isMeltable(pos) && world instanceof ServerWorld serverWorld && state.getBlock() instanceof Meltable meltableBlock) {
             meltableBlock.onMeltableManuallyPlaced(serverWorld, pos);
         }
     }

@@ -1,6 +1,6 @@
 package me.ngcsonsplash.serverseasons.mixin;
 
-import me.ngcsonsplash.serverseasons.FabricSeasons;
+import me.ngcsonsplash.serverseasons.ServerSeasons;
 import me.ngcsonsplash.serverseasons.resources.FoliageSeasonColors;
 import me.ngcsonsplash.serverseasons.resources.GrassSeasonColors;
 import net.minecraft.block.BlockState;
@@ -17,21 +17,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BlockColorsMixin {
     @Inject(method = "method_1693", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/GrassColors;getDefaultColor()I"), cancellable = true)
     private static void injectGrassColor(BlockState state, @Nullable BlockRenderView world, @Nullable BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(GrassSeasonColors.getColor(FabricSeasons.getCurrentSeason(), 0.5D, 1.0D));
+        info.setReturnValue(GrassSeasonColors.getColor(ServerSeasons.getCurrentSeason(), 0.5D, 1.0D));
     }
     
     @Inject(method = "method_1695", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/FoliageColors;getSpruceColor()I"), cancellable = true)
     private static void injectSpruceColor(BlockState state, @Nullable BlockRenderView world, @Nullable BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(FoliageSeasonColors.getSpruceColor(FabricSeasons.getCurrentSeason()));
+        info.setReturnValue(FoliageSeasonColors.getSpruceColor(ServerSeasons.getCurrentSeason()));
     }
     
     @Inject(method = "method_1687", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/FoliageColors;getBirchColor()I"), cancellable = true)
     private static void injectBirchColor(BlockState state, @Nullable BlockRenderView world, @Nullable BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(FoliageSeasonColors.getBirchColor(FabricSeasons.getCurrentSeason()));
+        info.setReturnValue(FoliageSeasonColors.getBirchColor(ServerSeasons.getCurrentSeason()));
     }
     
     @Inject(method = "method_1692", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/FoliageColors;getDefaultColor()I"), cancellable = true)
     private static void injectFoliageColor(BlockState state, @Nullable BlockRenderView world, @Nullable BlockPos pos, int tintIndex, CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(FoliageSeasonColors.getDefaultColor(FabricSeasons.getCurrentSeason()));
+        info.setReturnValue(FoliageSeasonColors.getDefaultColor(ServerSeasons.getCurrentSeason()));
     }
 }
