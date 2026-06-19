@@ -1,0 +1,21 @@
+{
+  "tooltip.seasons.spring": "Musim Semi",
+  "tooltip.seasons.summer": "Musim Panas",
+  "tooltip.seasons.fall": "Musim Gugur",
+  "tooltip.seasons.winter": "Musim Dingin",
+  "tooltip.seasons.faster_grow": "Tumbuh lebih cepat pada musim ini",
+  "tooltip.seasons.normal_grow": "Tumbuh normal pada musim ini",
+  "tooltip.seasons.slowed_grow": "Tumbuh lebih lambat pada musim ini",
+  "tooltip.seasons.not_grow": "Tidak akan tumbuh pada musim ini",
+  "tooltip.seasons.show_more": "Tekan %s untuk menampilkan lebih banyak",
+
+  "chat.seasons.mod_installed": "Sepertinya kamu telah menginstal %s!",
+  "chat.seasons.compatibility": "Instal addon ini untuk mendapatkan kompatibilitas penuh dengan Fabric Seasons.",
+  "chat.seasons.mod_not_installed": "Sepertinya kamu belum menginstal %s!",
+  "chat.seasons.extras": "Dapatkan kustom item dan blok untuk membantumu dalam petualanganmu dengan menginstal addon ini.",
+  "chat.seasons.available_at": "Tersedia di: ",
+  "chat.seasons.show_once": "Pesan ini hanya akan muncul sekali.",
+
+  "commands.seasons.query_1": "Musim saat ini adalah %s.",
+  "commands.seasons.query_2": "Tersisa %s hari (%s ticks) sebelum %s."
+}
